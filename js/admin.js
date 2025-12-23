@@ -24,7 +24,7 @@ function showDashboard() {
         <input type='file' id='csv-upload' accept='.csv,text/csv' style='margin-bottom:10px;'>
         <button id='upload-csv-btn' style='padding:8px 18px;background:#0b5fa6;color:#fff;border:none;border-radius:6px;'>Upload CSV</button>
         <div id='csv-upload-status' style='margin-top:10px;font-size:1em;'></div>
-        <div style='font-size:0.95em;color:#555;margin-top:8px;'>CSV columns should match your Supabase table (e.g., date, parameterid, value, unit, locationid, etc).</div>
+        <div style='font-size:0.95em;color:#555;margin-top:8px;'>Please only use this function if you have the correct CSV format and understand the data structure.</div>
       </section>
       <section class='intro' style='margin-top:32px;'>
         <h2>Write Blog Post</h2>
