@@ -583,6 +583,20 @@
 
     const chartTypeToggleBtn = document.getElementById('chart-type-toggle-btn');
     let chartTypeState = 'bar'; // default
+    let trendlineState = false;
+        const trendlineToggleBtn = document.getElementById('trendline-toggle-btn');
+        function updateTrendlineBtn() {
+          if (!trendlineToggleBtn) return;
+          trendlineToggleBtn.textContent = trendlineState ? 'Hide Trendline' : 'Show Trendline';
+        }
+        if(trendlineToggleBtn){
+          trendlineToggleBtn.addEventListener('click', ()=>{
+            trendlineState = !trendlineState;
+            updateTrendlineBtn();
+            renderChart(filterRecords());
+          });
+          updateTrendlineBtn();
+        }
     function getChartType() {
       return chartTypeState;
     }
@@ -701,7 +715,8 @@
             backgroundColor: palette(i),
             borderColor: palette(i),
             borderWidth: 1,
-            spanGaps: true
+            spanGaps: true,
+            _showTrendline: trendlineState
           };
         });
       } else {
@@ -718,7 +733,8 @@
             backgroundColor: palette(i),
             borderColor: palette(i),
             borderWidth: 1,
-            spanGaps: true
+            spanGaps: true,
+            _showTrendline: trendlineState
           };
         });
       }
@@ -735,7 +751,8 @@
           plugins: {
             legend: { labels: { font: { size: 16 }, padding: 18 } },
             tooltip: { backgroundColor: '#0b5fa6', titleColor: '#fff', bodyColor: '#fff', borderColor: '#fff', borderWidth: 1, padding: 14 },
-            title: { display: false }
+            title: { display: false },
+            trendline: { enabled: trendlineState, color: '#e74c3c', lineWidth: 2 }
           },
           elements: {
             line: { borderWidth: 4, tension: 0.3 },

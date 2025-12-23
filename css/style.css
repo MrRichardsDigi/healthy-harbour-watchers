@@ -27,7 +27,7 @@
 }
 .cta-btn {
 	display: inline-block;
-	background: linear-gradient(90deg,#3ec6e0,#0b5fa6);
+	background: #1976d2;
 	color: #fff;
 	padding: 12px 32px;
 	border-radius: 24px;
@@ -37,7 +37,7 @@
 	transition: background 0.3s, transform 0.2s;
 }
 .cta-btn:hover {
-	background: linear-gradient(90deg,#0b5fa6,#3ec6e0);
+	background: #1565c0;
 	transform: scale(1.06);
 }
 
@@ -183,4 +183,134 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;color:#0
 .intro{max-width:920px;margin:24px auto;padding:0 16px}
 footer{padding:12px 20px;text-align:center;background:#f0f6ff}
 /* simple responsive */
-@media (max-width:600px){.carousel img{height:200px}}
+@media (max-width: 900px) {
+	.stats-cards {
+		flex-direction: column;
+		gap: 18px;
+		max-width: 98vw;
+	}
+	.featured-locations {
+		max-width: 98vw;
+		padding: 0 4vw;
+	}
+	.intro {
+		max-width: 98vw;
+		padding: 0 4vw;
+	}
+}
+
+@media (max-width: 700px) {
+	.hero-bg {
+		min-height: 180px;
+		height: 32vh;
+		background-size: cover;
+	}
+	.hero-overlay {
+		padding: 24px 8px;
+		border-radius: 12px;
+	}
+	.hero-overlay h2 {
+		font-size: 1.5rem;
+	}
+	.hero-mission {
+		font-size: 1.05rem;
+		margin-bottom: 16px;
+	}
+	.cta-btn {
+		padding: 10px 18px;
+		font-size: 1rem;
+		border-radius: 18px;
+	}
+	.site-header {
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 10px 8px;
+	}
+	.site-header h1 {
+		font-size: 1.2rem;
+		margin-bottom: 6px;
+	}
+	.site-header nav {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 2px;
+	}
+	.site-header nav a {
+		margin: 0 8px 4px 0;
+		font-size: 1em;
+		padding: 2px 0;
+	}
+	.carousel {
+		max-width: 98vw;
+		border-radius: 6px;
+	}
+	.carousel img {
+		height: 140px;
+		min-height: 80px;
+	}
+	.location-card {
+		min-width: 140px;
+		max-width: 180px;
+		padding: 8px 4px 10px 4px;
+	}
+	.location-card img {
+		height: 70px;
+		border-radius: 8px;
+	}
+	.wavy-divider svg {
+		height: 32px;
+	}
+	.intro {
+		font-size: 1em;
+		padding: 0 2vw;
+	}
+	footer {
+		font-size: 0.95em;
+		padding: 8px 4vw;
+	}
+}
+
+@media (max-width: 480px) {
+	.hero-bg {
+		min-height: 100px;
+		height: 22vh;
+	}
+	.hero-overlay {
+		padding: 12px 2px;
+		font-size: 0.98em;
+	}
+	.hero-overlay h2 {
+		font-size: 1.1rem;
+	}
+	.cta-btn {
+		font-size: 0.98em;
+		padding: 8px 10px;
+	}
+	.site-header nav {
+		flex-direction: column;
+		gap: 2px;
+		align-items: flex-start;
+	}
+	.site-header nav a {
+		margin: 0 0 2px 0;
+		font-size: 0.98em;
+	}
+	.location-card {
+		min-width: 110px;
+		max-width: 120px;
+		font-size: 0.98em;
+	}
+	.location-card img {
+		height: 44px;
+	}
+	.intro {
+		font-size: 0.98em;
+		padding: 0 1vw;
+	}
+}
+
+@media (max-width:600px){
+	.carousel img{height:200px}
+}
