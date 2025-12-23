@@ -54,7 +54,7 @@ function setupFormHandling() {
         const data = Object.fromEntries(formData);
         
         // Basic validation
-        if (!data.name || !data.email || !data.message) {
+        if (!data.name || !data.email || !data.subject || !data.message) {
             alert('Please fill in all required fields');
             return;
         }
