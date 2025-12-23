@@ -1,3 +1,4 @@
-date,parameterid,value,unit,locationid
-2025-01-15,1,34.1,ppt,1
-2025-01-16,2,12.3,°C,2
+Site,,water temp oC,salinity ppt,sal adj,Spec cond,sp cond adj,DO mg/L,DO %,pH,turbidity,chloro a,NNN μmol/L,DRP μmol/L,enterococci
+#1,Pulling Pt,14.2,28.4,,43.60,,9.81,91.00,7.94,4.09,,,0.345,0
+#2,Pulling Pt,12.3,30.1,,46.40,,8.56,94.6,7.79,2.49,,,0.618,2
+#3,Back Beach,12.4,28.0,,43.40,,8.35,92.0,7.74,34.00,,,0.379,14
