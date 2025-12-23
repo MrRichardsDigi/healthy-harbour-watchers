@@ -4,6 +4,72 @@
    - Renders Chart and table on data.html (supports ?loc=id)
 */
 (async function(){
+        // --- Assays info cards logic for index.html ---
+        if(document.getElementById('assays-cards')) {
+          const assays = [
+            {
+              name: 'NNN (Nitrate-Nitrite-Nitrogen)',
+              desc: 'NNN is a measure of dissolved inorganic nitrogen, important for understanding nutrient levels and potential for algal growth.'
+            },
+            {
+              name: 'DRP (Dissolved Reactive Phosphorus)',
+              desc: 'DRP indicates the amount of phosphorus available for algae, a key nutrient that can drive blooms.'
+            },
+            {
+              name: 'Chlorophyll A',
+              desc: 'Chlorophyll A is a pigment in algae and is used as an indicator of algal biomass in the water.'
+            },
+            {
+              name: 'pH',
+              desc: 'pH measures how acidic or basic the water is, affecting aquatic life and chemical processes.'
+            },
+            {
+              name: 'Turbidity',
+              desc: 'Turbidity is a measure of water clarity, affected by suspended particles and runoff.'
+            },
+            {
+              name: 'Conductivity',
+              desc: 'Conductivity reflects the water’s ability to conduct electricity, related to the concentration of dissolved salts.'
+            },
+            {
+              name: 'Temperature',
+              desc: 'Temperature affects oxygen levels, chemical reactions, and the health of aquatic organisms.'
+            }
+          ];
+          // Use the same images as locations, or add more if you want
+          const imgList = [
+            'assets/harbour1.jpg',
+            'assets/harbour2.jpg',
+            'assets/harbour3.jpg',
+            'assets/harbour4.jpg',
+            'assets/harbour5.jpg',
+            'assets/harbour6.jpg'
+          ];
+          function shuffle(arr) {
+            for(let i=arr.length-1;i>0;i--){
+              const j=Math.floor(Math.random()*(i+1));
+              [arr[i],arr[j]]=[arr[j],arr[i]];
+            }
+            return arr;
+          }
+          const selected = shuffle([...assays]).slice(0,3);
+          const container = document.getElementById('assays-cards');
+          container.innerHTML = '';
+          selected.forEach((assay, i) => {
+            const card = document.createElement('div');
+            card.className = 'location-card';
+            // Pick a random image for each card
+            const img = imgList[Math.floor(Math.random()*imgList.length)];
+            card.innerHTML = `
+              <img src="${img}" alt="${assay.name}">
+              <div class="location-info">
+                <strong>${assay.name}</strong>
+                <span>${assay.desc}</span>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+        }
     // --- Featured Locations logic for index.html ---
     if(document.getElementById('featured-locations')) {
       // Load locations from locations.json, exclude Pulling Point 2, randomize 3
@@ -35,6 +101,7 @@
         }
         const featured = shuffle([...filtered]).slice(0,3);
         const container = document.getElementById('featured-locations');
+        container.innerHTML = '';
         featured.forEach(loc => {
           const card = document.createElement('a');
           card.className = 'location-card';

@@ -8,7 +8,12 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
+  <div class="site-banner">
+    <span>Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</span>
+  </div>
+
   <header class="site-header">
+    <a href="index.html" class="site-logo"><img src="assets/logo.png" alt="Healthy Harbour Watchers logo"></a>
     <h1>Healthy Harbour Watchers</h1>
     <nav>
       <a href="index.html">Home</a>
@@ -32,8 +37,14 @@
 
     <!-- Featured Locations -->
     <section class="featured-locations">
-      <h3>Featured Locations</h3>
+      <h3 class="featured-locations-heading">Featured Locations</h3>
       <div class="locations-scroll" id="featured-locations"></div>
+    </section>
+
+    <!-- Assays Section (below locations, same style) -->
+    <section class="assays-locations">
+      <h3 class="featured-locations-heading">More information about our assays</h3>
+      <div class="locations-scroll" id="assays-cards"></div>
     </section>
 
     <!-- Wavy SVG Divider -->
