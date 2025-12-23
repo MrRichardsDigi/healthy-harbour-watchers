@@ -23,6 +23,16 @@
   </header>
 
   <main>
+        <section style="max-width:1000px;margin:24px auto 8px auto;padding:0 16px 12px 16px;background:#e6f0ff;border-radius:10px;box-shadow:0 2px 12px #0b5fa61a;">
+          <h2 style="font-size:1.3rem;margin-bottom:8px;">How to Use This Page</h2>
+          <ol style="font-size:1rem;line-height:1.7;margin-left:1.2em;">
+            <li><strong>Select Locations:</strong> Use the location selection box to choose one or more sampling sites. Hold <kbd>Ctrl</kbd> (or <kbd>Cmd</kbd> on Mac) and click to select multiple sites.</li>
+            <li><strong>Select Parameters:</strong> Use the parameter selection box to pick the water quality parameters (e.g., salinity, temperature) you want to view. You can compare multiple parameters at once.</li>
+            <li><strong>Adjust Date Range:</strong> Use the date slider to filter results by sampling date. Drag the handles to set your desired time period.</li>
+            <li><strong>View Data:</strong> The interactive chart displays trends for your selections. The table below shows the raw data for further analysis.</li>
+            <li><strong>Download Data:</strong> (If available) Use the download button to export the filtered data as a CSV file.</li>
+          </ol>
+        </section>
     <section style="max-width:1000px;margin:16px auto;padding:0 16px">
       <div id="db-status" style="margin:8px 0;display:flex;align-items:center;gap:8px">
         <strong>DB:</strong> <span id="db-status-text">Not checked</span>
@@ -67,7 +77,10 @@
 
         <pre id="raw-data-output" style="display:none;background:#1a1a1a;color:#7f7;overflow:auto;padding:8px;max-height:360px;margin-top:8px;border:1px solid #555"></pre>
       </div>
-      <h3>Raw Records</h3>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;margin-top:24px">
+        <h3 style="margin:0">Raw Records</h3>
+        <button id="download-csv" style="padding:6px 14px;font-size:1em;cursor:pointer;background:#0b5fa6;color:#fff;border:none;border-radius:6px;box-shadow:0 2px 8px #0b5fa61a;">Download CSV</button>
+      </div>
       <table id="data-table" style="width:100%;border-collapse:collapse"></table>
     </section>
   </main>

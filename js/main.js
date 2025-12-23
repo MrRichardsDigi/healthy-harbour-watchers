@@ -223,6 +223,43 @@
 
   // If we're on data.html, render chart and table
   if(document.getElementById('data-table')){
+        // Download CSV button logic
+        const downloadBtn = document.getElementById('download-csv');
+        if(downloadBtn){
+          downloadBtn.addEventListener('click',()=>{
+            const filtered = filterRecords();
+            if(!filtered.length){
+              alert('No data to download.');
+              return;
+            }
+            // Build CSV
+            const headers = ['date','parameter','value','unit','loc'];
+            const rows = [headers.join(',')];
+            filtered.forEach(r=>{
+              const row = [
+                r.date,
+                (paramDisplay && paramDisplay[String(r.parameter)]) ? paramDisplay[String(r.parameter)] : String(r.parameter),
+                r.value,
+                r.unit,
+                r.loc
+              ].map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',');
+              rows.push(row);
+            });
+            const csv = rows.join('\r\n');
+            // Download
+            const blob = new Blob([csv],{type:'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hhw-data.csv';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(()=>{
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            }, 100);
+          });
+        }
     // DB connection check UI
     const dbStatusText = document.getElementById('db-status-text');
     const dbCheckBtn = document.getElementById('db-check-btn');
