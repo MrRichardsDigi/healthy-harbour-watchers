@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Login — Healthy Harbour Watchers</title>
+  <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js already loaded above -->
+  <!-- Supabase client (UMD) and local config. Create/replace js/config.js with your project values. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Admin Login</h1>
+    <nav>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+  <main>
+    <section class="intro" style="max-width:400px;margin:40px auto;">
+      <h2>Admin Login</h2>
+      <form id="admin-login-form" style="display:flex;flex-direction:column;gap:14px;">
+        <label>Password:
+          <input type="password" id="admin-password" style="padding:8px;font-size:1.1em;">
+        </label>
+        <button type="submit" style="padding:10px 0;font-size:1.1em;background:#0b5fa6;color:#fff;border:none;border-radius:6px;">Login</button>
+        <div id="admin-login-error" style="color:#b33;font-size:1em;display:none;"></div>
+      </form>
+    </section>
+  </main>
+  <script src="js/admin.js"></script>
+</body>
+</html>
