@@ -27,6 +27,7 @@ function showDashboard() {
         <form id='add-blog-form' style='display:flex;flex-direction:column;gap:10px;'>
           <input type='text' id='blog-title' placeholder='Title' required>
           <textarea id='blog-content' placeholder='Content' rows='6' required></textarea>
+          <label style='font-size:0.98em;'>Image (optional): <input type='file' id='blog-image' accept='image/*'></label>
           <button type='submit'>Publish Post</button>
         </form>
       </section>
@@ -78,6 +79,8 @@ function showDashboard() {
         e.preventDefault();
         const title = document.getElementById('blog-title').value.trim();
         const content = document.getElementById('blog-content').value.trim();
+        const imageInput = document.getElementById('blog-image');
+        let image_url = '';
         if(!title || !content){
           alert('Please enter a title and content.');
           return;
@@ -87,7 +90,21 @@ function showDashboard() {
           return;
         }
         const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const { data, error } = await client.from('blog_posts').insert([{ title, content, published: true }]);
+        // Handle image upload if file selected
+        if(imageInput && imageInput.files && imageInput.files[0]){
+          const file = imageInput.files[0];
+          const fileExt = file.name.split('.').pop();
+          const fileName = `blog_${Date.now()}.${fileExt}`;
+          const { data: imgData, error: imgErr } = await client.storage.from('Blogimages').upload(fileName, file, { cacheControl: '3600', upsert: false });
+          if(imgErr){
+            alert('Image upload failed: ' + imgErr.message);
+            return;
+          }
+          // Get public URL
+          const { data: publicUrlData } = client.storage.from('Blogimages').getPublicUrl(fileName);
+          image_url = publicUrlData && publicUrlData.publicUrl ? publicUrlData.publicUrl : '';
+        }
+        const { data, error } = await client.from('blog_posts').insert([{ title, content, image_url, published: true }]);
         if(error){
           alert('Error publishing post: ' + error.message);
         } else {
