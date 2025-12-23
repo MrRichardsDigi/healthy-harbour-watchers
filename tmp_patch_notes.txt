@@ -1,0 +1,5 @@
+Patch plan:
+- After fetching `parameters` table, if empty, query `data` for distinct `parameterid` values.
+- If distinct ids found, query `parameters` with `.in('id', ids)` to get names; otherwise use ids as keys.
+- Add debug notes for each step and export to `window.__hhw_debug`.
+- Ensure paramMap is populated when possible so UI shows names.

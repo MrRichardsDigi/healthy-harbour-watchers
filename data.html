@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Data — Healthy Harbour Watchers</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js already loaded above -->
+  <!-- Supabase client (UMD) and local config. Create/replace js/config.js with your project values. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Data Viewer</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="locations.html">Locations</a>
+      <a href="data.html">Data</a>
+      <a href="join.html">Join</a>
+    </nav>
+  </header>
+
+  <main>
+    <section style="max-width:1000px;margin:16px auto;padding:0 16px">
+      <div id="db-status" style="margin:8px 0;display:flex;align-items:center;gap:8px">
+        <strong>DB:</strong> <span id="db-status-text">Not checked</span>
+        <button id="db-check-btn" style="padding:6px 8px;border-radius:4px;cursor:pointer">Check DB</button>
+      </div>
+      <div id="location-name"></div>
+
+      <div id="filters" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0">
+        <label style="display:flex;flex-direction:column;font-size:13px"><span>Location</span>
+          <select id="location-select" multiple size="6" style="min-width:240px;padding:6px"><option value="">All locations</option></select>
+        </label>
+        <label style="display:flex;flex-direction:column;font-size:13px"><span>Parameters</span>
+          <select id="param-select" multiple size="4" style="min-width:200px;padding:6px"></select>
+        </label>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
+          <button id="chart-type-toggle-btn" style="padding:6px 12px;font-size:13px;cursor:pointer;">Convert to line graph</button>
+        </div>
+        <div id="date-slider-container" style="display:flex;flex-direction:column;min-width:320px;max-width:420px">
+          <span style="font-size:13px">Date range</span>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span id="date-slider-min-label" style="font-size:12px"></span>
+            <input id="date-range-slider-start" type="range" min="0" max="1" value="0" step="1" style="flex:1">
+            <input id="date-range-slider-end" type="range" min="0" max="1" value="1" step="1" style="flex:1">
+            <span id="date-slider-max-label" style="font-size:12px"></span>
+          </div>
+          <div style="font-size:12px;margin-top:2px">
+            <span id="date-slider-selected"></span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button id="apply-filters" style="padding:6px 10px">Apply</button>
+          <button id="reset-filters" style="padding:6px 10px">Reset</button>
+        </div>
+      </div>
+
+      <div id="chart-title" style="text-align:center;font-size:1.35em;font-weight:600;margin:18px 0 0 0;color:#0b5fa6;"></div>
+      <div id="chart-container" style="display:flex;justify-content:center;align-items:center;margin:12px 0 12px 0;">
+        <canvas id="chart" style="width:100%;max-width:1100px;min-height:420px;height:480px;background:#f8fbff;box-shadow:0 4px 24px 0 #0b5fa62a,0 1.5px 6px 0 #0001;"></canvas>
+      </div>
+      <div style="margin-top:12px">
+        <pre id="debug-output" style="display:none;background:#111;color:#dfe;overflow:auto;padding:8px;max-height:240px;margin-top:8px"></pre>
+
+        <pre id="raw-data-output" style="display:none;background:#1a1a1a;color:#7f7;overflow:auto;padding:8px;max-height:360px;margin-top:8px;border:1px solid #555"></pre>
+      </div>
+      <h3>Raw Records</h3>
+      <table id="data-table" style="width:100%;border-collapse:collapse"></table>
+    </section>
+  </main>
+
+  <footer>
+    <small>Healthy Harbour Watchers — Otago Harbour</small>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+/* Hero Section with background image and overlay */
+.hero-bg {
+	position: relative;
+	width: 100vw;
+	height: 48vh;
+	min-height: 320px;
+	background: url('../assets/harbour1.jpg') center top/100vw 96vh no-repeat;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.hero-overlay {
+	background: rgba(11,37,69,0.55);
+	color: #fff;
+	padding: 48px 32px;
+	border-radius: 18px;
+	text-align: center;
+	box-shadow: 0 4px 32px #0b5fa61a;
+}
+.hero-overlay h2 {
+	font-size: 2.6rem;
+	margin-bottom: 12px;
+}
+.hero-mission {
+	font-size: 1.3rem;
+	margin-bottom: 24px;
+}
+.cta-btn {
+	display: inline-block;
+	background: linear-gradient(90deg,#3ec6e0,#0b5fa6);
+	color: #fff;
+	padding: 12px 32px;
+	border-radius: 24px;
+	font-size: 1.1rem;
+	text-decoration: none;
+	box-shadow: 0 2px 12px #0b5fa61a;
+	transition: background 0.3s, transform 0.2s;
+}
+.cta-btn:hover {
+	background: linear-gradient(90deg,#0b5fa6,#3ec6e0);
+	transform: scale(1.06);
+}
+
+/* Carousel Section (add fade animation) */
+.carousel-section {
+	margin-top: -48px;
+	margin-bottom: 24px;
+}
+.carousel-track img {
+	transition: opacity 0.6s, transform 0.6s;
+}
+
+/* Stats Cards */
+.stats-cards {
+	display: flex;
+	justify-content: center;
+	gap: 32px;
+	margin: 32px auto 24px auto;
+	max-width: 900px;
+}
+.stat-card {
+	background: #e6f0ff;
+	border-radius: 18px;
+	box-shadow: 0 2px 12px #0b5fa61a;
+	padding: 24px 18px;
+	text-align: center;
+	min-width: 120px;
+	flex: 1;
+}
+.stat-icon {
+	font-size: 2.2rem;
+	margin-bottom: 8px;
+}
+.stat-value {
+	font-size: 1.7rem;
+	font-weight: bold;
+	color: #0b5fa6;
+}
+.stat-label {
+	font-size: 1rem;
+	color: #0b2545;
+}
+
+/* Featured Locations */
+.featured-locations {
+	max-width: 980px;
+	margin: 0 auto 32px auto;
+	padding: 0 16px;
+}
+.featured-locations h3 {
+	font-size: 1.5rem;
+	margin-bottom: 12px;
+	color: #0b5fa6;
+}
+.locations-scroll {
+	display: flex;
+	gap: 24px;
+	overflow-x: auto;
+	padding-bottom: 8px;
+}
+.location-card {
+	background: #f4f8ff;
+	border-radius: 16px;
+	box-shadow: 0 2px 12px #0b5fa61a;
+	min-width: 220px;
+	max-width: 240px;
+	flex: 0 0 220px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 12px 8px 16px 8px;
+}
+.location-card img {
+	width: 100%;
+	height: 120px;
+	object-fit: cover;
+	border-radius: 12px;
+	margin-bottom: 8px;
+}
+.location-info {
+	text-align: center;
+	font-size: 1rem;
+	color: #0b2545;
+}
+.location-info strong {
+	color: #0b5fa6;
+	font-size: 1.1rem;
+	display: block;
+	margin-bottom: 2px;
+}
+
+/* Wavy Divider */
+.wavy-divider {
+	width: 100vw;
+	overflow: hidden;
+	margin: 0;
+	line-height: 0;
+}
+.wavy-divider svg {
+	display: block;
+	width: 100vw;
+	height: 60px;
+}
+
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;color:#0b2545}
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#e6f0ff}
+.site-header nav a{margin-left:12px;color:#0b2545;text-decoration:none}
+.hero{padding:20px;text-align:center}
+ .carousel {
+	 position: relative;
+	 width: 100%;
+	 max-width: 700px;
+	 margin: 16px auto;
+	 overflow: hidden;
+	 border-radius: 8px;
+	 background: #f4f8ff;
+ }
+ .carousel-track {
+	 display: flex;
+	 transition: transform 300ms ease;
+	 width: 100%;
+ }
+ .carousel img {
+	 width: 100%;
+	 height: 320px;
+	 object-fit: cover;
+	 flex: 0 0 100%;
+	 display: block;
+ }
+ .carousel-btn {
+	 position: absolute;
+	 top: 50%;
+	 transform: translateY(-50%);
+	 background: rgba(0,0,0,0.35);
+	 color: #fff;
+	 border: none;
+	 padding: 8px 12px;
+	 cursor: pointer;
+	 z-index: 2;
+ }
+.carousel-btn.next{right:8px}
+.intro{max-width:920px;margin:24px auto;padding:0 16px}
+footer{padding:12px 20px;text-align:center;background:#f0f6ff}
+/* simple responsive */
+@media (max-width:600px){.carousel img{height:200px}}

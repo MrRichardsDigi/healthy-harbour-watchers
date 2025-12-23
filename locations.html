@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Locations — Healthy Harbour Watchers</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+</head>
+<body>
+  <header class="site-header">
+    <h1>Locations</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="locations.html">Locations</a>
+      <a href="data.html">Data</a>
+      <a href="join.html">Join</a>
+    </nav>
+  </header>
+
+  <main>
+    <section style="max-width:1000px;margin:16px auto;padding:0 16px">
+      <p>Sampling locations around Otago Harbour. Click a marker to view data for that location.</p>
+      <div style="position:relative;height:calc(100vh - 80px);min-height:600px">
+        <div id="map" style="height:100%;width:100%;border:1px solid #ddd;border-radius:6px"></div>
+      </div>
+      <aside id="site-sidebar" style="position:fixed;top:90px;right:0;min-width:280px;max-width:360px;height:auto;background:rgba(248,251,255,0.92);border-radius:12px;padding:22px 18px;box-shadow:0 2px 16px #0b5fa61a;display:none;z-index:1001;"></aside>
+      <ul id="locations-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <small>Healthy Harbour Watchers — Otago Harbour</small>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+  <!-- Optional Supabase client + local config (fill js/config.js with your SUPABASE_URL and SUPABASE_ANON_KEY) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
