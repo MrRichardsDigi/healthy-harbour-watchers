@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Healthy Harbour Watchers — static site
 
 This repository contains a small static website for the Healthy Harbour Watchers group and example data for Otago Harbour.
@@ -37,3 +38,7 @@ Supabase integration (optional)
 See `js/config.js` for the example placeholder values. After filling it, reload `data.html` or `locations.html` to fetch from Supabase instead of the local JSON files.
 
 Feedback: tell me which features you want next (filters, upload, real dataset integration).
+=======
+# healthy-harbour-watchers
+Healthy Harbour Watchers Website
+>>>>>>> 221c378dbf5a6f017d207e16a180a4e52bbf1b5e
