@@ -1,3 +1,5 @@
+
+
 (async function(){
   if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
     document.getElementById('blog-posts').innerHTML = '<div style="color:#b33">Supabase config missing or not loaded.</div>';

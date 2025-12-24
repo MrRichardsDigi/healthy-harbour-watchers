@@ -242,6 +242,37 @@
     }).addTo(map);
     const list = document.getElementById('locations-list');
     const sidebar = document.getElementById('site-sidebar');
+    const paramCardsLeft = document.getElementById('location-parameter-cards-left');
+    const paramCardsRight = document.getElementById('location-parameter-cards-right');
+    // Helper: render most recent datapoint cards for a location, split left/right
+    async function renderParameterCardsSplit(locationId) {
+      if(!paramCardsLeft || !paramCardsRight) return;
+      paramCardsLeft.innerHTML = '<span style="color:#888;font-size:1em">Loading...</span>';
+      paramCardsRight.innerHTML = '';
+      const records = await getRecords(locationId);
+      // Group by parameter, pick most recent by date
+      const latestByParam = {};
+      records.forEach(r => {
+        if(!r.parameter) return;
+        if(!latestByParam[r.parameter] || (r.date && r.date > latestByParam[r.parameter].date)) {
+          latestByParam[r.parameter] = r;
+        }
+      });
+      const cards = Object.values(latestByParam).map(rec => {
+        const card = document.createElement('div');
+        card.className = 'location-parameter-card';
+        card.innerHTML = `<strong>${rec.parameter}</strong>
+          <div style="font-size:1.1em;color:#1976d2;font-weight:600;">${rec.value ?? 'N/A'} ${rec.unit ?? ''}</div>
+          <div style="font-size:0.98em;color:#555;">${rec.date ? 'Sampled: ' + rec.date : ''}</div>`;
+        return card;
+      });
+      paramCardsLeft.innerHTML = '';
+      paramCardsRight.innerHTML = '';
+      // Split cards into left/right columns
+      const mid = Math.ceil(cards.length / 2);
+      cards.slice(0, 5).forEach(card => paramCardsLeft.appendChild(card));
+      cards.slice(5, 10).forEach(card => paramCardsRight.appendChild(card));
+    }
     // Add markers and sidebar logic
     locations.forEach(loc=>{
       const marker = L.marker([loc.lat,loc.lng]).addTo(map);
@@ -272,6 +303,8 @@
               }, 1200);
             };
           }
+          // Render parameter cards for this location (split left/right)
+          renderParameterCardsSplit(loc.id);
         }
       });
       // List entry
@@ -284,8 +317,8 @@
       };
       list.appendChild(li);
     });
-    // Hide sidebar when clicking map background
-    map.on('click', ()=>{ if(sidebar) sidebar.style.display = 'none'; });
+    // Hide sidebar and parameter cards when clicking map background
+    map.on('click', ()=>{ if(sidebar) sidebar.style.display = 'none'; if(paramCardsLeft) paramCardsLeft.innerHTML = ''; if(paramCardsRight) paramCardsRight.innerHTML = ''; });
   }
 
   // If we're on data.html, render chart and table

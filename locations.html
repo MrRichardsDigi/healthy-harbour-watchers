@@ -17,20 +17,25 @@
     <h1>Locations</h1>
     <nav>
       <a href="index.html">Home</a>
-      <a href="locations.html">Locations</a>
+      <a href="locations.html" class="nav-current">Locations</a>
       <a href="data.html">Data</a>
       <a href="join.html">Join</a>
       <a href="blog.html">Blog</a>
+      <a href="admin.html">Admin</a>
     </nav>
   </header>
 
   <main>
     <section style="max-width:1000px;margin:16px auto;padding:0 16px">
-      <p>Sampling locations around Otago Harbour. Click a marker to view data for that location.</p>
-      <div style="position:relative;height:calc(100vh - 80px);min-height:600px">
-        <div id="map" style="height:100%;width:100%;border:1px solid #ddd;border-radius:6px"></div>
+      <p class="centered-intro">Sampling locations around Otago Harbour. Click a marker to view data for that location.</p>
+      <div class="map-cards-row">
+        <div id="location-parameter-cards-left" class="parameter-cards-col" style="flex:0 0 260px;display:flex;flex-direction:column;gap:18px;justify-content:flex-start;"></div>
+        <div style="position:relative;flex:1 1 0;min-width:630px;max-width:1050px;height:81vh;min-height:630px;">
+          <div id="map" style="height:100%;width:100%;min-height:630px;border:1px solid #ddd;border-radius:6px;position:relative;"></div>
+          <div id="site-sidebar" style="position:absolute;top:24px;right:24px;min-width:280px;max-width:360px;height:auto;background:rgba(248,251,255,0.92);border-radius:12px;padding:22px 18px;box-shadow:0 2px 16px #0b5fa61a;display:none;z-index:1001;"></div>
+        </div>
+        <div id="location-parameter-cards-right" class="parameter-cards-col" style="flex:0 0 260px;display:flex;flex-direction:column;gap:18px;justify-content:flex-start;"></div>
       </div>
-      <aside id="site-sidebar" style="position:fixed;top:90px;right:0;min-width:280px;max-width:360px;height:auto;background:rgba(248,251,255,0.92);border-radius:12px;padding:22px 18px;box-shadow:0 2px 16px #0b5fa61a;display:none;z-index:1001;"></aside>
       <ul id="locations-list"></ul>
     </section>
   </main>

@@ -1,3 +1,19 @@
+/* Highlight current page in header navigation */
+.site-header nav a.nav-current {
+	background: #e6f0ff;
+	color: #1976d2;
+	border-radius: 6px;
+	font-weight: bold;
+	box-shadow: 0 1px 6px #0b5fa61a;
+	padding: 6px 16px;
+}
+/* Centered intro text for locations page */
+.centered-intro {
+	text-align: center;
+	font-size: 1.18em;
+	margin-bottom: 18px;
+	color: var(--blue-text);
+}
 /* Ensure all .locations-scroll use flex row and centering */
 .locations-scroll {
 	display: flex;
@@ -199,6 +215,27 @@ body {
 	font-size: 1.1rem;
 	display: block;
 	margin-bottom: 2px;
+}
+.location-parameter-card {
+  background: var(--blue-card);
+  border-radius: 16px;
+  box-shadow: 0 2px 12px var(--blue-shadow);
+  min-width: 180px;
+  max-width: 220px;
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px 16px 8px;
+  text-align: center;
+  font-size: 1.05em;
+  color: var(--blue-text);
+  gap: 4px;
+}
+.location-parameter-card strong {
+  color: var(--blue-accent);
+  font-size: 1.08em;
+  margin-bottom: 2px;
 }
 
 /* Wavy Divider */
@@ -479,5 +516,64 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
   }
   .site-logo {
     margin-right: 10px;
+  }
+}
+.map-cards-row {
+	display: flex;
+	flex-direction: row;
+	gap: 32px;
+	align-items: flex-start;
+	justify-content: center;
+	width: 100vw;
+	max-width: 1050px;
+	margin-left: -32px;
+	margin-right: auto;
+}
+	width: 100%;
+	height: 54vh;
+	min-width: 320px;
+	min-height: 320px;
+	max-width: 100vw;
+	max-height: 70vh;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+}
+#location-parameter-cards {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: flex-start;
+}
+.parameter-cards-col {
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  justify-content: flex-start;
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .map-cards-row {
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+  }
+  #location-parameter-cards {
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .parameter-cards-col {
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 12px;
+    align-items: stretch;
   }
 }
