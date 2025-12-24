@@ -9,6 +9,12 @@ function loadPapaParse(cb) {
   document.head.appendChild(script);
 }
 
+// Create a single Supabase client instance for the whole file
+let supabaseClient = null;
+if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined' && window.supabase) {
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
 function showDashboard() {
   document.body.innerHTML = `
     <div class="site-banner">
@@ -56,57 +62,58 @@ function showDashboard() {
         <h2>Draft Blog Posts</h2>
         <div id='draft-posts'></div>
       </section>
-      // Drafts management logic
-      async function loadDrafts() {
-        const draftDiv = document.getElementById('draft-posts');
-        if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
-          draftDiv.innerHTML = '<div style="color:#b33">Supabase config missing or not loaded.</div>';
-          return;
-        }
-        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        draftDiv.innerHTML = '<div>Loading drafts...</div>';
-        const { data, error } = await client.from('blog_posts').select('*').eq('published', false).order('created_at', { ascending: false });
-        if(error) {
-          draftDiv.innerHTML = '<div style="color:#b33">Error loading drafts: '+error.message+'</div>';
-          return;
-        }
-        if(!data.length) {
-          draftDiv.innerHTML = '<div>No drafts yet.</div>';
-          return;
-        }
-        draftDiv.innerHTML = data.map(post => `
-          <div style="background:#f4f8ff;padding:14px 16px;border-radius:10px;margin-bottom:18px;box-shadow:0 1px 6px #0b5fa61a;">
-            <strong>${post.title}</strong>
-            <div style="color:#0b5fa6;font-size:0.98em;margin-bottom:8px;">${(function(d){d=new Date(d);return d.getDate().toString().padStart(2,'0')+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear();})(post.created_at)}</div>
-            <div style="font-size:1em;white-space:pre-line;margin-bottom:8px;">${post.content}</div>
-            <button class="publish-draft-btn" data-id="${post.id}" style="background:#0b5fa6;color:#fff;border:none;border-radius:6px;padding:6px 14px;margin-right:8px;">Publish</button>
-            <button class="edit-draft-btn" data-id="${post.id}" style="background:#e6f0ff;color:#0b5fa6;border:none;border-radius:6px;padding:6px 14px;">Edit</button>
-          </div>
-        `).join('');
-        // Add event listeners for publish and edit
-        draftDiv.querySelectorAll('.publish-draft-btn').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            await client.from('blog_posts').update({ published: true }).eq('id', id);
-            loadDrafts();
-            alert('Draft published!');
-          });
-        });
-        draftDiv.querySelectorAll('.edit-draft-btn').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            const post = data.find(p => String(p.id) === String(id));
-            if(post){
-              document.getElementById('blog-title').value = post.title;
-              document.getElementById('blog-content').value = post.content;
-              // Image editing not supported for drafts
-            }
-          });
-        });
-      }
-      loadDrafts();
     </main>
   `;
+
+  // Drafts management logic
+  async function loadDrafts() {
+    const draftDiv = document.getElementById('draft-posts');
+    if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
+      draftDiv.innerHTML = '<div style="color:#b33">Supabase config missing or not loaded.</div>';
+      return;
+    }
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    draftDiv.innerHTML = '<div>Loading drafts...</div>';
+    const { data, error } = await client.from('blog_posts').select('*').eq('published', false).order('created_at', { ascending: false });
+    if(error) {
+      draftDiv.innerHTML = '<div style="color:#b33">Error loading drafts: '+error.message+'</div>';
+      return;
+    }
+    if(!data.length) {
+      draftDiv.innerHTML = '<div>No drafts yet.</div>';
+      return;
+    }
+    draftDiv.innerHTML = data.map(post => `
+      <div style="background:#f4f8ff;padding:14px 16px;border-radius:10px;margin-bottom:18px;box-shadow:0 1px 6px #0b5fa61a;">
+        <strong>${post.title}</strong>
+        <div style="color:#0b5fa6;font-size:0.98em;margin-bottom:8px;">${(function(d){d=new Date(d);return d.getDate().toString().padStart(2,'0')+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear();})(post.created_at)}</div>
+        <div style="font-size:1em;white-space:pre-line;margin-bottom:8px;">${post.content}</div>
+        <button class="publish-draft-btn" data-id="${post.id}" style="background:#0b5fa6;color:#fff;border:none;border-radius:6px;padding:6px 14px;margin-right:8px;">Publish</button>
+        <button class="edit-draft-btn" data-id="${post.id}" style="background:#e6f0ff;color:#0b5fa6;border:none;border-radius:6px;padding:6px 14px;">Edit</button>
+      </div>
+    `).join('');
+    // Add event listeners for publish and edit
+    draftDiv.querySelectorAll('.publish-draft-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        await client.from('blog_posts').update({ published: true }).eq('id', id);
+        loadDrafts();
+        alert('Draft published!');
+      });
+    });
+    draftDiv.querySelectorAll('.edit-draft-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const post = data.find(p => String(p.id) === String(id));
+        if(post){
+          document.getElementById('blog-title').value = post.title;
+          document.getElementById('blog-content').value = post.content;
+          // Image editing not supported for drafts
+        }
+      });
+    });
+  }
+  loadDrafts();
 
   // CSV upload logic
   loadPapaParse(()=>{
