@@ -36,7 +36,7 @@
               desc: 'Temperature affects oxygen levels, chemical reactions, and the health of aquatic organisms.'
             }
           ];
-          // Use the same images as locations, or add more if you want
+          // Here we need to use specific images for assays, the images should be matched to the assays, same with the locations - need to fix this later
           const imgList = [
             'assets/harbour1.jpg',
             'assets/harbour2.jpg',
@@ -79,11 +79,11 @@
         const imgList = ['assets/harbour1.jpg','assets/harbour2.jpg','assets/harbour3.jpg'];
         const descs = [
           'Historic sampling site near the harbour mouth.',
-          'Popular for mussel and water quality sampling.',
+          'Some actual information about each site will go here.',
           'Sheltered bay, frequent mussel sampling.',
-          'Community site near city edge.',
+          'These should randomize',
           'Freshwater meets the harbour ecosystem.',
-          'Popular marina and sampling site.',
+          'There will be pictures also',
           'Stormwater outfall monitoring.',
           'Creek entering the harbour.',
           'Outlet to the harbour.'
