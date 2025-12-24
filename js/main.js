@@ -658,19 +658,37 @@
     function renderTable(filtered){
       table.innerHTML = '';
       if(!filtered.length){ table.innerHTML = '<tr><td>No records found</td></tr>'; return; }
-      const headers = ['date','parameter','value','unit','loc'];
+      const headers = ['date','parameter','value','unit','location'];
       const thead = document.createElement('thead');
       thead.innerHTML = `<tr>${headers.map(h=>`<th style="text-align:left;padding:6px;border-bottom:1px solid #ddd">${h}</th>`).join('')}</tr>`;
       table.appendChild(thead);
       const tbody = document.createElement('tbody');
+      // Build a map of location id to name for fast lookup
+      const locIdToName = {};
+      if (Array.isArray(locations)) {
+        locations.forEach(l => {
+          locIdToName[String(l.id)] = l.name || l.location || String(l.id);
+        });
+      }
+      function formatDateDDMMYYYY(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        if (isNaN(d)) return dateStr;
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
       filtered.forEach(r=>{
         const tr = document.createElement('tr');
         const displayParam = (paramDisplay && paramDisplay[String(r.parameter)]) ? paramDisplay[String(r.parameter)] : String(r.parameter);
-        tr.innerHTML = `<td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.date}</td>
+        const displayLoc = locIdToName[String(r.loc)] || r.loc;
+        const displayDate = formatDateDDMMYYYY(r.date);
+        tr.innerHTML = `<td style="padding:6px;border-bottom:1px solid #f1f1f1">${displayDate}</td>
                         <td style="padding:6px;border-bottom:1px solid #f1f1f1">${displayParam}</td>
                         <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.value}</td>
                         <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.unit}</td>
-                        <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.loc}</td>`;
+                        <td style="padding:6px;border-bottom:1px solid #f1f1f1">${displayLoc}</td>`;
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);

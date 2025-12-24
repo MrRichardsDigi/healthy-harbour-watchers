@@ -23,34 +23,101 @@
     </nav>
   </header>
   <main>
-    <section class="intro">
-      <h2>Join the Healthy Harbour Watchers</h2>
-      <p>
-        Healthy Harbour Watchers partners with schools across Dunedin to give students hands-on experience in environmental science. Students participate in real world data collection, learn to conduct water quality assays, and gain valuable lab skills. Our program brings science out of the classroom and into the harbour, empowering young people to explore, measure, and understand their local environment.
-      </p>
-      <p>
-        Through field trips and lab sessions, students collect samples, analyze results, and contribute to our long-term monitoring of Otago Harbour. It's a unique opportunity to work alongside scientists, develop practical skills, and make a real impact on the health of our waterways.
-      </p>
-      <div class="carousel" style="margin:32px auto 24px auto;max-width:700px;">
-        <button class="carousel-btn prev" aria-label="Previous">‹</button>
-        <div class="carousel-track">
-          <img src="assets/join1.jpg" alt="Join photo 1">
-          <img src="assets/join2.jpg" alt="Join photo 2">
-          <img src="assets/join3.jpg" alt="Join photo 3">
-          <img src="assets/join4.jpg" alt="Join photo 4">
-          <img src="assets/join5.jpg" alt="Join photo 5">
-          <img src="assets/join6.jpg" alt="Join photo 6">
-          <img src="assets/join7.jpg" alt="Join photo 7">
+    <section class="join-flex-row">
+      <aside class="schools-cards">
+        <h3>Schools currently involved in Healthy Harbour Watchers</h3>
+        <div class="schools-list">
+          <div class="school-card">
+            <img src="assets/shcslogo.jpg" alt="St Hilda's Collegiate" />
+            <div class="school-name">St Hilda's Collegiate</div>
+          </div>
+          <div class="school-card">
+            <img src="assets/trinitylogo.png" alt="Trinity College" />
+            <div class="school-name">Trinity College</div>
+          </div>
+          <div class="school-card">
+            <img src="assets/lphslogo.png" alt="Logan Park High School" />
+            <div class="school-name">Logan Park High School</div>
+          </div>
+          <div class="school-card">
+            <img src="assets/bayfieldlogo.png" alt="Bayfield High School" />
+            <div class="school-name">Bayfield High School</div>
+          </div>
         </div>
-        <button class="carousel-btn next" aria-label="Next">›</button>
-      </div>
-      <div class="contact-row">
-        <a href="https://www.facebook.com/Healthy-Harbour-Watchers-148353175208403" target="_blank" rel="noopener" class="contact-btn fb-btn">
-          Visit us on Facebook
-        </a>
-        <a href="mailto:andrew_innes09@hotmail.com" class="contact-btn email-btn">
-          Email Andrew Innes
-        </a>
+      </aside>
+      <div class="join-main-content">
+        <h2 style="text-align:center;">Join the Healthy Harbour Watchers</h2>
+        <p>
+          Healthy Harbour Watchers partners with schools across Dunedin to give students hands-on experience in environmental science. Students participate in real world data collection, learn to conduct water quality assays, and gain valuable lab skills. Our program brings science out of the classroom and into the harbour, empowering young people to explore, measure, and understand their local environment.
+        </p>
+        <p>
+          Through field trips and lab sessions, students collect samples, analyze results, and contribute to our long-term monitoring of Otago Harbour. It's a unique opportunity to work alongside scientists, develop practical skills, and make a real impact on the health of our waterways.
+        </p>
+        <div class="carousel join-carousel" style="margin:40px auto 32px auto; max-width:1200px; min-height:420px; box-shadow:0 4px 32px #0b5fa62a; border-radius:18px; position:relative;">
+          <button class="carousel-btn prev" aria-label="Previous" style="font-size:2.5em;left:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">‹</button>
+          <div class="carousel-track" style="height:420px;">
+            <img src="assets/join1.jpg" alt="Join photo 1">
+            <img src="assets/join2.jpg" alt="Join photo 2">
+            <img src="assets/join3.jpg" alt="Join photo 3">
+            <img src="assets/join4.jpg" alt="Join photo 4">
+            <img src="assets/join5.jpg" alt="Join photo 5">
+            <img src="assets/join6.jpg" alt="Join photo 6">
+            <img src="assets/join7.jpg" alt="Join photo 7">
+          </div>
+          <button class="carousel-btn next" aria-label="Next" style="font-size:2.5em;right:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">›</button>
+          <div class="carousel-indicators" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3;"></div>
+        </div>
+        <script>
+        (function(){
+          const track = document.querySelector('.join-carousel .carousel-track');
+          const imgs = Array.from(track.querySelectorAll('img'));
+          const prev = document.querySelector('.join-carousel .carousel-btn.prev');
+          const next = document.querySelector('.join-carousel .carousel-btn.next');
+          const indicators = document.querySelector('.join-carousel .carousel-indicators');
+          let index = 0;
+          function show(i){
+            index = (i + imgs.length) % imgs.length;
+            track.style.transform = `translateX(-${index * 100}%)`;
+            Array.from(indicators.children).forEach((dot, idx) => {
+              dot.style.background = idx === index ? '#0b5fa6' : '#fff';
+              dot.style.opacity = idx === index ? '1' : '0.6';
+              dot.style.transform = idx === index ? 'scale(1.2)' : 'scale(1)';
+            });
+          }
+          imgs.forEach((img, idx) => {
+            img.style.transition = 'opacity 0.7s, transform 0.7s';
+          });
+          prev.addEventListener('click',()=>show(index-1));
+          next.addEventListener('click',()=>show(index+1));
+          let auto = setInterval(()=>show(index+1),4000);
+          [prev,next].forEach(b=>b.addEventListener('click',()=>{clearInterval(auto);auto=setInterval(()=>show(index+1),4000);}));
+          // Indicators
+          indicators.innerHTML = '';
+          imgs.forEach((img, idx) => {
+            const dot = document.createElement('span');
+            dot.style.width = '14px';
+            dot.style.height = '14px';
+            dot.style.borderRadius = '50%';
+            dot.style.background = idx === 0 ? '#0b5fa6' : '#fff';
+            dot.style.display = 'inline-block';
+            dot.style.cursor = 'pointer';
+            dot.style.transition = 'all 0.3s';
+            dot.style.boxShadow = '0 1px 4px #0b5fa62a';
+            dot.style.opacity = idx === 0 ? '1' : '0.6';
+            dot.addEventListener('click',()=>{show(idx);clearInterval(auto);auto=setInterval(()=>show(index+1),4000);});
+            indicators.appendChild(dot);
+          });
+          show(0);
+        })();
+        </script>
+        <div class="contact-row">
+          <a href="https://www.facebook.com/Healthy-Harbour-Watchers-148353175208403" target="_blank" rel="noopener" class="contact-btn fb-btn">
+            Visit us on Facebook
+          </a>
+          <a href="mailto:andrew_innes09@hotmail.com" class="contact-btn email-btn">
+            Email Andrew Innes
+          </a>
+        </div>
       </div>
     </section>
   </main>
