@@ -297,13 +297,25 @@ function showDashboard() {
   });
 }
 
-function logout() {
+async function logout() {
+  if (supabaseClient) {
+    await supabaseClient.auth.signOut();
+  }
   localStorage.removeItem('hhw_admin');
   window.location.href = 'admin.html';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Supabase Auth login
+document.addEventListener('DOMContentLoaded', async () => {
+  // Always check Supabase Auth session first
+  if (supabaseClient) {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+      localStorage.setItem('hhw_admin', 'yes');
+      showDashboard();
+      return;
+    }
+  }
+  // If no session, show login form logic
   const form = document.getElementById('admin-login-form');
   if(form) {
     form.addEventListener('submit', async (e) => {
@@ -333,20 +345,15 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('hhw_admin', 'yes');
       showDashboard();
     });
-    return;
-  }
-  if(localStorage.getItem('hhw_admin') === 'yes') {
-    showDashboard();
-    return;
-  }
-  const pwField = document.getElementById('admin-password');
-  if(pwField) {
-    pwField.addEventListener('keypress', function(e) {
-      if(e.key === 'Enter') {
-        e.preventDefault();
-        const form = e.target.closest('form');
-        if(form) form.dispatchEvent(new Event('submit'));
-      }
-    });
+    const pwField = document.getElementById('admin-password');
+    if(pwField) {
+      pwField.addEventListener('keypress', function(e) {
+        if(e.key === 'Enter') {
+          e.preventDefault();
+          const form = e.target.closest('form');
+          if(form) form.dispatchEvent(new Event('submit'));
+        }
+      });
+    }
   }
 });

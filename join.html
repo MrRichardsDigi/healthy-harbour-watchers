@@ -24,7 +24,7 @@
   </header>
   <main>
     <section class="join-flex-row">
-      <aside class="schools-cards">
+      <aside class="schools-cards" style="margin-left:-150px;">
         <h3>Schools currently involved in Healthy Harbour Watchers</h3>
         <div class="schools-list">
           <div class="school-card">
@@ -45,29 +45,44 @@
           </div>
         </div>
       </aside>
-      <div class="join-main-content">
-        <h2 style="text-align:center;">Join the Healthy Harbour Watchers</h2>
-        <p>
-          Healthy Harbour Watchers partners with schools across Dunedin to give students hands-on experience in environmental science. Students participate in real world data collection, learn to conduct water quality assays, and gain valuable lab skills. Our program brings science out of the classroom and into the harbour, empowering young people to explore, measure, and understand their local environment.
-        </p>
-        <p>
-          Through field trips and lab sessions, students collect samples, analyze results, and contribute to our long-term monitoring of Otago Harbour. It's a unique opportunity to work alongside scientists, develop practical skills, and make a real impact on the health of our waterways.
-        </p>
-        <div class="carousel join-carousel" style="margin:40px auto 32px auto; max-width:1200px; min-height:420px; box-shadow:0 4px 32px #0b5fa62a; border-radius:18px; position:relative;">
-          <button class="carousel-btn prev" aria-label="Previous" style="font-size:2.5em;left:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">‹</button>
-          <div class="carousel-track" style="height:420px;">
-            <img src="assets/join1.jpg" alt="Join photo 1">
-            <img src="assets/join2.jpg" alt="Join photo 2">
-            <img src="assets/join3.jpg" alt="Join photo 3">
-            <img src="assets/join4.jpg" alt="Join photo 4">
-            <img src="assets/join5.jpg" alt="Join photo 5">
-            <img src="assets/join6.jpg" alt="Join photo 6">
-            <img src="assets/join7.jpg" alt="Join photo 7">
-          </div>
-          <button class="carousel-btn next" aria-label="Next" style="font-size:2.5em;right:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">›</button>
-          <div class="carousel-indicators" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3;"></div>
+      <div class="join-main-content join-main-centered" style="margin-left:0;margin-right:220px;">
+        <div style="max-width:1200px;width:100%;margin:0 180px 0 0;text-align:center;">
+          <h2 style="text-align:center;">Join the Healthy Harbour Watchers</h2>
+          <p>
+            Healthy Harbour Watchers partners with schools across Dunedin to give students hands-on experience in environmental science. Students participate in real world data collection, learn to conduct water quality assays, and gain valuable lab skills. Our program brings science out of the classroom and into the harbour, empowering young people to explore, measure, and understand their local environment.
+          </p>
+          <p>
+            Through field trips and lab sessions, students collect samples, analyze results, and contribute to our long-term monitoring of Otago Harbour. It's a unique opportunity to work alongside scientists, develop practical skills, and make a real impact on the health of our waterways.
+          </p>
         </div>
-        <script>
+        <div class="carousel-contact-row">
+          <div class="carousel join-carousel" style="margin:40px 0 32px 0; max-width:900px; min-height:420px; box-shadow:0 4px 32px #0b5fa62a; border-radius:18px; position:relative;">
+            <button class="carousel-btn prev" aria-label="Previous" style="font-size:2.5em;left:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">‹</button>
+            <div class="carousel-track" style="height:420px;">
+              <img src="assets/join1.jpg" alt="Join photo 1">
+              <img src="assets/join2.jpg" alt="Join photo 2">
+              <img src="assets/join3.jpg" alt="Join photo 3">
+              <img src="assets/join4.jpg" alt="Join photo 4">
+              <img src="assets/join5.jpg" alt="Join photo 5">
+              <img src="assets/join6.jpg" alt="Join photo 6">
+              <img src="assets/join7.jpg" alt="Join photo 7">
+            </div>
+            <button class="carousel-btn next" aria-label="Next" style="font-size:2.5em;right:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">›</button>
+            <div class="carousel-indicators" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3;"></div>
+          </div>
+          <div class="contact-cards-right" style="margin-left:32px;align-self:center;">
+            <div class="contact-card">
+              <a href="https://www.facebook.com/Healthy-Harbour-Watchers-148353175208403" target="_blank" rel="noopener" class="contact-btn fb-btn">
+                <span style="font-size:1.2em;font-weight:600;">Visit us on Facebook</span>
+              </a>
+            </div>
+            <div class="contact-card">
+              <a href="mailto:andrew_innes09@hotmail.com" class="contact-btn email-btn">
+                <span style="font-size:1.2em;font-weight:600;">Email Andrew Innes</span>
+              </a>
+            </div>
+          </div>
+          <script>
         (function(){
           const track = document.querySelector('.join-carousel .carousel-track');
           const imgs = Array.from(track.querySelectorAll('img'));
@@ -110,14 +125,6 @@
           show(0);
         })();
         </script>
-        <div class="contact-row">
-          <a href="https://www.facebook.com/Healthy-Harbour-Watchers-148353175208403" target="_blank" rel="noopener" class="contact-btn fb-btn">
-            Visit us on Facebook
-          </a>
-          <a href="mailto:andrew_innes09@hotmail.com" class="contact-btn email-btn">
-            Email Andrew Innes
-          </a>
-        </div>
       </div>
     </section>
   </main>

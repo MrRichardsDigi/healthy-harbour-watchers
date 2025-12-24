@@ -1,3 +1,54 @@
+/* Carousel and contact row for join page */
+.carousel-contact-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 40px;
+	margin-bottom: 32px;
+}
+.carousel-contact-row .join-carousel {
+	flex: 0 0 900px;
+	max-width: 900px;
+}
+.carousel-contact-row .contact-cards-right {
+	flex: 0 0 260px;
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	align-items: flex-start;
+	margin-left: 32px;
+}
+/* Contact cards right side for join page */
+.contact-cards-right {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  margin-left: 32px;
+  position: static;
+}
+.contact-card {
+	background: #fff;
+	border-radius: 12px;
+	box-shadow: 0 1px 6px #0b5fa61a;
+	padding: 16px 22px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 220px;
+	margin-bottom: 0;
+}
+.contact-btn {
+	text-decoration: none;
+	color: #1976d2;
+	font-weight: 600;
+	font-size: 1.1em;
+	transition: color 0.2s;
+}
+.contact-btn:hover {
+	color: #0b5fa6;
+}
 /* Join page schools cards layout */
 .join-flex-row {
 	display: flex;
@@ -650,15 +701,6 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
 	max-width: 1050px;
 	margin-left: -32px;
 	margin-right: auto;
-}
-	width: 100%;
-	height: 54vh;
-	min-width: 320px;
-	min-height: 320px;
-	max-width: 100vw;
-	max-height: 70vh;
-	border: 1px solid #ddd;
-	border-radius: 6px;
 }
 #location-parameter-cards {
   flex: 0 0 260px;
