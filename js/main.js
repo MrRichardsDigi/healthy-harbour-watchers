@@ -250,19 +250,22 @@
       paramCardsLeft.innerHTML = '<span style="color:#888;font-size:1em">Loading...</span>';
       paramCardsRight.innerHTML = '';
       const records = await getRecords(locationId);
-      // Group by parameter, pick most recent by date
-      const latestByParam = {};
+      // For each parameter, find the most recent valid data point
+      const latestValidByParam = {};
       records.forEach(r => {
         if(!r.parameter) return;
-        if(!latestByParam[r.parameter] || (r.date && r.date > latestByParam[r.parameter].date)) {
-          latestByParam[r.parameter] = r;
+        // Only consider valid values (zero is valid)
+        const isValid = r.value !== null && r.value !== undefined && r.value !== '' && r.value !== 'N/A';
+        if(!isValid) return;
+        if(!latestValidByParam[r.parameter] || (r.date && r.date > latestValidByParam[r.parameter].date)) {
+          latestValidByParam[r.parameter] = r;
         }
       });
-      const cards = Object.values(latestByParam).map(rec => {
+      const cards = Object.values(latestValidByParam).map(rec => {
         const card = document.createElement('div');
         card.className = 'location-parameter-card';
         card.innerHTML = `<strong>${rec.parameter}</strong>
-          <div style="font-size:1.1em;color:#1976d2;font-weight:600;">${rec.value ?? 'N/A'} ${rec.unit ?? ''}</div>
+          <div style="font-size:1.1em;color:#1976d2;font-weight:600;">${rec.value} ${rec.unit ?? ''}</div>
           <div style="font-size:0.98em;color:#555;">${rec.date ? 'Sampled: ' + rec.date : ''}</div>`;
         return card;
       });
@@ -276,6 +279,16 @@
     // Add markers and sidebar logic
     locations.forEach(loc=>{
       const marker = L.marker([loc.lat,loc.lng]).addTo(map);
+      // Add a label with the location name next to the pin
+      const label = L.tooltip({
+        permanent: true,
+        direction: 'right',
+        offset: [12, 0],
+        className: 'location-pin-label'
+      })
+        .setContent(`<span style="font-size:1.08em;color:#1976d2;font-weight:600;background:#fff;padding:2px 8px;border-radius:6px;box-shadow:0 1px 6px #0b5fa61a;">${loc.name}</span>`)
+        .setLatLng([loc.lat, loc.lng]);
+      label.addTo(map);
       marker.on('click', ()=>{
         // Show sidebar with info
         if(sidebar){
