@@ -1,0 +1,46 @@
+.field-main {
+  max-width: 760px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.field-card {
+  padding: 20px;
+  background: #f4f8ff;
+  border-radius: 12px;
+}
+.field-card h2 { margin-top: 0; }
+.field-card form, .measurement-grid {
+  display: grid;
+  gap: 12px;
+}
+.measurement-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+.field-card label { display: grid; gap: 5px; font-weight: 600; }
+.field-card input, .field-card select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px solid #8199b3;
+  border-radius: 6px;
+  background: white;
+  font: inherit;
+}
+.field-card fieldset { border: 1px solid #b5c6e0; border-radius: 6px; }
+.field-card legend { font-weight: 700; }
+.field-card button, .field-review button {
+  min-height: 44px;
+  padding: 10px 18px;
+  background: #0b5fa6;
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  font: inherit;
+  cursor: pointer;
+}
+.field-card button:disabled, .field-review button:disabled { opacity: .6; cursor: not-allowed; }
+.field-review article { background: #f4f8ff; padding: 14px; border-radius: 8px; margin: 12px 0; }
+.field-review ul { padding-left: 22px; }
+.field-review button { margin: 4px 8px 4px 0; }
+.field-review .reject { background: #983b3b; }

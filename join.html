@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script defer src="js/navigation.js?v=2"></script>
   <title>Join Healthy Harbour Watchers</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
   <div class="site-banner">
@@ -17,6 +18,8 @@
       <a href="index.html">Home</a>
       <a href="locations.html">Locations</a>
       <a href="data.html">Data</a>
+      <a href="field.html">Field entry</a>
+      <a href="handbook.html">Handbook</a>
       <a href="join.html" class="nav-current">Join</a>
       <a href="blog.html">Blog</a>
       <a href="admin.html">Admin</a>
@@ -24,7 +27,7 @@
   </header>
   <main>
     <section class="join-flex-row">
-      <aside class="schools-cards" style="margin-left:-150px;">
+      <aside class="schools-cards">
         <h3>Schools currently involved in Healthy Harbour Watchers</h3>
         <div class="schools-list">
           <div class="school-card">
@@ -43,10 +46,14 @@
             <img src="assets/bayfieldlogo.png" alt="Bayfield High School" />
             <div class="school-name">Bayfield High School</div>
           </div>
+          <div class="school-card">
+            <img class="school-logo-contain" src="assets/columbalogo.png" alt="Columba College" />
+            <div class="school-name">Columba College</div>
+          </div>
         </div>
       </aside>
-      <div class="join-main-content join-main-centered" style="margin-left:0;margin-right:220px;">
-        <div style="max-width:1200px;width:100%;margin:0 180px 0 0;text-align:center;">
+      <div class="join-main-content join-main-centered">
+        <div class="join-introduction">
           <h2 style="text-align:center;">Join the Healthy Harbour Watchers</h2>
           <p>
             Healthy Harbour Watchers partners with schools across Dunedin to give students hands-on experience in environmental science. Students participate in real world data collection, learn to conduct water quality assays, and gain valuable lab skills. Our program brings science out of the classroom and into the harbour, empowering young people to explore, measure, and understand their local environment.
@@ -56,9 +63,9 @@
           </p>
         </div>
         <div class="carousel-contact-row">
-          <div class="carousel join-carousel" style="margin:40px 0 32px 0; max-width:900px; min-height:420px; box-shadow:0 4px 32px #0b5fa62a; border-radius:18px; position:relative;">
+          <div class="carousel join-carousel">
             <button class="carousel-btn prev" aria-label="Previous" style="font-size:2.5em;left:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">‹</button>
-            <div class="carousel-track" style="height:420px;">
+            <div class="carousel-track">
               <img src="assets/join1.jpg" alt="Join photo 1">
               <img src="assets/join2.jpg" alt="Join photo 2">
               <img src="assets/join3.jpg" alt="Join photo 3">
@@ -70,11 +77,12 @@
             <button class="carousel-btn next" aria-label="Next" style="font-size:2.5em;right:18px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.25);border-radius:50%;width:48px;height:48px;">›</button>
             <div class="carousel-indicators" style="position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3;"></div>
           </div>
-          <div class="contact-cards-right" style="margin-left:32px;align-self:center;">
+          <div class="contact-cards-right">
             <div class="contact-card">
               <a href="https://www.facebook.com/Healthy-Harbour-Watchers-148353175208403" target="_blank" rel="noopener" class="contact-btn fb-btn">
                 <span style="font-size:1.2em;font-weight:600;">Visit us on Facebook</span>
               </a>
+              </div>
             </div>
             <div class="contact-card">
               <a href="mailto:andrew_innes09@hotmail.com" class="contact-btn email-btn">
@@ -131,6 +139,5 @@
   <footer>
     <small>Healthy Harbour Watchers — Otago Harbour</small>
   </footer>
-  <script src="js/carousel.js"></script>
 </body>
 </html>

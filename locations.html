@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Locations — Healthy Harbour Watchers</title>
-  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/navigation.js?v=2"></script>
+  <link rel="stylesheet" href="css/style.css?v=7">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 </head>
@@ -19,6 +20,8 @@
       <a href="index.html">Home</a>
       <a href="locations.html" class="nav-current">Locations</a>
       <a href="data.html">Data</a>
+      <a href="field.html">Field entry</a>
+      <a href="handbook.html">Handbook</a>
       <a href="join.html">Join</a>
       <a href="blog.html">Blog</a>
       <a href="admin.html">Admin</a>
@@ -27,16 +30,16 @@
 
   <main>
     <section style="max-width:1000px;margin:16px auto;padding:0 16px">
-      <p class="centered-intro">Sampling locations around Otago Harbour. Click a marker to view data for that location.</p>
+      <p class="centered-intro">Explore the eight current monitoring sites and historical sampling sites around Otago Harbour. Select a marker or site to see its data.</p>
       <div class="map-cards-row">
-        <div id="location-parameter-cards-left" class="parameter-cards-col" style="flex:0 0 260px;display:flex;flex-direction:column;gap:18px;justify-content:flex-start;"></div>
-        <div style="position:relative;flex:1 1 0;min-width:630px;max-width:1050px;height:81vh;min-height:630px;">
-          <div id="map" style="height:100%;width:100%;min-height:630px;border:1px solid #ddd;border-radius:6px;position:relative;"></div>
-          <div id="site-sidebar" style="position:absolute;top:24px;right:24px;min-width:280px;max-width:360px;height:auto;background:rgba(248,251,255,0.92);border-radius:12px;padding:22px 18px;box-shadow:0 2px 16px #0b5fa61a;display:none;z-index:1001;"></div>
+        <div id="location-parameter-cards-left" class="parameter-cards-col"></div>
+        <div class="map-wrapper">
+          <div id="map"></div>
+          <div id="site-sidebar"></div>
         </div>
-        <div id="location-parameter-cards-right" class="parameter-cards-col" style="flex:0 0 260px;display:flex;flex-direction:column;gap:18px;justify-content:flex-start;"></div>
+        <div id="location-parameter-cards-right" class="parameter-cards-col"></div>
       </div>
-      <ul id="locations-list"></ul>
+      <div id="locations-list"></div>
     </section>
   </main>
 
@@ -49,6 +52,6 @@
   <!-- Optional Supabase client + local config (fill js/config.js with your SUPABASE_URL and SUPABASE_ANON_KEY) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=5"></script>
 </body>
 </html>

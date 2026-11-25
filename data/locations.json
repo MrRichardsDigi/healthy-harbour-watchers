@@ -20,43 +20,57 @@
   {
     "id": "4",
     "name": "Mussel Bay",
+    "currentSite": 1,
     "lat": -45.82029214043579,
     "lng": 170.61540292162857
   },
   {
     "id": "5",
     "name": "Ravensbourne Boat Club",
+    "currentSite": 3,
     "lat": -45.86778638091901,
     "lng": 170.54990175760292
   },
   {
     "id": "6",
     "name": "Leith River Mouth",
+    "currentSite": 4,
     "lat": -45.87130850850974,
     "lng": 170.52813693165888
   },
   {
     "id": "7",
     "name": "MacAndrew Bay Marina",
+    "currentSite": 7,
     "lat": -45.869285745411766,
     "lng": 170.59550323769713
   },
   {
     "id": "8",
     "name": "MacAndrew Bay Stormwater Outfall",
+    "currentSite": 8,
     "lat": -45.868971536600014,
     "lng": 170.5973424912239
   },
   {
     "id": "9",
     "name": "Sommerville Creek",
+    "currentSite": 6,
     "lat": -45.89252008601696,
     "lng": 170.52803456994542
   },
   {
     "id": "10",
     "name": "Anderson's Bay Outlet",
+    "currentSite": 5,
     "lat": -45.89197805587839,
     "lng": 170.52041774896438
+  },
+  {
+    "id": "11",
+    "name": "Stream at Sawyer Bay",
+    "currentSite": 2,
+    "lat": -45.82098474836307,
+    "lng": 170.60611182618072
   }
 ]

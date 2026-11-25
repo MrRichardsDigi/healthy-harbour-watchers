@@ -40,10 +40,7 @@
           const imgList = [
             'assets/harbour1.jpg',
             'assets/harbour2.jpg',
-            'assets/harbour3.jpg',
-            'assets/harbour4.jpg',
-            'assets/harbour5.jpg',
-            'assets/harbour6.jpg'
+            'assets/harbour3.jpg'
           ];
           function shuffle(arr) {
             for(let i=arr.length-1;i>0;i--){
@@ -72,34 +69,15 @@
         }
     // --- Featured Locations logic for index.html ---
     if(document.getElementById('featured-locations')) {
-      // Load locations from locations.json, exclude Pulling Point 2, randomize 3
       fetch('data/locations.json').then(r=>r.json()).then(locations => {
-        const filtered = locations.filter(l => l.name !== 'Pulling Point 2');
+        const filtered = locations.filter(l => l.currentSite).sort((a,b) => a.currentSite - b.currentSite);
         // Assign images and descriptions (fallbacks)
         const imgList = ['assets/harbour1.jpg','assets/harbour2.jpg','assets/harbour3.jpg'];
-        const descs = [
-          'Historic sampling site near the harbour mouth.',
-          'Some actual information about each site will go here.',
-          'Sheltered bay, frequent mussel sampling.',
-          'These should randomize',
-          'Freshwater meets the harbour ecosystem.',
-          'There will be pictures also',
-          'Stormwater outfall monitoring.',
-          'Creek entering the harbour.',
-          'Outlet to the harbour.'
-        ];
         filtered.forEach((l,i)=>{
           l.img = imgList[i%imgList.length];
-          l.desc = descs[i%descs.length];
+          l.desc = `Current monitoring site ${l.currentSite}`;
         });
-        function shuffle(arr) {
-          for(let i=arr.length-1;i>0;i--){
-            const j=Math.floor(Math.random()*(i+1));
-            [arr[i],arr[j]]=[arr[j],arr[i]];
-          }
-          return arr;
-        }
-        const featured = shuffle([...filtered]).slice(0,3);
+        const featured = filtered;
         const container = document.getElementById('featured-locations');
         container.innerHTML = '';
         featured.forEach(loc => {
@@ -123,6 +101,14 @@
     return r.json();
   }
 
+  function showDataSourceNotice(message) {
+    const notice = document.getElementById('data-source-status');
+    if (notice) {
+      notice.textContent = message;
+      notice.hidden = !message;
+    }
+  }
+
   // Initialize Supabase client if config and library are present.
   let supabaseClient = null;
   try{
@@ -138,10 +124,13 @@
   async function getLocations(){
     if(supabaseClient){
       try{
-          const { data: locRows, error } = await supabaseClient.from('locations').select('*');
+        const [{ data: locRows, error }, localLocations] = await Promise.all([
+          supabaseClient.from('locations').select('*'),
+          fetchJSON('data/locations.json')
+        ]);
         if(error) throw error;
         // normalize to {id, name, lat, lng}
-        const normalized = (locRows || []).map(r=>({ id: String(r.id), name: r.location ?? r.name ?? String(r.id), lat: r.lat ?? r.latitude, lng: r.lng ?? r.longitude }));
+        const normalized = (locRows || []).map(r=>({ id: String(r.id), name: r.location ?? r.name ?? String(r.id), lat: r.lat ?? r.latitude, lng: r.lng ?? r.longitude, currentSite: localLocations.find(l => String(l.id) === String(r.id))?.currentSite }));
         return normalized;
       }catch(e){
         console.warn('Supabase locations fetch failed, falling back to local JSON', e);
@@ -212,17 +201,21 @@
         // Only fall back to local JSON if Supabase returns zero rows or errors
         if(!rows || rows.length === 0 || (normalized||[]).length === 0){
           try{ window.__hhw_debug = window.__hhw_debug || {}; window.__hhw_debug.notes = (window.__hhw_debug.notes||[]); window.__hhw_debug.notes.push('Supabase returned 0 rows; falling back to local JSON'); }catch(_){}
+          showDataSourceNotice('No live measurements were returned. Showing the bundled sample data instead.');
           return fetchJSON('data/sample-data.json');
         }
 
+        showDataSourceNotice('');
         if(locId){ return normalized.filter(r=>r.loc===locId); }
         return normalized;
       }catch(e){
         console.warn('Supabase composite fetch failed, falling back to local JSON', e);
+        showDataSourceNotice('Could not load live measurements. Showing the bundled sample data instead; check your connection and try again.');
         try{ window.__hhw_debug = window.__hhw_debug || {}; window.__hhw_debug.fetchErrors = window.__hhw_debug.fetchErrors || []; window.__hhw_debug.fetchErrors.push({op:'data-composite', error:String(e)}); }catch(_){ }
         return fetchJSON('data/sample-data.json');
       }
     }
+    showDataSourceNotice('Live data is not configured. Showing the bundled sample data instead.');
     return fetchJSON('data/sample-data.json');
   }
 
@@ -277,58 +270,57 @@
       cards.slice(5, 10).forEach(card => paramCardsRight.appendChild(card));
     }
     // Add markers and sidebar logic
-    locations.forEach(loc=>{
+    const groups = [
+      { title: 'Current monitoring sites', items: locations.filter(loc => loc.currentSite).sort((a,b) => a.currentSite - b.currentSite) },
+      { title: 'Historical sites', items: locations.filter(loc => !loc.currentSite) }
+    ];
+    groups.forEach(group => {
+      const heading = document.createElement('h2');
+      heading.textContent = group.title;
+      const entries = document.createElement('ul');
+      list.append(heading, entries);
+      group.items.forEach(loc=>{
       const marker = L.marker([loc.lat,loc.lng]).addTo(map);
-      // Add a label with the location name next to the pin
-      const label = L.tooltip({
-        permanent: true,
-        direction: 'right',
-        offset: [12, 0],
-        className: 'location-pin-label'
-      })
-        .setContent(`<span style="font-size:1.08em;color:#1976d2;font-weight:600;background:#fff;padding:2px 8px;border-radius:6px;box-shadow:0 1px 6px #0b5fa61a;">${loc.name}</span>`)
-        .setLatLng([loc.lat, loc.lng]);
-      label.addTo(map);
+      marker.bindTooltip(loc.name, { direction: 'top', className: 'location-pin-label' });
       marker.on('click', ()=>{
         // Show sidebar with info
         if(sidebar){
           sidebar.style.display = 'block';
           sidebar.innerHTML = `
-            <button id="close-sidebar" style="position:absolute;top:12px;right:12px;background:#fff2;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:18px;color:#0b5fa6;z-index:20">&times;</button>
+            <button id="close-sidebar" aria-label="Close site details" style="position:absolute;top:12px;right:12px;background:#fff2;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:18px;color:#0b5fa6;z-index:20">&times;</button>
             <h3 style='margin-top:0'>${loc.name}</h3>
-            <div style="margin-bottom:10px;font-size:13px;color:#444">Site ID: ${loc.id}</div>
-            <div id="site-info" style="margin-bottom:10px;color:#222">(Site info goes here)</div>
-            <div><a id="view-data-link" href="#" style="color:#0b5fa6;text-decoration:underline">View data for this site</a></div>
+            <div style="margin-bottom:10px;font-size:13px;color:#444">${loc.currentSite ? `Current site ${loc.currentSite}` : 'Historical site'}</div>
+            <div><a id="view-data-link" href="data.html?loc=${encodeURIComponent(loc.id)}" style="color:#0b5fa6;text-decoration:underline">View data for this site</a></div>
           `;
           // Close button logic
           const closeBtn = sidebar.querySelector('#close-sidebar');
           if(closeBtn){
             closeBtn.onclick = ()=>{ sidebar.style.display = 'none'; };
           }
-          // View data link logic: zoom in, then navigate
-          const viewDataLink = sidebar.querySelector('#view-data-link');
-          if(viewDataLink){
-            viewDataLink.onclick = (e)=>{
-              e.preventDefault();
-              map.flyTo([loc.lat, loc.lng], 16, { animate: true, duration: 1.2 });
-              setTimeout(()=>{
-                window.location.href = `data.html?loc=${loc.id}`;
-              }, 1200);
-            };
-          }
           // Render parameter cards for this location (split left/right)
           renderParameterCardsSplit(loc.id);
         }
       });
+      if (getLocParam() === String(loc.id)) {
+        map.setView([loc.lat, loc.lng], 14);
+        marker.fire('click');
+      }
       // List entry
       const li = document.createElement('li');
-      li.innerHTML = `<strong>${loc.name}</strong> — <a href="data.html?loc=${loc.id}">View data</a>`;
-      li.style.cursor = 'pointer';
-      li.onclick = ()=>{
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'site-list-button';
+      button.textContent = `${loc.currentSite ? `Site ${loc.currentSite}: ` : ''}${loc.name}`;
+      button.onclick = ()=>{
         map.setView([loc.lat,loc.lng],14);
         marker.fire('click');
       };
-      list.appendChild(li);
+      const link = document.createElement('a');
+      link.href = `data.html?loc=${encodeURIComponent(loc.id)}`;
+      link.textContent = 'View data';
+      li.append(button, document.createTextNode(' — '), link);
+      entries.appendChild(li);
+      });
     });
     // Hide sidebar and parameter cards when clicking map background
     map.on('click', ()=>{ if(sidebar) sidebar.style.display = 'none'; if(paramCardsLeft) paramCardsLeft.innerHTML = ''; if(paramCardsRight) paramCardsRight.innerHTML = ''; });
@@ -373,57 +365,6 @@
             }, 100);
           });
         }
-    // DB connection check UI
-    const dbStatusText = document.getElementById('db-status-text');
-    const dbCheckBtn = document.getElementById('db-check-btn');
-
-    async function checkSupabaseConnection(){
-      if(!supabaseClient){
-        dbStatusText.textContent = 'Not configured';
-        dbStatusText.style.color = '#a33';
-        return false;
-      }
-      dbStatusText.textContent = 'Checking...';
-      dbStatusText.style.color = '#555';
-      try{
-        // lightweight query: request one row from locations
-        const { data, error } = await supabaseClient.from('locations').select('id').limit(1);
-        if(error) throw error;
-        // also perform a direct REST fetch to surface network/CORS/http errors
-        try{
-          const restUrl = String(SUPABASE_URL).replace(/\/$/, '') + '/rest/v1/locations?select=id&limit=1';
-          const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` };
-          const resp = await fetch(restUrl, { method: 'GET', headers });
-          if(!resp.ok){
-            const body = await resp.text().catch(()=>'<no body>');
-            dbStatusText.textContent = `Error HTTP ${resp.status}`;
-            dbStatusText.title = body;
-            dbStatusText.style.color = '#a33';
-            console.warn('Supabase REST response', resp.status, body);
-            return false;
-          }
-          dbStatusText.textContent = `Connected (HTTP ${resp.status})`;
-          dbStatusText.style.color = '#0a8';
-          return true;
-        }catch(fetchErr){
-          dbStatusText.textContent = 'Fetch error';
-          dbStatusText.title = fetchErr.message || String(fetchErr);
-          dbStatusText.style.color = '#a33';
-          console.warn('Direct fetch to Supabase failed', fetchErr);
-          return false;
-        }
-      }catch(err){
-        console.warn('Supabase check failed', err);
-        dbStatusText.textContent = 'Error: '+(err.message||err);
-        dbStatusText.style.color = '#a33';
-        return false;
-      }
-    }
-
-    if(dbCheckBtn) dbCheckBtn.addEventListener('click', checkSupabaseConnection);
-    // auto-check on page load
-    checkSupabaseConnection();
-
     const locId = getLocParam();
     // always fetch all records initially; selection will filter client-side
     // Use the local locations JSON on the data page to avoid depending on the locations endpoint
@@ -434,7 +375,7 @@
     const locationSelect = document.getElementById('location-select');
     // group locations by display name
     const groups = {};
-    locations.forEach(l=>{
+    locations.slice().sort((a,b) => (a.currentSite || 999) - (b.currentSite || 999)).forEach(l=>{
       const name = l.name || l.location || String(l.id);
       groups[name] = groups[name] || [];
       groups[name].push(String(l.id));
@@ -445,7 +386,8 @@
       if(LOCATION_OVERRIDE && name !== LOCATION_OVERRIDE) return; // skip other groups
       const opt = document.createElement('option');
       opt.value = ids.join('|'); // store all ids for this display name
-      opt.textContent = name;
+      const current = locations.find(l => (l.name || l.location || String(l.id)) === name)?.currentSite;
+      opt.textContent = `${name}${current ? ` (current site ${current})` : ' (historical)'}`;
       locationSelect.appendChild(opt);
     });
     // If override is active, hide/disable the default empty option and select the override option(s)
@@ -487,13 +429,13 @@
 
     // UI elements
     const paramSelect = document.getElementById('param-select');
-    // Dual date slider UI
-    const dateSliderStart = document.getElementById('date-range-slider-start');
-    const dateSliderEnd = document.getElementById('date-range-slider-end');
-    const dateSliderMinLabel = document.getElementById('date-slider-min-label');
-    const dateSliderMaxLabel = document.getElementById('date-slider-max-label');
-    const dateSliderSelected = document.getElementById('date-slider-selected');
-    let sliderDates = [];
+    const dateStart = document.getElementById('date-start');
+    const dateEnd = document.getElementById('date-end');
+    const dateStartLabel = document.getElementById('date-start-label');
+    const dateEndLabel = document.getElementById('date-end-label');
+    const dateClear = document.getElementById('date-clear');
+    const samplingDates = Array.from(new Set(allRecords.map(r => r.date).filter(Boolean))).sort();
+    let appliedDateRange = null;
     const applyBtn = document.getElementById('apply-filters');
     const resetBtn = document.getElementById('reset-filters');
     const table = document.getElementById('data-table');
@@ -615,7 +557,7 @@
       let locFound = false;
       for(let i=0;i<locationSelect.options.length;i++){
         const opt = locationSelect.options[i];
-        if(opt.textContent && opt.textContent.trim().toLowerCase() === 'pulling point'){
+        if(locId ? opt.value.split('|').includes(String(locId)) : opt.value.split('|').includes('1')){
           opt.selected = true;
           locFound = true;
         } else {
@@ -644,12 +586,6 @@
       const selectedLocValues = Array.from(locationSelect.selectedOptions).map(o=>o.value).filter(v=>v && v!=='');
       // flatten selected location ids (options may hold 'id' or 'id|id')
       const selectedLoc = selectedLocValues.length ? selectedLocValues.flatMap(v=>String(v).split('|')) : [];
-      // dual slider filtering
-      let minIdx = 0, maxIdx = sliderDates.length-1;
-      if(dateSliderStart && dateSliderEnd && sliderDates.length > 1){
-        minIdx = Math.min(Number(dateSliderStart.value), Number(dateSliderEnd.value));
-        maxIdx = Math.max(Number(dateSliderStart.value), Number(dateSliderEnd.value));
-      }
       return allRecords.filter(r=>{
         // parameter filtering: compare selected param ids to record.parameterId if available, otherwise compare names
         if(selectedParams.length){
@@ -658,11 +594,7 @@
         }
         // location filtering: if any selected, require r.loc to be in the flattened list
         if(selectedLoc.length){ if(!selectedLoc.includes(String(r.loc))) return false; }
-        // date filtering via dual slider
-        if(r.date && sliderDates.length > 1){
-          const idx = sliderDates.indexOf(r.date);
-          if(idx < minIdx || idx > maxIdx) return false;
-        }
+        if (appliedDateRange && (!r.date || r.date < appliedDateRange.start || r.date > appliedDateRange.end)) return false;
         return true;
       });
     }
@@ -748,7 +680,11 @@
         updateChartTypeBtn();
       }
       preselectInitial();
-      setupDateSlider();
+      setupDateSliders();
+      dateClear.addEventListener('click', () => {
+        resetDateSliders();
+        applyFilters();
+      });
       // Set up Apply button to always apply current filter state
       if(applyBtn){
         applyBtn.onclick = null;
@@ -759,12 +695,7 @@
       if(resetBtn){
         resetBtn.onclick = null;
         resetBtn.addEventListener('click', ()=>{
-          // Reset sliders to full range
-          if(sliderDates.length > 1){
-            dateSliderStart.value = 0;
-            dateSliderEnd.value = sliderDates.length-1;
-            updateDateSliderLabel();
-          }
+          resetDateSliders();
           for(let i=0;i<paramSelect.options.length;i++) paramSelect.options[i].selected = true;
           locationSelect.value = '';
           applyFilters();
@@ -776,6 +707,7 @@
 
     // Call after allRecords and selectors are ready
     setupUIAfterDOM();
+    document.dispatchEvent(new Event('hhw-data-ready'));
 
     function renderChart(filtered){
       const chartTitleDiv = document.getElementById('chart-title');
@@ -802,18 +734,8 @@
       });
       // Date range formatting
       let dateRangeStr = '';
-      if (sliderDates && sliderDates.length > 1 && dateSliderStart && dateSliderEnd) {
-        const minIdx = Math.min(Number(dateSliderStart.value), Number(dateSliderEnd.value));
-        const maxIdx = Math.max(Number(dateSliderStart.value), Number(dateSliderEnd.value));
-        const startDate = sliderDates[minIdx];
-        const endDate = sliderDates[maxIdx];
-        function formatDate(d) {
-          if(!d) return '';
-          const dt = new Date(d);
-          if(isNaN(dt)) return d;
-          return dt.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
-        }
-        dateRangeStr = ` (${formatDate(startDate)} to ${formatDate(endDate)})`;
+      if (appliedDateRange) {
+        dateRangeStr = ` (${formatSamplingDate(appliedDateRange.start)} to ${formatSamplingDate(appliedDateRange.end)})`;
       }
       let chartTitle = '';
       if(paramNames.length === 1 && locNames.length === 1){
@@ -908,13 +830,50 @@
       });
     }
 
-    if(chartTypeToggle){
-      chartTypeToggle.addEventListener('change', ()=>{
-        renderChart(filterRecords());
+    function formatSamplingDate(value) {
+      const [year, month, day] = value.split('-').map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function updateDateSliderLabels() {
+      const start = samplingDates[Number(dateStart.value)];
+      const end = samplingDates[Number(dateEnd.value)];
+      dateStartLabel.textContent = start ? formatSamplingDate(start) : 'No dates available';
+      dateEndLabel.textContent = end ? formatSamplingDate(end) : 'No dates available';
+      dateStart.setAttribute('aria-valuetext', dateStartLabel.textContent);
+      dateEnd.setAttribute('aria-valuetext', dateEndLabel.textContent);
+    }
+
+    function resetDateSliders() {
+      dateStart.value = '0';
+      dateEnd.value = String(Math.max(0, samplingDates.length - 1));
+      updateDateSliderLabels();
+    }
+
+    function setupDateSliders() {
+      const last = Math.max(0, samplingDates.length - 1);
+      [dateStart, dateEnd].forEach(slider => {
+        slider.max = String(last);
+        slider.disabled = samplingDates.length < 2;
       });
+      resetDateSliders();
+      dateStart.addEventListener('input', () => {
+        if (Number(dateStart.value) > Number(dateEnd.value)) dateEnd.value = dateStart.value;
+        updateDateSliderLabels();
+      });
+      dateEnd.addEventListener('input', () => {
+        if (Number(dateEnd.value) < Number(dateStart.value)) dateStart.value = dateEnd.value;
+        updateDateSliderLabels();
+      });
+      dateClear.disabled = samplingDates.length < 2;
     }
 
     function applyFilters(){
+      const start = Number(dateStart.value);
+      const end = Number(dateEnd.value);
+      appliedDateRange = samplingDates.length > 1 && (start !== 0 || end !== samplingDates.length - 1)
+        ? { start: samplingDates[start], end: samplingDates[end] }
+        : null;
       const filtered = filterRecords();
       renderTable(filtered);
       renderChart(filtered);
@@ -922,50 +881,6 @@
       showLocationName(locationSelect.value || '');
     }
 
-    // Dual date slider setup
-    function setupDateSlider(){
-      sliderDates = Array.from(new Set(allRecords.map(r=>r.date).filter(Boolean))).sort();
-      if(sliderDates.length < 2){
-        dateSliderStart.disabled = true;
-        dateSliderEnd.disabled = true;
-        dateSliderMinLabel.textContent = '';
-        dateSliderMaxLabel.textContent = '';
-        dateSliderSelected.textContent = '';
-        return;
-      }
-      dateSliderStart.disabled = false;
-      dateSliderEnd.disabled = false;
-      dateSliderStart.min = 0;
-      dateSliderStart.max = sliderDates.length-1;
-      dateSliderEnd.min = 0;
-      dateSliderEnd.max = sliderDates.length-1;
-      dateSliderStart.value = 0;
-      dateSliderEnd.value = sliderDates.length-1;
-      dateSliderStart.step = 1;
-      dateSliderEnd.step = 1;
-      dateSliderMinLabel.textContent = sliderDates[0];
-      dateSliderMaxLabel.textContent = sliderDates[sliderDates.length-1];
-      updateDateSliderLabel();
-
-      // Remove previous listeners to avoid duplicates
-      dateSliderStart.oninput = null;
-      dateSliderEnd.oninput = null;
-      dateSliderStart.addEventListener('input', ()=>{
-        updateDateSliderLabel();
-        applyFilters();
-      });
-      dateSliderEnd.addEventListener('input', ()=>{
-        updateDateSliderLabel();
-        applyFilters();
-      });
-    }
-
-    function updateDateSliderLabel(){
-      if(sliderDates.length < 2) { dateSliderSelected.textContent = ''; return; }
-      const minIdx = Math.min(Number(dateSliderStart.value), Number(dateSliderEnd.value));
-      const maxIdx = Math.max(Number(dateSliderStart.value), Number(dateSliderEnd.value));
-      dateSliderSelected.textContent = `${sliderDates[minIdx]} to ${sliderDates[maxIdx]}`;
-    }
 
     // (moved to setupUIAfterDOM)
 

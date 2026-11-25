@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Data — Healthy Harbour Watchers</title>
-  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/navigation.js?v=2"></script>
+  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/data-mobile.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Chart.js already loaded above -->
   <!-- Supabase client (UMD) and local config. Create/replace js/config.js with your project values. -->
@@ -23,6 +25,8 @@
       <a href="index.html">Home</a>
       <a href="locations.html">Locations</a>
       <a href="data.html" class="nav-current">Data</a>
+      <a href="field.html">Field entry</a>
+      <a href="handbook.html">Handbook</a>
       <a href="join.html">Join</a>
       <a href="blog.html">Blog</a>
       <a href="admin.html">Admin</a>
@@ -30,21 +34,19 @@
   </header>
 
   <main>
-        <section style="max-width:1000px;margin:24px auto 8px auto;padding:0 16px 12px 16px;background:#e6f0ff;border-radius:10px;box-shadow:0 2px 12px #0b5fa61a;">
-          <h2 style="font-size:1.3rem;margin-bottom:8px;">How to Use This Page</h2>
-          <ol style="font-size:1rem;line-height:1.7;margin-left:1.2em;">
-            <li><strong>Select Locations:</strong> Use the location selection box to choose one or more sampling sites. Hold <kbd>Ctrl</kbd> (or <kbd>Cmd</kbd> on Mac) and click to select multiple sites.</li>
+        <details id="data-help" class="data-help" open>
+          <summary><h2>How to Use This Page</h2></summary>
+          <ol>
+            <li><strong>Select Locations:</strong> Choose one or more sampling sites. On a computer, hold <kbd>Ctrl</kbd> (or <kbd>Cmd</kbd> on Mac) and click to select multiple sites. On a phone, open Filters and tap the sites you want, or use your device's multiple-selection controls if Filters are not shown.</li>
             <li><strong>Select Parameters:</strong> Use the parameter selection box to pick the water quality parameters (e.g., salinity, temperature) you want to view. You can only compare multiple parameters at once OR multiple sites, not both yet.</li>
-            <li><strong>Adjust Date Range:</strong> Use the date slider to filter results by sampling date. Drag the handles to set your desired time period.</li>
+            <li><strong>Adjust Date Range:</strong> Move the start and end sliders to select sampling dates, then apply. Use All dates to reset the range.</li>
             <li><strong>View Data:</strong> Click the Apply button, The interactive chart displays trends for your selections. The table below shows the raw data for further analysis.</li>
             <li><strong>Download Data:</strong> Use the download button to export the filtered data as a CSV file.</li>
           </ol>
-        </section>
-    <section style="max-width:1000px;margin:16px auto;padding:0 16px">
-      <div id="db-status" style="margin:8px 0;display:flex;align-items:center;gap:8px">
-        <strong>DB:</strong> <span id="db-status-text">Not checked</span>
-        <button id="db-check-btn" style="padding:6px 8px;border-radius:4px;cursor:pointer">Check DB</button>
-      </div>
+        </details>
+        <script src="js/data-help.js"></script>
+    <section class="data-viewer" style="max-width:1000px;margin:16px auto;padding:0 16px">
+      <p id="data-source-status" role="status" hidden></p>
       <div id="location-name"></div>
 
       <div id="filters" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0">
@@ -54,23 +56,26 @@
         <label style="display:flex;flex-direction:column;font-size:13px"><span>Parameters</span>
           <select id="param-select" multiple size="4" style="min-width:200px;padding:6px"></select>
         </label>
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
+        <div class="chart-controls" style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
           <button id="chart-type-toggle-btn" style="padding:6px 12px;font-size:13px;cursor:pointer;">Convert to line graph</button>
           <button id="trendline-toggle-btn" style="padding:6px 12px;font-size:13px;cursor:pointer;">Show Trendline</button>
         </div>
-        <div id="date-slider-container" style="display:flex;flex-direction:column;min-width:320px;max-width:420px">
-          <span style="font-size:13px">Date range</span>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span id="date-slider-min-label" style="font-size:12px"></span>
-            <input id="date-range-slider-start" type="range" min="0" max="1" value="0" step="1" style="flex:1">
-            <input id="date-range-slider-end" type="range" min="0" max="1" value="1" step="1" style="flex:1">
-            <span id="date-slider-max-label" style="font-size:12px"></span>
+        <div id="date-slider-container" class="date-controls">
+          <strong>Date range</strong>
+          <p>Slide between sampling dates, then apply. Dates may be unevenly spaced.</p>
+          <div class="date-sliders">
+            <label class="date-slider" for="date-start">
+              <span>From <output id="date-start-label" for="date-start">Loading dates...</output></span>
+              <input id="date-start" type="range" min="0" max="0" value="0" step="1" disabled>
+            </label>
+            <label class="date-slider" for="date-end">
+              <span>To <output id="date-end-label" for="date-end">Loading dates...</output></span>
+              <input id="date-end" type="range" min="0" max="0" value="0" step="1" disabled>
+            </label>
           </div>
-          <div style="font-size:12px;margin-top:2px">
-            <span id="date-slider-selected"></span>
-          </div>
+          <button type="button" id="date-clear">All dates</button>
         </div>
-        <div style="display:flex;gap:8px">
+        <div class="filter-actions" style="display:flex;gap:8px">
           <button id="apply-filters" style="padding:6px 10px">Apply</button>
           <button id="reset-filters" style="padding:6px 10px">Reset</button>
         </div>
@@ -85,11 +90,13 @@
 
         <pre id="raw-data-output" style="display:none;background:#1a1a1a;color:#7f7;overflow:auto;padding:8px;max-height:360px;margin-top:8px;border:1px solid #555"></pre>
       </div>
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;margin-top:24px">
+      <div class="records-heading">
         <h3 style="margin:0">Raw Records</h3>
         <button id="download-csv" style="padding:6px 14px;font-size:1em;cursor:pointer;background:#0b5fa6;color:#fff;border:none;border-radius:6px;box-shadow:0 2px 8px #0b5fa61a;">Download CSV</button>
       </div>
-      <table id="data-table" style="width:100%;border-collapse:collapse"></table>
+      <div class="table-scroll" role="region" aria-label="Raw records table" tabindex="0">
+        <table id="data-table" style="width:100%;border-collapse:collapse"></table>
+      </div>
     </section>
   </main>
 
@@ -98,6 +105,7 @@
   </footer>
 
   <script src="js/chartjs-plugin-trendline.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/data-mobile.js?v=3"></script>
+  <script src="js/main.js?v=6"></script>
 </body>
 </html>

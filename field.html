@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script defer src="js/navigation.js?v=2"></script>
+  <meta name="theme-color" content="#0b5fa6">
+  <title>Field entry — Healthy Harbour Watchers</title>
+  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/field.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/field.js"></script>
+</head>
+<body>
+  <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
+  <header class="site-header">
+    <a href="index.html" class="site-logo"><img src="assets/logo.png" alt="Healthy Harbour Watchers logo"></a>
+    <h1>Field entry</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="locations.html">Locations</a>
+      <a href="data.html">Data</a>
+      <a href="field.html" class="nav-current">Field entry</a>
+      <a href="handbook.html">Handbook</a>
+      <a href="join.html">Join</a>
+      <a href="blog.html">Blog</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="field-main">
+    <section class="field-card">
+      <h2>Record a sample</h2>
+      <p>Choose the site and date, then enter the measurements you took. Leave other measurements blank. An internet connection is required.</p>
+      <p>Submissions are reviewed before appearing in the public data. Please don't enter names or other personal information.</p>
+      <form id="field-form">
+        <label for="field-location">Sampling site</label>
+        <select id="field-location" required disabled><option value="">Loading sites...</option></select>
+        <label for="field-date">Sampling date</label>
+        <input id="field-date" type="date" required>
+        <fieldset>
+          <legend>Measurements</legend>
+          <p>Enter at least one measurement. Use a decimal point for decimals.</p>
+          <div class="measurement-grid">
+            <label>Water temperature (°C)<input type="number" step="any" inputmode="decimal" data-parameter="1"></label>
+            <label>Adjusted salinity<input type="number" step="any" inputmode="decimal" data-parameter="2"></label>
+            <label>Adjusted specific conductivity<input type="number" step="any" inputmode="decimal" data-parameter="3"></label>
+            <label>Dissolved oxygen (%)<input type="number" step="any" inputmode="decimal" data-parameter="4"></label>
+            <label>pH<input type="number" step="any" inputmode="decimal" data-parameter="5"></label>
+            <label>Turbidity<input type="number" step="any" inputmode="decimal" data-parameter="6"></label>
+            <label>Chlorophyll a<input type="number" step="any" inputmode="decimal" data-parameter="7"></label>
+            <label>NNN (µmol/L)<input type="number" step="any" inputmode="decimal" data-parameter="8"></label>
+            <label>DRP (µmol/L)<input type="number" step="any" inputmode="decimal" data-parameter="9"></label>
+            <label>Enterococci<input type="number" step="any" inputmode="decimal" data-parameter="10"></label>
+          </div>
+        </fieldset>
+        <button id="field-submit" type="submit" disabled>Submit for review</button>
+        <p id="field-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <footer><small>Healthy Harbour Watchers — Otago Harbour</small></footer>
+</body>
+</html>

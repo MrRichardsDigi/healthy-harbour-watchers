@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Healthy Harbour Watchers — Otago Harbour</title>
-  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/navigation.js?v=2"></script>
+  <link rel="stylesheet" href="css/style.css?v=7">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
@@ -19,6 +20,8 @@
       <a href="index.html" class="nav-current">Home</a>
       <a href="locations.html">Locations</a>
       <a href="data.html">Data</a>
+      <a href="field.html">Field entry</a>
+      <a href="handbook.html">Handbook</a>
       <a href="join.html">Join</a>
       <a href="blog.html">Blog</a>
       <a href="admin.html">Admin</a>
@@ -32,20 +35,24 @@
         <h2>Monitoring Otago Harbour</h2>
         <p class="hero-mission">Long-term community science for a healthy harbour</p>
         <a href="data.html" class="cta-btn">Explore Data</a>
+        <a href="field.html" class="cta-btn">Enter Field Data</a>
       </div>
     </section>
 
 
     <!-- Featured Locations -->
     <section class="featured-locations">
-      <h3 class="featured-locations-heading">Featured Locations</h3>
-      <div class="locations-scroll" id="featured-locations"></div>
+      <h3 class="featured-locations-heading">Current Monitoring Sites</h3>
+      <p class="centered-intro">Explore the eight sites currently monitored around the harbour.</p>
+      <div class="locations-scroll" id="featured-locations" role="region" aria-label="Featured locations" tabindex="0"></div>
+      <p class="handbook-home-link"><a href="locations.html">View all sites and the map &rarr;</a></p>
     </section>
 
     <!-- Assays Section (below locations, same style) -->
     <section class="assays-locations">
-      <h3 class="featured-locations-heading">Our Assays (there will be links to protocols here)</h3>
-      <div class="locations-scroll" id="assays-cards"></div>
+      <h3 class="featured-locations-heading">Our Assays</h3>
+      <div class="locations-scroll" id="assays-cards" role="region" aria-label="Assays" tabindex="0"></div>
+      <p class="handbook-home-link"><a href="handbook.html">Explore the monitoring handbook &rarr;</a></p>
     </section>
 
     <!-- Wavy SVG Divider -->
@@ -63,6 +70,6 @@
     <small>Healthy Harbour Watchers — Otago Harbour</small>
   </footer>
 
-  <script src="js/main.js"></script>
+  <script src="js/main.js?v=5"></script>
 </body>
 </html>
