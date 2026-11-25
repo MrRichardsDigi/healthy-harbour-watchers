@@ -17,6 +17,12 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
 }
 .field-card label { display: grid; gap: 5px; font-weight: 600; }
+.measurement-grid label span { font-size: .85rem; font-weight: 400; }
+.measurement-grid small { color: #854600; font-weight: 600; }
+.measurement-grid small:empty { display: none; }
+.field-draft { margin: 12px 0; padding: 14px; background: white; border-radius: 8px; }
+.field-draft button { margin: 4px 8px 4px 0; }
+.field-draft ul { padding-left: 22px; }
 .field-card input, .field-card select {
   box-sizing: border-box;
   width: 100%;

@@ -51,7 +51,11 @@ Setup (a Supabase project owner must perform these steps):
    Remove a reviewer by deleting their row from `public.field_reviewers`. Signing into the admin dashboard alone does not grant field-review access.
 5. Publish the site over HTTPS (or use localhost for testing). Verify the existing `locations` table is readable using the public key. Submit a test sample, sign in as an authorized reviewer, approve it, and verify it appears in the data viewer. Also test rejection and an unauthorized account.
 
-Anyone with the public link can submit, so review every sample before approval. The form does not collect names. Public submissions can be abused; consider adding rate limiting or bot protection before a broad launch. If a submission fails, the form keeps its entries; retry unchanged to avoid duplicating a submission whose response was lost. Data is not saved offline and will be lost if the page is closed or refreshed.
+Anyone with the public link can submit, so review every sample before approval. The form does not collect names. Public submissions can be abused; consider adding rate limiting or bot protection before a broad launch.
+
+Open the field page with internet first and wait for the offline-ready message on each device. The page and site list are then available offline in supported browsers. Entries in progress are saved on the device as they are entered; save each completed sample to keep multiple samples. Saved samples do not send automatically: reconnect and submit each one for review. They remain on that browser/device, not in an account or a backup, and clearing site data or using private browsing can remove them. If a submission is not confirmed, retry the same saved sample unchanged; its persistent submission ID prevents duplicate retries. Do not edit or delete an uncertain submission until its status is checked.
+
+The field form shows advisory unusual-value prompts based on a read-only review of 4,236 historic measurements in November 2026. Bounds are deliberately broader than most observed values: temperature -2–28, adjusted salinity 0–45, adjusted conductivity 0–60, dissolved oxygen % 0–160, pH 5–10, turbidity 0–65, chlorophyll a 0–16, NNN 0–145, DRP 0–5, and enterococci 0–3000. DRP uses the 99th percentile as a guide rather than the historical maximum of 9999, which may be an outlier or placeholder. These are prompts to recheck, not scientific thresholds or rejection rules; genuine unusual results can be submitted. Units not established by the database remain unspecified until confirmed against the approved method.
 
 ## Bulk upload
 
@@ -64,6 +68,8 @@ The imported columns are water temperature, adjusted salinity, adjusted conducti
 The redesigned uploader requires `data/bulk-upload-setup.sql` to be installed in Supabase after `data/field-entry-setup.sql`. It adds an authorized-reviewer-only, transactional publish function and an upload receipt for safe retries. It has been installed in the current project; other projects need the setup applied separately. Existing direct-write paths do not participate in the bulk upload's locking, so avoid simultaneous CSV uploads or direct writes for the same date. Use the existing field reviewer allowlist to authorize bulk publishers.
 
 To test the uploader without changing a database, serve the repository locally and open `tests/bulk-upload.html`. The test uses a mock database and requires internet access for the CSV and Excel libraries.
+
+To test field-entry draft handling without changing a database, open `tests/field.html` on the local server. It uses mock storage and a mock submission service. Also verify offline reopening on a separate test device or origin after the offline-ready message appears.
 
 Feedback: tell me which features you want next
 =======

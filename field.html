@@ -7,10 +7,10 @@
   <meta name="theme-color" content="#0b5fa6">
   <title>Field entry — Healthy Harbour Watchers</title>
   <link rel="stylesheet" href="css/style.css?v=7">
-  <link rel="stylesheet" href="css/field.css">
+  <link rel="stylesheet" href="css/field.css?v=2">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
-  <script defer src="js/field.js"></script>
+  <script defer src="js/field.js?v=3"></script>
 </head>
 <body>
   <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
@@ -31,7 +31,9 @@
   <main class="field-main">
     <section class="field-card">
       <h2>Record a sample</h2>
-      <p>Choose the site and date, then enter the measurements you took. Leave other measurements blank. An internet connection is required.</p>
+      <p>Choose the site and date, then enter the measurements you took. Leave other measurements blank. You can save multiple samples on this device and submit them when connected.</p>
+      <p id="offline-status" role="status">Preparing offline access...</p>
+      <p>When offline, the site list comes from the last successful connection. Check the site name before saving.</p>
       <p>Submissions are reviewed before appearing in the public data. Please don't enter names or other personal information.</p>
       <form id="field-form">
         <label for="field-location">Sampling site</label>
@@ -42,21 +44,28 @@
           <legend>Measurements</legend>
           <p>Enter at least one measurement. Use a decimal point for decimals.</p>
           <div class="measurement-grid">
-            <label>Water temperature (°C)<input type="number" step="any" inputmode="decimal" data-parameter="1"></label>
-            <label>Adjusted salinity<input type="number" step="any" inputmode="decimal" data-parameter="2"></label>
-            <label>Adjusted specific conductivity<input type="number" step="any" inputmode="decimal" data-parameter="3"></label>
-            <label>Dissolved oxygen (%)<input type="number" step="any" inputmode="decimal" data-parameter="4"></label>
-            <label>pH<input type="number" step="any" inputmode="decimal" data-parameter="5"></label>
-            <label>Turbidity<input type="number" step="any" inputmode="decimal" data-parameter="6"></label>
-            <label>Chlorophyll a<input type="number" step="any" inputmode="decimal" data-parameter="7"></label>
-            <label>NNN (µmol/L)<input type="number" step="any" inputmode="decimal" data-parameter="8"></label>
-            <label>DRP (µmol/L)<input type="number" step="any" inputmode="decimal" data-parameter="9"></label>
-            <label>Enterococci<input type="number" step="any" inputmode="decimal" data-parameter="10"></label>
+            <label>Water temperature (°C)<span>How warm the water is.</span><input type="number" step="any" inputmode="decimal" data-parameter="1" aria-describedby="warning-1"><small id="warning-1"></small></label>
+            <label>Adjusted salinity<span>Dissolved salts; enter the adjusted reading.</span><input type="number" step="any" inputmode="decimal" data-parameter="2" aria-describedby="warning-2"><small id="warning-2"></small></label>
+            <label>Adjusted specific conductivity<span>How well the water conducts electricity; enter the adjusted reading.</span><input type="number" step="any" inputmode="decimal" data-parameter="3" aria-describedby="warning-3"><small id="warning-3"></small></label>
+            <label>Dissolved oxygen (%)<span>Oxygen as percentage saturation, not mg/L.</span><input type="number" step="any" inputmode="decimal" data-parameter="4" aria-describedby="warning-4"><small id="warning-4"></small></label>
+            <label>pH<span>How acidic or alkaline the water is.</span><input type="number" step="any" inputmode="decimal" data-parameter="5" aria-describedby="warning-5"><small id="warning-5"></small></label>
+            <label>Turbidity<span>Cloudiness caused by particles in the water.</span><input type="number" step="any" inputmode="decimal" data-parameter="6" aria-describedby="warning-6"><small id="warning-6"></small></label>
+            <label>Chlorophyll a<span>A pigment used to estimate algae in the water.</span><input type="number" step="any" inputmode="decimal" data-parameter="7" aria-describedby="warning-7"><small id="warning-7"></small></label>
+            <label>NNN (µmol/L)<span>Nitrogen nutrients, including nitrate and nitrite.</span><input type="number" step="any" inputmode="decimal" data-parameter="8" aria-describedby="warning-8"><small id="warning-8"></small></label>
+            <label>DRP (µmol/L)<span>Dissolved reactive phosphorus, a nutrient.</span><input type="number" step="any" inputmode="decimal" data-parameter="9" aria-describedby="warning-9"><small id="warning-9"></small></label>
+            <label>Enterococci<span>Bacteria used as an indicator of possible faecal contamination.</span><input type="number" step="any" inputmode="decimal" data-parameter="10" aria-describedby="warning-10"><small id="warning-10"></small></label>
           </div>
+          <p>Where no unit is shown, check the approved method and instrument. Unusual-value prompts are reminders to check, not limits or safety advice.</p>
         </fieldset>
-        <button id="field-submit" type="submit" disabled>Submit for review</button>
+        <button id="field-save" type="submit" disabled>Save sample on this device</button>
+        <button id="field-cancel-edit" type="button" hidden>Cancel editing</button>
         <p id="field-status" role="status" aria-live="polite"></p>
       </form>
+      <section aria-labelledby="saved-heading">
+        <h2 id="saved-heading">Saved samples</h2>
+        <p>Samples stay on this device until you submit or delete them. They are not sent automatically.</p>
+        <div id="field-drafts"></div>
+      </section>
     </section>
   </main>
   <footer><small>Healthy Harbour Watchers — Otago Harbour</small></footer>
