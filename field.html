@@ -34,11 +34,13 @@
       <h2>Field entry sign-in</h2>
       <p>Only individually approved participants can submit samples. Sign in while online before going into the field.</p>
       <button type="button" id="field-google">Sign in with Google</button>
-      <form id="field-email-form" hidden>
-        <label for="field-email">Email address</label>
-        <input id="field-email" type="email" autocomplete="email" required>
-        <button type="submit">Email me a sign-in link</button>
-      </form>
+      <div id="field-email-option" hidden>
+        <form id="field-email-form">
+          <label for="field-email">Email address</label>
+          <input id="field-email" type="email" autocomplete="email" required>
+          <button type="submit">Email me a sign-in link</button>
+        </form>
+      </div>
       <p>Email sign-in for other participants will be available once email delivery is set up.</p>
       <button type="button" id="field-switch" hidden>Sign out to switch accounts</button>
       <p id="field-auth-status" role="status" aria-live="polite">Checking access...</p>

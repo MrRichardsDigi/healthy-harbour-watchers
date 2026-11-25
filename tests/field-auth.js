@@ -60,6 +60,7 @@
     }
     let w = await load();
     assert(w.document.getElementById('field-content').hidden, 'Unsigned user sees form');
+    assert(w.document.getElementById('field-email-option').hidden, 'Email sign-in should be hidden');
     w.document.getElementById('field-google').click();
     w.document.getElementById('field-email').value = 'participant@example.org';
     w.document.getElementById('field-email-form').requestSubmit();

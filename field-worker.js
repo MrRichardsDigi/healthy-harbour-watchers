@@ -1,4 +1,4 @@
-const CACHE = 'hhw-field-v4';
+const CACHE = 'hhw-field-v5';
 const CORE = [
   'field.html', 'css/style.css?v=7', 'css/field.css?v=2', 'js/navigation.js?v=2',
   'js/field-auth.js?v=1', 'js/field.js?v=4', 'js/config.js', 'data/locations.json', 'assets/logo.png'
