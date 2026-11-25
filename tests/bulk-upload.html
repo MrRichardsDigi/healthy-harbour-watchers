@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bulk uploader tests</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="../js/bulk-upload.js"></script>
+  <script defer src="bulk-upload.js"></script>
+</head>
+<body>
+  <h1>Bulk uploader tests</h1>
+  <p>These tests use a mock database and never publish real data.</p>
+  <pre id="results">Running...</pre>
+  <input id="csv-upload" type="file">
+  <input id="csv-sampling-date" type="date">
+  <button id="upload-csv-btn">Preview</button>
+  <div id="csv-upload-status"></div>
+  <div id="bulk-preview"></div>
+</body>
+</html>

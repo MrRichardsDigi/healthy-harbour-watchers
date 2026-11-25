@@ -4,15 +4,6 @@ function setupBulkUpload(client) {
   const previewButton = document.getElementById('upload-csv-btn');
   const status = document.getElementById('csv-upload-status');
   const preview = document.getElementById('bulk-preview');
-  const siteMappingConfirmed = false;
-  if (!siteMappingConfirmed) {
-    fileInput.disabled = true;
-    dateInput.disabled = true;
-    previewButton.disabled = true;
-    status.textContent = 'Bulk upload is paused until the spreadsheet site numbers are confirmed and mapped to the correct sampling sites.';
-    return;
-  }
-
   const fields = {
     'water temp oc': [1, 'Water temperature'],
     'sal adj': [2, 'Adjusted salinity'],
@@ -73,6 +64,30 @@ function setupBulkUpload(client) {
     parent.appendChild(el);
     return el;
   }
+  async function loadSiteMapping(databaseSites) {
+    const response = await fetch('data/locations.json', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Unable to load the current site mapping.');
+    const locations = await response.json();
+    if (!Array.isArray(locations) || !Array.isArray(databaseSites)) throw new Error('Invalid site mapping or database locations.');
+    const databaseById = new Map(databaseSites.map(site => [String(site.id), site.location]));
+    const sites = new Map();
+    const usedIds = new Set();
+    for (const location of locations) {
+      if (location.currentSite == null) continue;
+      const number = location.currentSite;
+      const id = Number(location.id);
+      if (!Number.isSafeInteger(number) || number < 1 || !Number.isSafeInteger(id) || id < 1 ||
+          sites.has(number) || usedIds.has(id) || typeof location.name !== 'string' ||
+          typeof databaseById.get(String(id)) !== 'string' ||
+          normalize(location.name) !== normalize(databaseById.get(String(id)))) {
+        throw new Error('The current site mapping is invalid or does not match the database. Upload is disabled.');
+      }
+      sites.set(number, { id, name: databaseById.get(String(id)) });
+      usedIds.add(id);
+    }
+    if (!sites.size) throw new Error('No current sites are configured. Upload is disabled.');
+    return sites;
+  }
   async function readRows(file) {
     if (file.name.toLowerCase().endsWith('.csv')) {
       await loadScript('https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js', 'Papa');
@@ -119,7 +134,8 @@ function setupBulkUpload(client) {
       const mapped = headers.map((header, index) => ({ index, definition: fields[header] })).filter(item => item.definition);
       if (siteIndex < 0 || !mapped.length) throw new Error('The file must have a Site column and at least one recognized measurement column.');
       if (new Set(mapped.map(item => item.definition[0])).size !== mapped.length) throw new Error('More than one column maps to the same measurement.');
-      const validSites = new Map(locationsResponse.data.map(site => [String(site.id), site.location]));
+      const validSites = await loadSiteMapping(locationsResponse.data);
+      if (generation !== run) return;
       const measurements = [];
       const errors = [];
       const warnings = [];
@@ -135,11 +151,13 @@ function setupBulkUpload(client) {
           ignoredNotes++;
           return;
         }
-        if (!/^#?\d+$/.test(site) || !validSites.has(String(Number(site.replace('#', ''))))) {
+        const siteNumber = Number(site.replace('#', ''));
+        if (!/^#?\d+$/.test(site) || !validSites.has(siteNumber)) {
           errors.push(`Row ${rowNumber}: unknown or missing site "${site}".`);
           return;
         }
-        const id = Number(site.replace('#', ''));
+        const mappedSite = validSites.get(siteNumber);
+        const id = mappedSite.id;
         if (dateIndex >= 0) {
           const rowDate = String(row[dateIndex] || '').trim();
           if (!dateMatches(rowDate, selectedDate)) warnings.push(`Row ${rowNumber}: date "${rowDate}" does not match the selected date, or could not be recognized.`);
@@ -154,11 +172,11 @@ function setupBulkUpload(client) {
           }
           const key = `${id}:${item.definition[0]}`;
           if (seen.has(key)) {
-            errors.push(`Row ${rowNumber}: duplicate ${item.definition[1]} for ${validSites.get(String(id))}.`);
+            errors.push(`Row ${rowNumber}: duplicate ${item.definition[1]} for site ${siteNumber} (${mappedSite.name}).`);
             return;
           }
           seen.add(key);
-          measurements.push({ locationid: id, parameterid: item.definition[0], value: Number(raw), site: validSites.get(String(id)), parameter: item.definition[1] });
+          measurements.push({ locationid: id, parameterid: item.definition[0], value: Number(raw), site: `${siteNumber} - ${mappedSite.name}`, parameter: item.definition[1] });
         });
       });
       if (!measurements.length) errors.push('No measurements found.');

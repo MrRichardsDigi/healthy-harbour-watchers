@@ -35,6 +35,7 @@ function showDashboard() {
       <section class='intro'>
         <h2>Bulk Data Upload</h2>
         <p>Upload an SRF2 Excel workbook or CSV. Review the measurements before publishing them.</p>
+        <p>Use files with the current site numbering. Check the site numbers and names in the preview before publishing; older files may use different numbers.</p>
         <a href='data/data-upload-template.csv' download style='display:inline-block;margin-bottom:10px;padding:6px 14px;background:#e6f0ff;color:#0b5fa6;border-radius:6px;text-decoration:none;font-size:1em;'>Download CSV Template</a><br>
         <label style='display:block;margin-bottom:10px;'>
           Sampling Date:

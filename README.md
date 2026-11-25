@@ -55,13 +55,15 @@ Anyone with the public link can submit, so review every sample before approval. 
 
 ## Bulk upload
 
-**Bulk upload is paused:** SRF2 site numbers have changed and their corresponding sampling sites are not yet confirmed. Do not upload until the mapping has been verified and implemented. The current uploader previously assumed spreadsheet site numbers were database location IDs; that assumption is unsafe for the new numbering. Reload any open admin pages to pick up the pause.
+The uploader translates spreadsheet site numbers using the `currentSite` entries in `data/locations.json`, not database IDs. Before previewing, it checks that mapped IDs and names match the database and rejects missing or ambiguous mappings. The preview shows each site number and name; check these before publishing. Update the mapping if the monitoring programme changes, and use only files with the current numbering.
 
 The admin dashboard accepts an Excel workbook containing an `SRF2` sheet or a CSV exported from that sheet. Select one date for the whole upload, then preview and confirm before publishing. The preview warns when a row's date differs or cannot be understood, lists columns not imported, and skips blank measurements and explanatory rows without a site or date. It rejects invalid sites, invalid numbers and duplicate site/measurement pairs, and checks for existing site/date/measurement records before publishing. Existing duplicates are checked again by the database when publishing.
 
 The imported columns are water temperature, adjusted salinity, adjusted conductivity, dissolved oxygen %, pH (if supplied), turbidity, chlorophyll a, NNN, DRP and enterococci. Unadjusted salinity, specific conductivity and dissolved oxygen mg/L are not imported. Confirm the selected date and units before publishing.
 
 The redesigned uploader requires `data/bulk-upload-setup.sql` to be installed in Supabase after `data/field-entry-setup.sql`. It adds an authorized-reviewer-only, transactional publish function and an upload receipt for safe retries. It has been installed in the current project; other projects need the setup applied separately. Existing direct-write paths do not participate in the bulk upload's locking, so avoid simultaneous CSV uploads or direct writes for the same date. Use the existing field reviewer allowlist to authorize bulk publishers.
+
+To test the uploader without changing a database, serve the repository locally and open `tests/bulk-upload.html`. The test uses a mock database and requires internet access for the CSV and Excel libraries.
 
 Feedback: tell me which features you want next
 =======
