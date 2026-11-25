@@ -12,6 +12,7 @@
   <script defer src="js/config.js"></script>
   <script defer src="js/field-auth.js?v=1"></script>
   <script defer src="js/field.js?v=4"></script>
+  <script defer src="js/site-photo-upload.js"></script>
 </head>
 <body>
   <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
@@ -87,6 +88,19 @@
         <p>Samples stay on this device until you submit or delete them. They are not sent automatically.</p>
         <div id="field-drafts"></div>
       </section>
+    </section>
+    <section class="field-card">
+      <h2>Submit a site photo</h2>
+      <p>Upload when connected. Choose a photo of the site without identifiable people. Photos are reviewed before they appear publicly; do not include names or other personal information.</p>
+      <p>Photos are resized and camera metadata is removed before upload. The original remains on your device.</p>
+      <form id="site-photo-form">
+        <label for="site-photo-location">Site</label>
+        <select id="site-photo-location" required disabled><option value="">Loading sites...</option></select>
+        <label for="site-photo-file">Site photo (maximum 5 MB)</label>
+        <input id="site-photo-file" type="file" accept="image/jpeg,image/png,image/webp" required>
+        <button type="submit">Submit photo for review</button>
+        <p id="site-photo-status" role="status" aria-live="polite"></p>
+      </form>
     </section>
     </div>
   </main>

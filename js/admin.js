@@ -39,6 +39,11 @@ function showDashboard() {
         <div id='field-access-list'></div>
       </section>
       <section class='intro field-review'>
+        <h2>Review and manage site photos</h2>
+        <p>Approve only site photos without identifiable people or other personal information.</p>
+        <div id='site-photo-reviews' aria-live='polite'></div>
+      </section>
+      <section class='intro field-review'>
         <h2>Field submissions awaiting review</h2>
         <p>Approve only measurements you have checked. Approved measurements appear in the public data viewer.</p>
         <div id='field-reviews' aria-live='polite'></div>
@@ -78,6 +83,7 @@ function showDashboard() {
 
   setupSiteNavigation();
   if (supabaseClient) setupFieldAccessAdmin(supabaseClient);
+  if (supabaseClient) loadSitePhotoReviews(supabaseClient);
   if (supabaseClient) loadFieldReviews(supabaseClient);
 
   // Drafts management logic

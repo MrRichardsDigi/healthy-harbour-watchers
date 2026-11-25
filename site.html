@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Monitoring site — Healthy Harbour Watchers</title>
+  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/site.css">
+  <script defer src="js/navigation.js?v=2"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/site.js"></script>
+</head>
+<body>
+  <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
+  <header class="site-header">
+    <a href="index.html" class="site-logo"><img src="assets/logo.png" alt="Healthy Harbour Watchers logo"></a>
+    <h1>Monitoring site</h1>
+    <nav>
+      <a href="index.html">Home</a><a href="locations.html" class="nav-current">Locations</a>
+      <a href="data.html">Data</a><a href="field.html">Field entry</a>
+      <a href="handbook.html">Handbook</a><a href="join.html">Join</a>
+      <a href="blog.html">Blog</a><a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="site-profile">
+    <p><a href="locations.html">&larr; All monitoring sites</a></p>
+    <p id="site-status" role="status">Loading site...</p>
+    <article id="site-details" hidden>
+      <p id="site-type" class="site-type"></p>
+      <h2 id="site-name"></h2>
+      <p id="site-coordinates"></p>
+      <p class="site-actions">
+        <a id="site-map">See on the harbour map</a>
+        <a id="site-data">Explore this site's data</a>
+      </p>
+      <section aria-labelledby="photos-heading">
+        <h3 id="photos-heading">Site photos</h3>
+        <p>Photos are reviewed before appearing here. Approved participants can submit site photos through field entry.</p>
+        <p id="site-photos-status" role="status">Loading photos...</p>
+        <div id="site-photos" class="site-photos"></div>
+      </section>
+    </article>
+  </main>
+  <footer><small>Healthy Harbour Watchers — Otago Harbour</small></footer>
+</body>
+</html>

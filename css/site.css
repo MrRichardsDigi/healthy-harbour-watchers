@@ -1,0 +1,9 @@
+.site-profile { max-width: 1000px; margin: 24px auto; padding: 0 16px 32px; }
+.site-type { color: #0b5fa6; font-weight: 700; }
+.site-profile h2 { margin-top: 0; }
+.site-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.site-actions a { display: inline-block; padding: 10px 16px; border-radius: 6px; background: #0b5fa6; color: white; }
+.site-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+.site-photos figure { margin: 0; }
+.site-photos img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.site-photos figcaption { margin-top: 6px; color: #555; }

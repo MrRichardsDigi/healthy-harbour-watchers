@@ -83,9 +83,9 @@
         featured.forEach(loc => {
           const card = document.createElement('a');
           card.className = 'location-card';
-          card.href = `locations.html?loc=${encodeURIComponent(loc.id)}`;
+          card.href = `site.html?id=${encodeURIComponent(loc.id)}`;
           card.innerHTML = `
-            <img src="${loc.img}" alt="${loc.name}">
+            <img src="${loc.img}" alt="">
             <div class="location-info">
               <strong>${loc.name}</strong>
               <span>${loc.desc}</span>
@@ -290,6 +290,7 @@
             <button id="close-sidebar" aria-label="Close site details" style="position:absolute;top:12px;right:12px;background:#fff2;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:18px;color:#0b5fa6;z-index:20">&times;</button>
             <h3 style='margin-top:0'>${loc.name}</h3>
             <div style="margin-bottom:10px;font-size:13px;color:#444">${loc.currentSite ? `Current site ${loc.currentSite}` : 'Historical site'}</div>
+            <div><a href="site.html?id=${encodeURIComponent(loc.id)}">View site profile</a></div>
             <div><a id="view-data-link" href="data.html?loc=${encodeURIComponent(loc.id)}" style="color:#0b5fa6;text-decoration:underline">View data for this site</a></div>
           `;
           // Close button logic
@@ -318,7 +319,10 @@
       const link = document.createElement('a');
       link.href = `data.html?loc=${encodeURIComponent(loc.id)}`;
       link.textContent = 'View data';
-      li.append(button, document.createTextNode(' — '), link);
+      const profile = document.createElement('a');
+      profile.href = `site.html?id=${encodeURIComponent(loc.id)}`;
+      profile.textContent = 'Site profile';
+      li.append(button, document.createTextNode(' — '), profile, document.createTextNode(' — '), link);
       entries.appendChild(li);
       });
     });

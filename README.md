@@ -88,6 +88,18 @@ Online authorization is checked by the database against the authenticated user's
 
 For mock-only browser tests, open `tests/field-auth.html` and `tests/field.html` on a local server. `tests/field-access.sql` creates mock schemas and roles and must be run only against a fresh disposable PostgreSQL database, never the live project.
 
+## Site profiles and photos
+
+The locations list and map link to `site.html?id=...`, a profile for each current or historical site with map and data links. Profiles use `data/locations.json`; no descriptions or site photographs are invented.
+
+The photo feature requires `data/site-photos-setup.sql` after the field entry and field access setup. Test the complete Storage upload, review, rejection and public viewing flow in a separate Supabase project before installing it on production. The script creates a private `site-photos` bucket and fails if that bucket already exists. It adds separate photo records and policies; it does not change measurements or field submissions.
+
+Approved field users can upload a site photo while online, separately from a sample. Choose a JPEG, PNG or WebP of at most 5 MB; the browser resizes it and re-encodes it as JPEG to remove camera metadata before uploading. Only site photos without identifiable people should be submitted. Reviewers must check the actual image for people or personal information before approving it. This is a policy and review process, not automatic detection; the server cannot guarantee a modified client stripped metadata.
+
+The private bucket allows files up to 5 MiB and the database limits the total to 100 photos including pending, approved, rejected and incomplete uploads. Rejected photos should be deleted in the review panel, which frees their slot. Reviewers can also remove published photos. Incomplete uploads older than one day appear there for cleanup. If an upload is interrupted, keep the page open and retry with the same photo; the original remains on the device. Photo storage and transfer count toward Supabase project usage and existing plan limits. The cap is not a guarantee of zero cost; monitor the project and do not enable paid billing without approval.
+
+Only approved photos are accessible to visitors, via time-limited URLs. Reviewers can access pending photos. Never put personal information into a photo. Test `tests/site-photos.sql` only against the same fresh, disposable PostgreSQL database used by `tests/field-access.sql`; it creates mock Storage objects and cannot substitute for a real Supabase Storage integration test.
+
 Feedback: tell me which features you want next
 =======
 Healthy Harbour Watchers Website
