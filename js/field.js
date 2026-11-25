@@ -132,9 +132,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       status.textContent = 'You are offline. The sample is saved on this device; submit it when connected.';
       return;
     }
-    if (typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' ||
-        SUPABASE_ANON_KEY === '******' || !window.supabase) {
-      status.textContent = 'Submission is unavailable. Reconnect and reload the page; your sample remains saved on this device.';
+    if (!window.fieldAuth || !window.fieldAuth.approved || !window.fieldAuth.client) {
+      status.textContent = 'Sign in while connected before submitting. Your sample remains saved on this device.';
       return;
     }
     if (!window.confirm('Submit this saved sample for review?')) return;
@@ -145,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderDrafts();
     status.textContent = 'Submitting saved sample...';
     try {
-      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const client = window.fieldAuth.client;
       const measurements = Object.fromEntries(Object.entries(draft.values).map(([key, value]) => [key, Number(value)]));
       const { error } = await client.rpc('submit_field_sample', {
         p_id: draft.id, p_locationid: Number(draft.location), p_date: draft.date, p_measurements: measurements

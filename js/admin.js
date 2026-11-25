@@ -28,6 +28,17 @@ function showDashboard() {
     </header>
     <main style='max-width:900px;margin:32px auto;'>
       <section class='intro field-review'>
+        <h2>Field entry access</h2>
+        <p>Only approved email addresses can submit field samples. School email domains do not automatically grant access.</p>
+        <form id='field-access-form'>
+          <label for='field-access-email'>Email address</label>
+          <input id='field-access-email' type='email' required>
+          <button type='submit'>Approve address</button>
+        </form>
+        <div id='field-access-status' role='status'></div>
+        <div id='field-access-list'></div>
+      </section>
+      <section class='intro field-review'>
         <h2>Field submissions awaiting review</h2>
         <p>Approve only measurements you have checked. Approved measurements appear in the public data viewer.</p>
         <div id='field-reviews' aria-live='polite'></div>
@@ -66,6 +77,7 @@ function showDashboard() {
   `;
 
   setupSiteNavigation();
+  if (supabaseClient) setupFieldAccessAdmin(supabaseClient);
   if (supabaseClient) loadFieldReviews(supabaseClient);
 
   // Drafts management logic

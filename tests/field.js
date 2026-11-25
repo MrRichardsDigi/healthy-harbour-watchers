@@ -50,7 +50,8 @@
         return { error: failure ? { message: 'Mock network failure' } : null };
       } }) };
       const script = w.document.createElement('script');
-      script.src = new URL('../js/field.js?v=3', location.href).href;
+      w.fieldAuth = { approved: true, client: w.supabase.createClient() };
+      script.src = new URL('../js/field.js?v=4', location.href).href;
       w.document.head.appendChild(script);
       await new Promise((resolve, reject) => {
         script.onload = resolve;

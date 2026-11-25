@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="css/field.css?v=2">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
-  <script defer src="js/field.js?v=3"></script>
+  <script defer src="js/field-auth.js?v=1"></script>
+  <script defer src="js/field.js?v=4"></script>
 </head>
 <body>
   <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
@@ -29,6 +30,24 @@
     </nav>
   </header>
   <main class="field-main">
+    <section class="field-card" id="field-login">
+      <h2>Field entry sign-in</h2>
+      <p>Only individually approved participants can submit samples. Sign in while online before going into the field.</p>
+      <button type="button" id="field-google">Sign in with Google</button>
+      <form id="field-email-form" hidden>
+        <label for="field-email">Email address</label>
+        <input id="field-email" type="email" autocomplete="email" required>
+        <button type="submit">Email me a sign-in link</button>
+      </form>
+      <p>Email sign-in for other participants will be available once email delivery is set up.</p>
+      <button type="button" id="field-switch" hidden>Sign out to switch accounts</button>
+      <p id="field-auth-status" role="status" aria-live="polite">Checking access...</p>
+    </section>
+    <section class="field-card" id="field-account" hidden>
+      <p id="field-account-status"></p>
+      <button type="button" id="field-signout">Sign out</button>
+    </section>
+    <div id="field-content" hidden>
     <section class="field-card">
       <h2>Record a sample</h2>
       <p>Choose the site and date, then enter the measurements you took. Leave other measurements blank. You can save multiple samples on this device and submit them when connected.</p>
@@ -67,6 +86,7 @@
         <div id="field-drafts"></div>
       </section>
     </section>
+    </div>
   </main>
   <footer><small>Healthy Harbour Watchers — Otago Harbour</small></footer>
 </body>

@@ -41,7 +41,7 @@ Setup (a Supabase project owner must perform these steps):
 
 1. Configure the project URL and **public anon/publishable key** in `js/config.js`, if not already configured. Never put a service-role or secret key in this file.
 2. Confirm that the existing `locations`, `parameters`, `samplingdates`, and `data` tables match the columns used by the existing CSV upload. Confirm the parameter IDs match the field form: 1 temperature, 2 adjusted salinity, 3 adjusted specific conductivity, 4 dissolved oxygen %, 5 pH, 6 turbidity, 7 chlorophyll a, 8 NNN, 9 DRP, 10 enterococci. Verify the instruments' units and adjustment method against your protocols before collecting data.
-3. Run `data/field-entry-setup.sql` in the Supabase SQL editor. It creates a private submission queue and reviewer allowlist, plus functions for public submission and authorized review. It does not change the existing data table's policies.
+3. For a new installation, run `data/field-entry-setup.sql` in the Supabase SQL editor, followed by the field sign-in setup below before using field entry. The initial script creates the submission queue and reviewer allowlist; it initially allows public submission and does not change the existing data table's policies.
 4. Create reviewer accounts in Supabase Auth. For each reviewer, add their Auth user UUID in the SQL editor:
 
    ```sql
@@ -51,7 +51,7 @@ Setup (a Supabase project owner must perform these steps):
    Remove a reviewer by deleting their row from `public.field_reviewers`. Signing into the admin dashboard alone does not grant field-review access.
 5. Publish the site over HTTPS (or use localhost for testing). Verify the existing `locations` table is readable using the public key. Submit a test sample, sign in as an authorized reviewer, approve it, and verify it appears in the data viewer. Also test rejection and an unauthorized account.
 
-Anyone with the public link can submit, so review every sample before approval. The form does not collect names. Public submissions can be abused; consider adding rate limiting or bot protection before a broad launch.
+Review every sample before approval. The form does not collect names.
 
 Open the field page with internet first and wait for the offline-ready message on each device. The page and site list are then available offline in supported browsers. Entries in progress are saved on the device as they are entered; save each completed sample to keep multiple samples. Saved samples do not send automatically: reconnect and submit each one for review. They remain on that browser/device, not in an account or a backup, and clearing site data or using private browsing can remove them. If a submission is not confirmed, retry the same saved sample unchanged; its persistent submission ID prevents duplicate retries. Do not edit or delete an uncertain submission until its status is checked.
 
@@ -70,6 +70,23 @@ The redesigned uploader requires `data/bulk-upload-setup.sql` to be installed in
 To test the uploader without changing a database, serve the repository locally and open `tests/bulk-upload.html`. The test uses a mock database and requires internet access for the CSV and Excel libraries.
 
 To test field-entry draft handling without changing a database, open `tests/field.html` on the local server. It uses mock storage and a mock submission service. Also verify offline reopening on a separate test device or origin after the offline-ready message appears.
+
+## Field sign-in
+
+The field page supports Google sign-in. Email sign-in is prepared but hidden until email delivery is configured and tested. Access is granted to individually approved, verified email addresses, not whole school domains. Field sign-in uses separate browser auth storage from the existing admin login. A field access administrator can approve and remove addresses in the admin dashboard; field reviewers do not automatically get permission to manage the access list.
+
+**Do not run the access migration until Google sign-in is configured, an access administrator is ready to be added, and the website is ready to deploy.** Applying `data/field-access-setup.sql` immediately revokes anonymous submission, so old field pages will no longer be able to submit. The current `data/field-entry-setup.sql` refuses to run afterward; older copies of that script can reopen anonymous submissions and must not be used. No existing submission, measurement, or offline draft is deleted by the migration. Users with saved drafts should keep them and reload the updated field page before submitting.
+
+Setup, to be performed by the project owner after local testing:
+
+1. In Google Cloud, create a web OAuth client. Set the authorized JavaScript origin to `https://mrrichardsdigi.github.io` and the authorized redirect URI to the callback URL shown on the Supabase Google provider page. Configure the consent screen and Google provider in Supabase; keep the client secret out of the repository and chat. School administrators may need to approve the app.
+2. In Supabase Auth URL configuration, allow `https://mrrichardsdigi.github.io/healthy-harbour-watchers/field.html` as a redirect. For local sign-in tests, explicitly allow the local field URL too. To enable email links later, configure and test suitable SMTP/email delivery, then unhide the email form in `field.html`; Supabase's default email service has restrictions.
+3. Back up the project and apply `data/field-access-setup.sql` in the SQL editor. Bootstrap a trusted existing admin account by adding its Auth user UUID (not its email) using `insert into public.field_access_admins (user_id) values ('REPLACE-WITH-ADMIN-UUID');`. Add addresses individually through the admin dashboard. Removing an address blocks future server submissions immediately, even for an existing session.
+4. Test an approved account, an unapproved account, anonymous API access, Google callback, the separate admin session, and a saved draft in a separate test project first. Deploy the site and verify access without creating live test measurements. Check the Supabase provider configuration and school access with the project owner before switching over.
+
+Online authorization is checked by the database against the authenticated user's confirmed email. An offline device cannot check revocation: after one successful online approval, a local marker allows the field form to open offline, but every actual submission is checked again by the server. If the page was opened offline, reconnect and reload before submitting. Offline drafts are stored in the browser and are visible to someone with access to the same unlocked device; this is not encrypted or a secure offline login. Signing out leaves drafts on the device so they are not lost. Participants should use a trusted device.
+
+For mock-only browser tests, open `tests/field-auth.html` and `tests/field.html` on a local server. `tests/field-access.sql` creates mock schemas and roles and must be run only against a fresh disposable PostgreSQL database, never the live project.
 
 Feedback: tell me which features you want next
 =======

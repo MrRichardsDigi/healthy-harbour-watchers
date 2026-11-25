@@ -1,5 +1,14 @@
 -- Run as the project owner in the Supabase SQL editor.
 -- Authorize reviewers separately as described in README.md.
+begin;
+do $$
+begin
+  if to_regclass('public.field_allowed_emails') is not null then
+    raise exception 'Field access is already installed; do not rerun the public field-entry setup';
+  end if;
+end;
+$$;
+
 create table if not exists public.field_reviewers (
   user_id uuid primary key references auth.users(id) on delete cascade
 );
@@ -115,3 +124,4 @@ grant execute on function public.submit_field_sample(uuid, bigint, date, jsonb) 
 grant execute on function public.pending_field_samples() to authenticated;
 grant execute on function public.review_field_sample(uuid, boolean) to authenticated;
 notify pgrst, 'reload schema';
+commit;
