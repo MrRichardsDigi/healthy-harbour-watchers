@@ -112,6 +112,27 @@
 	font-size: 1.05em;
 	text-align: center;
 }
+.school-sites {
+	width: 100%;
+	padding-top: 6px;
+	border-top: 1px solid #dce7f2;
+	color: #52708e;
+	font-size: .88rem;
+	text-align: left;
+}
+.school-sites > span {
+	font-weight: 700;
+}
+.school-sites ul {
+	margin: 4px 0 0;
+	padding-left: 18px;
+}
+.school-sites li + li {
+	margin-top: 3px;
+}
+.school-sites a {
+	color: #0b5fa6;
+}
 .join-main-content {
 	flex: 1 1 0%;
 	min-width: 0;
