@@ -773,6 +773,10 @@
       document.getElementById('chart-container').hidden = !showChart;
       document.getElementById('chart-title').hidden = !showChart;
       tideCompareToggle.checked = isTide;
+      if (!isTide) {
+        Array.from(tidePhaseSelect.options).forEach(option => { option.selected = false; });
+        tideHeightSelect.value = '';
+      }
       if (comparisonSummary) comparisonSummary.hidden = !isTide;
       applyFilters();
     }
@@ -893,8 +897,8 @@
           applyFilters();
         });
       }
-      // Initial render
-      applyFilters();
+      // Initial render and mode-specific control visibility
+      setDataMode('trends');
     }
 
     // Call after allRecords and selectors are ready
