@@ -136,10 +136,10 @@ function setupBulkUpload(client) {
       if (!rows.length) throw new Error('The file is empty.');
       const headers = rows[0].map(normalize);
       if (new Set(headers.filter(Boolean)).size !== headers.filter(Boolean).length) throw new Error('The file contains duplicate column headings.');
-      const siteIndex = headers.indexOf('site');
+      const siteIndex = headers.indexOf('site') >= 0 ? headers.indexOf('site') : headers.indexOf('site number');
       const dateIndex = headers.indexOf('date');
       const mapped = headers.map((header, index) => ({ index, definition: fields[header] })).filter(item => item.definition);
-      if (siteIndex < 0 || !mapped.length) throw new Error('The file must have a Site column and at least one recognized measurement column.');
+      if (siteIndex < 0 || !mapped.length) throw new Error('The file must have a Site Number column and at least one recognized measurement column.');
       if (new Set(mapped.map(item => item.definition[0])).size !== mapped.length) throw new Error('More than one column maps to the same measurement.');
       const validSites = await loadSiteMapping(locationsResponse.data);
       if (generation !== run) return;
@@ -188,7 +188,9 @@ function setupBulkUpload(client) {
       });
       if (!measurements.length) errors.push('No measurements found.');
       if (measurements.length > 5000) errors.push('The upload exceeds the 5,000-measurement limit.');
-      const ignored = headers.filter(header => header && header !== 'site' && header !== 'date' && !fields[header]);
+      const ignored = headers.filter(header =>
+        header && header !== 'site' && header !== 'site number' && header !== 'site name' &&
+        header !== 'date' && !fields[header]);
       if (ignored.length) warnings.push(`Not imported: ${ignored.join(', ')}${ignored.some(header => !excluded.includes(header)) ? ' (includes unrecognized columns)' : ''}.`);
       if (ignoredNotes) warnings.push(`${ignoredNotes} non-data row(s) without a site or date will be ignored.`);
       if (datesWithoutYear) warnings.push(`${datesWithoutYear} row date(s) do not show a year. Check that the selected year is correct.`);
