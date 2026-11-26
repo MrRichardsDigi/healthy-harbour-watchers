@@ -59,7 +59,8 @@
             'assets/join2.jpg'
           ];
           const assayImages = {
-            Temperature: ['assets/join4.jpg', 'assets/join1.jpg']
+            Temperature: ['assets/join4.jpg', 'assets/join1.jpg'],
+            Conductivity: ['assets/join1.jpg', 'assets/join4.jpg']
           };
           const selected = assays;
           const container = document.getElementById('assays-cards');
