@@ -9,6 +9,25 @@
     if(typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined' && window.supabase && window.supabase.createClient){
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
+    if(document.getElementById('harbour-insights-list')) {
+      fetch('data/insights.json').then(response => {
+    if (!response.ok) throw new Error('Could not load harbour insights');
+    return response.json();
+      }).then(insights => {
+    const container = document.getElementById('harbour-insights-list');
+    (insights || []).forEach(insight => {
+      const card = document.createElement('a');
+      card.className = 'harbour-insight-card';
+      card.href = insight.href;
+      const title = document.createElement('strong');
+      title.textContent = insight.title;
+      const description = document.createElement('span');
+      description.textContent = insight.description;
+      card.append(title, description);
+      container.appendChild(card);
+    });
+      }).catch(error => console.warn('Harbour insights unavailable:', error));
+    }
   }catch(e){
     console.warn('Supabase not configured or failed to initialize', e);
   }
@@ -557,6 +576,9 @@
     const resetBtn = document.getElementById('reset-filters');
     const table = document.getElementById('data-table');
     const ctx = document.getElementById('chart').getContext('2d');
+    const saveViewButton = document.getElementById('save-view');
+    const saveViewStatus = document.getElementById('save-view-status');
+    const savedViewLink = document.getElementById('saved-view-link');
 
     // derive available parameters and dates
     // Try to read a separate `parameters` table (id,parameter,unit). If present, use it to map ids -> display names.
@@ -695,6 +717,60 @@
       // If not found, select first available
       if(!locFound && locationSelect.options.length) locationSelect.options[0].selected = true;
       if(!paramFound && paramSelect.options.length) paramSelect.options[0].selected = true;
+    }
+
+    function restoreSavedView() {
+      const query = new URLSearchParams(location.search);
+      if (!query.has('view')) return;
+      const savedLocations = (query.get('locations') || '').split(',').filter(Boolean);
+      if (savedLocations.length) {
+        Array.from(locationSelect.options).forEach(option => {
+          option.selected = savedLocations.some(id => option.value.split('|').includes(id));
+        });
+      }
+      const savedParameters = (query.get('parameters') || '').split(',').filter(Boolean);
+      if (savedParameters.length) {
+        Array.from(paramSelect.options).forEach(option => { option.selected = savedParameters.includes(option.value); });
+      }
+      const savedPhases = (query.get('phases') || '').split(',').filter(Boolean);
+      Array.from(tidePhaseSelect.options).forEach(option => { option.selected = savedPhases.includes(option.value); });
+      tideHeightSelect.value = query.get('height') || '';
+      const from = samplingDates.indexOf(query.get('from'));
+      const to = samplingDates.indexOf(query.get('to'));
+      if (from >= 0 && to >= 0) {
+        dateStart.value = String(Math.min(from, to));
+        dateEnd.value = String(Math.max(from, to));
+        updateDateSliderLabels();
+      }
+    }
+
+    function saveCurrentView() {
+      const query = new URLSearchParams();
+      query.set('view', '1');
+      const locations = Array.from(locationSelect.selectedOptions)
+        .flatMap(option => option.value.split('|')).filter(Boolean);
+      const parameters = Array.from(paramSelect.selectedOptions).map(option => option.value);
+      const phases = Array.from(tidePhaseSelect.selectedOptions).map(option => option.value);
+      if (locations.length) query.set('locations', [...new Set(locations)].join(','));
+      if (parameters.length) query.set('parameters', parameters.join(','));
+      if (phases.length) query.set('phases', phases.join(','));
+      if (tideHeightSelect.value) query.set('height', tideHeightSelect.value);
+      if (appliedDateRange) {
+        query.set('from', appliedDateRange.start);
+        query.set('to', appliedDateRange.end);
+      }
+      const url = new URL(location.href);
+      url.search = query.toString();
+      url.hash = '';
+      savedViewLink.value = url.href;
+      savedViewLink.hidden = false;
+      saveViewStatus.textContent = 'Saved graph link ready to copy.';
+      saveViewStatus.hidden = false;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url.href).then(() => {
+          saveViewStatus.textContent = 'Saved graph link copied to the clipboard.';
+        }).catch(() => {});
+      }
     }
 
     // helper: filter records by UI
@@ -873,6 +949,8 @@
       }
       preselectInitial();
       setupDateSliders();
+      restoreSavedView();
+      if (saveViewButton) saveViewButton.addEventListener('click', saveCurrentView);
       dateClear.addEventListener('click', () => {
         resetDateSliders();
         applyFilters();

@@ -1264,6 +1264,10 @@ footer {
  body[data-data-mode] .data-modes { display: none; }
  .data-tool-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
  .data-tool-links a { color: #0b5fa6; font-weight: 700; }
+ .harbour-insights { padding: 28px 16px; background: #e6f0ff; }
+ .harbour-insights-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; max-width: 1000px; margin: 0 auto; }
+ .harbour-insight-card { display: flex; flex-direction: column; gap: 7px; padding: 16px; border: 1px solid #c8dced; border-radius: 10px; background: rgba(255,255,255,.86); color: #17365d; }
+ .harbour-insight-card strong { color: #0b5fa6; }
  .comparison-summary { margin: 14px 0; overflow-x: auto; }
  .comparison-summary table { width: 100%; border-collapse: collapse; }
  .comparison-summary caption { margin-bottom: 6px; text-align: left; color: #0b5fa6; font-weight: 700; }

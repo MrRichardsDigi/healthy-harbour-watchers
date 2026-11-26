@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Explore Mussel Bay temperature",
+    "description": "Open a saved view of the temperature measurements at the current Mussel Bay site.",
+    "href": "data.html?view=1&locations=4&parameters=1"
+  },
+  {
+    "title": "Explore Mussel Bay enterococci",
+    "description": "Open a saved view of the bacteria measurements at the current Mussel Bay site.",
+    "href": "data.html?view=1&locations=4&parameters=10"
+  }
+]

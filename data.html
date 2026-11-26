@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Data — Healthy Harbour Watchers</title>
   <script defer src="js/navigation.js?v=4"></script>
-  <link rel="stylesheet" href="css/style.css?v=13">
+  <link rel="stylesheet" href="css/style.css?v=14">
   <link rel="stylesheet" href="css/data-mobile.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Chart.js already loaded above -->
@@ -24,7 +24,7 @@
     <nav>
       <a href="index.html">Home</a>
       <a href="locations.html">Locations</a>
-      <a href="data-trends.html" class="nav-current">Data</a>
+      <a href="data.html" class="nav-current">Data</a>
       <a href="field.html">Field entry</a>
       <a href="handbook.html">Handbook</a>
       <a href="join.html">Join</a>
@@ -48,18 +48,6 @@
     <section class="data-viewer" style="max-width:1000px;margin:16px auto;padding:0 16px">
       <p id="data-source-status" role="status" hidden></p>
       <div id="location-name"></div>
-      <nav class="data-tool-links" aria-label="Data tools">
-        <a href="data-trends.html">Explore trends</a>
-        <a href="data-tides.html">Compare tide phases</a>
-        <a href="data-sites.html">Compare sites</a>
-        <a href="data-records.html">Records &amp; export</a>
-      </nav>
-      <nav class="data-modes" aria-label="Data views">
-        <button type="button" class="data-mode active" data-mode="trends">Explore trends</button>
-        <button type="button" class="data-mode" data-mode="tide">Compare tide phases</button>
-        <button type="button" class="data-mode" data-mode="sites">Compare sites</button>
-        <button type="button" class="data-mode" data-mode="records">Records &amp; export</button>
-      </nav>
 
       <div id="filters" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0">
         <label id="location-filter-control" style="display:flex;flex-direction:column;font-size:13px"><span>Location</span>
@@ -108,8 +96,11 @@
         <div class="filter-actions" style="display:flex;gap:8px">
           <button id="apply-filters" style="padding:6px 10px">Apply</button>
           <button id="reset-filters" style="padding:6px 10px">Reset</button>
+          <button id="save-view" type="button" style="padding:6px 10px">Save graph link</button>
         </div>
       </div>
+      <p id="save-view-status" role="status" hidden></p>
+      <input id="saved-view-link" type="url" readonly hidden aria-label="Saved graph link" style="width:100%;padding:7px;margin:4px 0 12px">
 
       <div id="chart-title" style="text-align:center;font-size:1.35em;font-weight:600;margin:18px 0 0 0;color:#0b5fa6;"></div>
       <div id="chart-container" style="display:flex;justify-content:center;align-items:center;margin:12px 0 12px 0;">
@@ -137,6 +128,6 @@
 
   <script src="js/chartjs-plugin-trendline.js"></script>
   <script src="js/data-mobile.js?v=3"></script>
-  <script src="js/main.js?v=13"></script>
+  <script src="js/main.js?v=14"></script>
 </body>
 </html>
