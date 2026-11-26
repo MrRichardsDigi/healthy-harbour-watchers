@@ -51,6 +51,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('site-map').href = `locations.html?loc=${encodeURIComponent(site.id)}`;
     document.getElementById('site-data').href = `data.html?loc=${encodeURIComponent(site.id)}`;
     document.getElementById('site-details').hidden = false;
+    const latitude = Number(site.lat);
+    const longitude = Number(site.lng);
+    const miniMap = document.getElementById('site-mini-map');
+    if (window.L && Number.isFinite(latitude) && Number.isFinite(longitude)) {
+      const map = window.L.map(miniMap, {
+        scrollWheelZoom: false,
+        dragging: false,
+        doubleClickZoom: false,
+        touchZoom: false
+      }).setView([latitude, longitude], 15);
+      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      window.L.marker([latitude, longitude]).addTo(map).bindPopup(site.name);
+    } else {
+      miniMap.textContent = 'Map unavailable. Use the harbour map link below.';
+    }
     status.hidden = true;
     if (!window.supabase || typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined') {
       throw new Error('Photo service unavailable');

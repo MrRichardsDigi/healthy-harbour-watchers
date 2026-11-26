@@ -5,6 +5,11 @@
 .site-school-brand { display: flex; align-items: center; gap: 12px; min-height: 64px; margin: 12px 0 18px; padding: 10px 14px; background: var(--site-school-accent); border-radius: 10px; }
 .site-school-brand img { width: 58px; height: 58px; object-fit: contain; }
 .site-school-brand p { margin: 0; color: var(--site-school-primary); font-weight: 700; }
+.site-map-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 360px); gap: 18px; align-items: center; margin: 20px 0; padding: 14px; background: var(--site-school-accent); border-radius: 10px; }
+.site-map-card h3 { margin: 0 0 4px; color: var(--site-school-primary); }
+.site-map-card p { margin: 0; }
+#site-mini-map { min-height: 190px; border: 2px solid var(--site-school-primary); border-radius: 8px; overflow: hidden; background: #dceaf2; }
+.site-map-card .leaflet-control-attribution { font-size: 9px; }
 .site-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .site-actions a { display: inline-block; padding: 10px 16px; border-radius: 7px; background: var(--site-school-primary); color: white; font-weight: 700; }
 .site-actions a:hover { filter: brightness(.92); }
@@ -12,3 +17,7 @@
 .site-photos figure { margin: 0; }
 .site-photos img { display: block; width: 100%; height: auto; border-radius: 8px; border: 3px solid var(--site-school-accent); }
 .site-photos figcaption { margin-top: 6px; color: #555; }
+@media (max-width: 700px) {
+  .site-map-card { grid-template-columns: 1fr; }
+  #site-mini-map { min-height: 210px; }
+}
