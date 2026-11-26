@@ -6,6 +6,20 @@ if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefin
   supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
+function setupAdminTabs() {
+  const tabs = Array.from(document.querySelectorAll('[data-admin-tab]'));
+  const panels = Array.from(document.querySelectorAll('[data-admin-panel]'));
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const selected = tab.dataset.adminTab;
+      tabs.forEach(item => item.setAttribute('aria-selected', String(item === tab)));
+      panels.forEach(panel => {
+        panel.hidden = panel.dataset.adminPanel !== selected;
+      });
+    });
+  });
+}
+
 function showDashboard() {
   document.body.innerHTML = `
     <div class="site-banner">
@@ -27,6 +41,13 @@ function showDashboard() {
       </nav>
     </header>
     <main style='max-width:900px;margin:32px auto;'>
+      <nav class='admin-tabs' aria-label='Admin dashboard sections' role='tablist'>
+        <button type='button' role='tab' aria-selected='true' aria-controls='admin-access-panel' data-admin-tab='access'>Access &amp; locations</button>
+        <button type='button' role='tab' aria-selected='false' aria-controls='admin-review-panel' data-admin-tab='review'>Review</button>
+        <button type='button' role='tab' aria-selected='false' aria-controls='admin-data-panel' data-admin-tab='data'>Data upload</button>
+        <button type='button' role='tab' aria-selected='false' aria-controls='admin-content-panel' data-admin-tab='content'>Content</button>
+      </nav>
+      <div id='admin-access-panel' class='admin-panel' data-admin-panel='access' role='tabpanel'>
       <section class='intro field-review'>
         <h2>Field entry access</h2>
         <p>Only approved email addresses can submit field samples. School email domains do not automatically grant access.</p>
@@ -39,21 +60,25 @@ function showDashboard() {
         <div id='field-access-list'></div>
       </section>
       <section class='intro field-review'>
-        <h2>Review and manage site photos</h2>
-        <p>Approve only site photos without identifiable people or other personal information.</p>
-        <div id='site-photo-reviews' aria-live='polite'></div>
-      </section>
-      <section class='intro field-review'>
         <h2>Assign locations to schools</h2>
         <p>Locations start unassigned. Choose a school for each location when the monitoring responsibility is confirmed.</p>
         <div id='location-school-status' role='status' aria-live='polite'></div>
         <div id='location-school-list'></div>
+      </section>
+      </div>
+      <div id='admin-review-panel' class='admin-panel' data-admin-panel='review' role='tabpanel' hidden>
+      <section class='intro field-review'>
+        <h2>Review and manage site photos</h2>
+        <p>Approve only site photos without identifiable people or other personal information.</p>
+        <div id='site-photo-reviews' aria-live='polite'></div>
       </section>
       <section class='intro field-review'>
         <h2>Field submissions awaiting review</h2>
         <p>Approve only measurements you have checked. Approved measurements appear in the public data viewer.</p>
         <div id='field-reviews' aria-live='polite'></div>
       </section>
+      </div>
+      <div id='admin-data-panel' class='admin-panel' data-admin-panel='data' role='tabpanel' hidden>
       <section class='intro'>
         <h2>Bulk Data Upload</h2>
         <p>Upload an SRF2 Excel workbook or CSV. Review the measurements before publishing them.</p>
@@ -68,6 +93,8 @@ function showDashboard() {
         <div id='csv-upload-status' role='status' aria-live='polite' style='margin-top:10px;font-size:1em;'></div>
         <div id='bulk-preview'></div>
       </section>
+      </div>
+      <div id='admin-content-panel' class='admin-panel' data-admin-panel='content' role='tabpanel' hidden>
       <section class='intro' style='margin-top:32px;'>
         <h2>Write Blog Post</h2>
         <form id='add-blog-form' style='display:flex;flex-direction:column;gap:10px;'>
@@ -84,10 +111,12 @@ function showDashboard() {
         <h2>Draft Blog Posts</h2>
         <div id='draft-posts'></div>
       </section>
+      </div>
     </main>
   `;
 
   setupSiteNavigation();
+  setupAdminTabs();
   if (supabaseClient) setupFieldAccessAdmin(supabaseClient);
   if (supabaseClient) setupLocationSchoolAdmin(supabaseClient);
   if (supabaseClient) loadSitePhotoReviews(supabaseClient);
