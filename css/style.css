@@ -801,11 +801,8 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
   }
 }
 
-/* Layout shared across the desktop and phone versions. */
+/* Keep the brand heading centered on wide headers; narrow layouts flow it with the logo. */
 .site-header h1 {
-	position: static;
-	transform: none;
-	white-space: normal;
 	text-align: center;
 }
 .site-header nav {
@@ -932,7 +929,12 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
 		grid-template-columns: auto 1fr;
 		gap: 8px 16px;
 	}
-	.site-header h1 { font-size: clamp(1.2rem, 3vw, 2rem); }
+	.site-header h1 {
+		position: static;
+		transform: none;
+		white-space: normal;
+		font-size: clamp(1.2rem, 3vw, 2rem);
+	}
 	.site-header nav { grid-column: 1 / -1; width: 100%; margin: 0; }
 	.join-flex-row { gap: 20px; }
 	.carousel-contact-row { flex-direction: column; gap: 0; }
