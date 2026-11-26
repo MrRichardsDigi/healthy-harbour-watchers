@@ -982,7 +982,8 @@
             .filter(value => Number.isFinite(value));
           return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
         }),
-        backgroundColor: index === 0 ? '#0b5fa6' : '#d97706'
+        backgroundColor: index === 0 ? '#0b5fa6' : '#d97706',
+        sampleCounts: params.map(parameter => filtered.filter(r => r.parameter === parameter && r.tidePhase === phase).length)
       }));
       if (chartInstance) chartInstance.destroy();
       chartInstance = new Chart(ctx, {
@@ -993,11 +994,20 @@
           maintainAspectRatio: false,
           plugins: {
             legend: { position: 'bottom' },
-            title: { display: true, text: 'Average measurement by tide phase' }
+            title: { display: true, text: 'Average measurement by tide phase' },
+            tooltip: {
+              callbacks: {
+                label: context => {
+                  const count = context.dataset.sampleCounts[context.dataIndex];
+                  const value = context.raw == null ? 'No data' : Number(context.raw).toFixed(2);
+                  return `${context.dataset.label}: ${value} (n=${count})`;
+                }
+              }
+            }
           },
           scales: {
             x: { title: { display: true, text: 'Parameter' } },
-            y: { title: { display: true, text: 'Average value' }, beginAtZero: false }
+            y: { title: { display: true, text: 'Average value' }, beginAtZero: true }
           }
         }
       });
