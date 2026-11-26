@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <script defer src="js/navigation.js?v=3"></script>
   <title>Blog — Healthy Harbour Watchers</title>
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
   <!-- Supabase client (UMD) and local config. Create/replace js/config.js with your project values. -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>
@@ -29,6 +29,19 @@
     </nav>
   </header>
   <main>
+    <section id="blog-submit" class="intro blog-submit" style="max-width:900px;margin:32px auto;">
+      <h2 style="text-align:center;">Share a project update</h2>
+      <p>Approved participants can send a story or project update. An administrator will review it before it appears on the public blog.</p>
+      <button id="blog-sign-in" type="button">Sign in with Google to submit</button>
+      <form id="blog-submit-form" hidden>
+        <label for="blog-submit-title">Title</label>
+        <input id="blog-submit-title" type="text" maxlength="160" required>
+        <label for="blog-submit-content">Your post</label>
+        <textarea id="blog-submit-content" rows="8" maxlength="12000" required></textarea>
+        <button type="submit">Send for review</button>
+      </form>
+      <p id="blog-submit-status" role="status" aria-live="polite"></p>
+    </section>
     <section class="intro" style="max-width:900px;margin:32px auto;">
       <h2 style="text-align:center;">Latest Posts</h2>
       <!-- Only show published posts on public blog page -->
@@ -39,5 +52,6 @@
     <small>Healthy Harbour Watchers — Otago Harbour</small>
   </footer>
   <script src="js/blog.js"></script>
+  <script src="js/blog-submit.js"></script>
 </body>
 </html>
