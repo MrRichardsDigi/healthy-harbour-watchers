@@ -4,6 +4,15 @@
    - Renders Chart and table on data.html (supports ?loc=id)
 */
 (async function(){
+  let supabaseClient = null;
+  try{
+    if(typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined' && window.supabase && window.supabase.createClient){
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  }catch(e){
+    console.warn('Supabase not configured or failed to initialize', e);
+  }
+
         // --- Assays info cards logic for index.html ---
         if(document.getElementById('assays-cards')) {
           const assays = [
@@ -36,11 +45,11 @@
               desc: 'Temperature affects oxygen levels, chemical reactions, and the health of aquatic organisms.'
             }
           ];
-          // Here we need to use specific images for assays, the images should be matched to the assays, same with the locations - need to fix this later
           const imgList = [
-            'assets/harbour1.jpg',
-            'assets/harbour2.jpg',
-            'assets/harbour3.jpg'
+            'assets/join5.jpg',
+            'assets/join7.jpg',
+            'assets/join3.jpg',
+            'assets/join2.jpg'
           ];
           function shuffle(arr) {
             for(let i=arr.length-1;i>0;i--){
@@ -49,14 +58,13 @@
             }
             return arr;
           }
-          const selected = shuffle([...assays]).slice(0,3);
+          const selected = shuffle([...assays]).slice(0,4);
           const container = document.getElementById('assays-cards');
           container.innerHTML = '';
           selected.forEach((assay, i) => {
             const card = document.createElement('div');
             card.className = 'location-card';
-            // Pick a random image for each card
-            const img = imgList[Math.floor(Math.random()*imgList.length)];
+            const img = imgList[i % imgList.length];
             card.innerHTML = `
               <img src="${img}" alt="${assay.name}">
               <div class="location-info">
@@ -69,12 +77,31 @@
         }
     // --- Featured Locations logic for index.html ---
     if(document.getElementById('featured-locations')) {
-      fetch('data/locations.json').then(r=>r.json()).then(locations => {
+      fetch('data/locations.json').then(r=>r.json()).then(async locations => {
         const filtered = locations.filter(l => l.currentSite).sort((a,b) => a.currentSite - b.currentSite);
-        // Assign images and descriptions (fallbacks)
         const imgList = ['assets/harbour1.jpg','assets/harbour2.jpg','assets/harbour3.jpg'];
+        const photosByLocation = {};
+        if (supabaseClient) {
+          await Promise.all(filtered.map(async location => {
+            try {
+              const { data, error } = await supabaseClient.rpc('site_photo_list', {
+                p_locationid: Number(location.id)
+              });
+              if (error) throw error;
+              const photo = data && data[0];
+              if (!photo || !photo.object_path) return;
+              const signed = await supabaseClient.storage.from('site-photos').createSignedUrl(photo.object_path, 3600);
+              if (signed.error) throw signed.error;
+              if (signed.data && signed.data.signedUrl) {
+                photosByLocation[String(location.id)] = signed.data.signedUrl;
+              }
+            } catch (error) {
+              console.warn(`Approved photo unavailable for ${location.name}:`, error);
+            }
+          }));
+        }
         filtered.forEach((l,i)=>{
-          l.img = imgList[i%imgList.length];
+          l.img = photosByLocation[String(l.id)] || imgList[i%imgList.length];
           l.desc = `Current monitoring site ${l.currentSite}`;
         });
         const featured = filtered;
@@ -85,7 +112,7 @@
           card.className = 'location-card';
           card.href = `site.html?id=${encodeURIComponent(loc.id)}`;
           card.innerHTML = `
-            <img src="${loc.img}" alt="">
+            <img src="${loc.img}" alt="Photo of ${loc.name}">
             <div class="location-info">
               <strong>${loc.name}</strong>
               <span>${loc.desc}</span>
@@ -107,17 +134,6 @@
       notice.textContent = message;
       notice.hidden = !message;
     }
-  }
-
-  // Initialize Supabase client if config and library are present.
-  let supabaseClient = null;
-  try{
-    if(typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined' && window.supabase && window.supabase.createClient){
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log('Supabase client initialized');
-    }
-  }catch(e){
-    console.warn('Supabase not configured or failed to initialize', e);
   }
 
   // Helper functions that prefer Supabase when configured, otherwise fall back to local JSON files.
