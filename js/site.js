@@ -92,14 +92,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
       const latest = matches[matches.length - 1];
       tideStatus.textContent =
-        `Port Chalmers tide prediction at estimated 09:30 NZ time: ${latest.tide.height.toFixed(2)} m, ${latest.tide.phase} tide on ${latest.date}. Historical sample times are estimated as 09:00–10:00.`;
+        `Port Chalmers tide prediction: ${latest.tide.height.toFixed(2)} m, ${latest.tide.phase} tide on ${latest.date}.`;
       if (tideTable) {
         const table = document.createElement('table');
-        table.innerHTML = '<caption>Recent sample dates and estimated tide conditions</caption><thead><tr><th scope="col">Sample date</th><th scope="col">Assumed time</th><th scope="col">Tide height</th><th scope="col">Phase</th></tr></thead>';
+        table.innerHTML = '<caption>Recent sample dates and estimated tide conditions</caption><thead><tr><th scope="col">Sample date</th><th scope="col">Tide height</th><th scope="col">Phase</th></tr></thead>';
         const body = document.createElement('tbody');
         matches.slice(-12).forEach(item => {
           const row = document.createElement('tr');
-          row.innerHTML = `<td>${item.date}</td><td>09:30 NZ</td><td>${item.tide.height.toFixed(2)} m</td><td>${item.tide.phase}</td>`;
+          row.innerHTML = `<td>${item.date}</td><td>${item.tide.height.toFixed(2)} m</td><td>${item.tide.phase}</td>`;
           body.appendChild(row);
         });
         table.appendChild(body);
