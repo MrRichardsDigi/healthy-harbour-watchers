@@ -51,7 +51,7 @@
       } }) };
       const script = w.document.createElement('script');
       w.fieldAuth = { approved: true, client: w.supabase.createClient() };
-      script.src = new URL('../js/field.js?v=4', location.href).href;
+      script.src = new URL('../js/field.js?v=5', location.href).href;
       w.document.head.appendChild(script);
       await new Promise((resolve, reject) => {
         script.onload = resolve;
@@ -67,7 +67,7 @@
       input.dispatchEvent(new w.Event('input', { bubbles: true }));
     }
     let w = await load();
-    const bounds = [[-2, 28], [0, 45], [0, 60], [0, 160], [5, 10], [0, 65], [0, 16], [0, 145], [0, 5], [0, 3000]];
+    const bounds = [[-2, 28], [0, 45], [0, 60], [0, 160], [5, 10], [0, 65], [0, 16], [0, 145], [0, 5], [0, 3000], [0, 20]];
     bounds.forEach(([min, max], i) => {
       const selector = `[data-parameter="${i + 1}"]`;
       change(w, selector, String(min));

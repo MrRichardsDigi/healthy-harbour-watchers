@@ -16,7 +16,7 @@ async function loadFieldReviews(client) {
     const names = {
       1: 'Water temperature (°C)', 2: 'Adjusted salinity', 3: 'Adjusted specific conductivity',
       4: 'Dissolved oxygen (%)', 5: 'pH', 6: 'Turbidity', 7: 'Chlorophyll a',
-      8: 'NNN (µmol/L)', 9: 'DRP (µmol/L)', 10: 'Enterococci'
+      8: 'NNN (µmol/L)', 9: 'DRP (µmol/L)', 10: 'Enterococci', 11: 'Dissolved oxygen (mg/L)'
     };
     for (const sample of submissions.data) {
       const card = document.createElement('article');

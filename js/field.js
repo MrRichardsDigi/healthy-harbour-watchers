@@ -9,8 +9,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const draftsElement = document.getElementById('field-drafts');
   const inputs = [...form.querySelectorAll('[data-parameter]')];
   const names = ['Water temperature (°C)', 'Adjusted salinity', 'Adjusted specific conductivity',
-    'Dissolved oxygen (%)', 'pH', 'Turbidity', 'Chlorophyll a', 'NNN (µmol/L)', 'DRP (µmol/L)', 'Enterococci'];
-  const ranges = [[-2, 28], [0, 45], [0, 60], [0, 160], [5, 10], [0, 65], [0, 16], [0, 145], [0, 5], [0, 3000]];
+    'Dissolved oxygen (%)', 'pH', 'Turbidity', 'Chlorophyll a', 'NNN (µmol/L)', 'DRP (µmol/L)', 'Enterococci', 'Dissolved oxygen (mg/L)'];
+  const ranges = {
+    1: [-2, 28], 2: [0, 45], 3: [0, 60], 4: [0, 160], 5: [5, 10],
+    6: [0, 65], 7: [0, 16], 8: [0, 145], 9: [0, 5], 10: [0, 3000], 11: [0, 20]
+  };
   const storageKey = 'hhw-field-drafts-v1';
   let state;
   let lastStored;
@@ -49,10 +52,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
   function warnings() {
-    inputs.forEach((input, index) => {
+    inputs.forEach(input => {
       const value = input.valueAsNumber;
-      const [min, max] = ranges[index];
-      document.getElementById(`warning-${index + 1}`).textContent =
+      const parameter = Number(input.dataset.parameter);
+      const [min, max] = ranges[parameter];
+      document.getElementById(`warning-${parameter}`).textContent =
         input.value !== '' && Number.isFinite(value) && (value < min || value > max)
           ? 'This is unusual compared with past readings. Check the value and units; it can still be saved and submitted.'
           : '';

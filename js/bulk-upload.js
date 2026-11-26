@@ -9,6 +9,7 @@ function setupBulkUpload(client) {
     'sal adj': [2, 'Adjusted salinity'],
     'sp cond adj': [3, 'Adjusted conductivity'],
     'do %': [4, 'Dissolved oxygen (%)'],
+    'do mg/l': [11, 'Dissolved oxygen (mg/L)'],
     'ph': [5, 'pH'],
     'turbidity': [6, 'Turbidity'],
     'turb': [6, 'Turbidity'],
@@ -17,7 +18,7 @@ function setupBulkUpload(client) {
     'drp μmol/l': [9, 'DRP'],
     'enterococci': [10, 'Enterococci']
   };
-  const excluded = ['salinity ppt', 'spec cond', 'do mg/l'];
+  const excluded = ['salinity ppt', 'spec cond'];
   let generation = 0;
   let busy = false;
 

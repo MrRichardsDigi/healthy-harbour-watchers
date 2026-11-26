@@ -58,7 +58,7 @@ begin
   if exists (
     select 1 from jsonb_to_recordset(p_measurements) as x(locationid bigint, parameterid bigint, value numeric)
     where x.locationid is null or x.parameterid is null or x.value is null
-      or x.parameterid not between 1 and 10
+      or x.parameterid not between 1 and 11
       or not exists (select 1 from public.locations l where l.id = x.locationid)
       or not exists (select 1 from public.parameters p where p.id = x.parameterid)
   ) then raise exception 'Upload contains an invalid site, parameter, or measurement'; end if;

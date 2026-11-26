@@ -77,7 +77,7 @@ begin
     raise exception 'Unknown sampling site';
   end if;
   for item in select key, value from jsonb_each(p_measurements) loop
-    if item.key not in ('1','2','3','4','5','6','7','8','9','10')
+    if item.key not in ('1','2','3','4','5','6','7','8','9','10','11')
        or jsonb_typeof(item.value) <> 'number' then
       raise exception 'Invalid measurement';
     end if;
