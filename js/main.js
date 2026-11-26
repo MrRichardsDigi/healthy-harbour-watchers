@@ -18,31 +18,38 @@
           const assays = [
             {
               name: 'NNN (Nitrate-Nitrite-Nitrogen)',
-              desc: 'NNN is a measure of dissolved inorganic nitrogen, important for understanding nutrient levels and potential for algal growth.'
+              desc: 'NNN is a measure of dissolved inorganic nitrogen, important for understanding nutrient levels and potential for algal growth.',
+              href: 'handbook.html#protocol-nitrogen'
             },
             {
               name: 'DRP (Dissolved Reactive Phosphorus)',
-              desc: 'DRP indicates the amount of phosphorus available for algae, a key nutrient that can drive blooms.'
+              desc: 'DRP indicates the amount of phosphorus available for algae, a key nutrient that can drive blooms.',
+              href: 'handbook.html#protocol-drp'
             },
             {
               name: 'Chlorophyll A',
-              desc: 'Chlorophyll A is a pigment in algae and is used as an indicator of algal biomass in the water.'
+              desc: 'Chlorophyll A is a pigment in algae and is used as an indicator of algal biomass in the water.',
+              href: 'handbook.html#protocol-chlorophyll-a'
             },
             {
               name: 'pH',
-              desc: 'pH measures how acidic or basic the water is, affecting aquatic life and chemical processes.'
+              desc: 'pH measures how acidic or basic the water is, affecting aquatic life and chemical processes.',
+              href: 'handbook.html#protocol-ph'
             },
             {
               name: 'Turbidity',
-              desc: 'Turbidity is a measure of water clarity, affected by suspended particles and runoff.'
+              desc: 'Turbidity is a measure of water clarity, affected by suspended particles and runoff.',
+              href: 'handbook.html#protocol-turbidity'
             },
             {
               name: 'Conductivity',
-              desc: 'Conductivity reflects the water’s ability to conduct electricity, related to the concentration of dissolved salts.'
+              desc: 'Conductivity reflects the water’s ability to conduct electricity, related to the concentration of dissolved salts.',
+              href: 'handbook.html#protocol-conductivity'
             },
             {
               name: 'Temperature',
-              desc: 'Temperature affects oxygen levels, chemical reactions, and the health of aquatic organisms.'
+              desc: 'Temperature affects oxygen levels, chemical reactions, and the health of aquatic organisms.',
+              href: 'handbook.html#protocol-temperature'
             }
           ];
           const imgList = [
@@ -62,8 +69,9 @@
           const container = document.getElementById('assays-cards');
           container.innerHTML = '';
           selected.forEach((assay, i) => {
-            const card = document.createElement('div');
+            const card = document.createElement('a');
             card.className = 'location-card';
+            card.href = assay.href;
             const img = imgList[i % imgList.length];
             card.innerHTML = `
               <img src="${img}" alt="${assay.name}">
