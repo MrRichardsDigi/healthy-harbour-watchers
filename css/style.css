@@ -454,11 +454,18 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;color:#0
 .location-school-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 320px); gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #dce7f2; }
 .location-school-row label { font-weight: 600; }
 .location-school-row select { min-height: 40px; padding: 6px 8px; }
-.admin-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 8px; background: #e6f0ff; border-radius: 10px; }
-.admin-tabs button { min-height: 44px; padding: 9px 16px; border: 1px solid #8eafc9; border-radius: 7px; background: #fff; color: #0b5fa6; font: inherit; font-weight: 700; cursor: pointer; }
+.admin-shell { max-width: 1080px; margin: 32px auto; padding: 0 16px 48px; }
+.admin-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 24px; padding: 8px; background: #dceaf7; border-radius: 12px; }
+.admin-tabs button { min-height: 52px; padding: 9px 16px; border: 1px solid #8eafc9; border-radius: 8px; background: #fff; color: #0b5fa6; font: inherit; font-weight: 700; cursor: pointer; }
 .admin-tabs button[aria-selected='true'] { background: #0b5fa6; color: #fff; border-color: #0b5fa6; }
 .admin-tabs button:focus-visible { outline: 3px solid #e39b19; outline-offset: 2px; }
-.admin-panel { display: grid; gap: 24px; }
+.admin-panel[hidden] { display: none !important; }
+.admin-panel { display: grid; gap: 24px; padding: clamp(18px, 3vw, 32px); background: rgba(255,255,255,.7); border: 1px solid #c8dced; border-radius: 14px; box-shadow: 0 2px 12px var(--blue-shadow); }
+.admin-panel > .intro { max-width: none; margin: 0; }
+@media (max-width: 700px) {
+  .admin-tabs { grid-template-columns: 1fr 1fr; }
+  .admin-tabs button { padding: 9px 8px; font-size: .92rem; }
+}
 .blog-submit form { display: grid; gap: 10px; max-width: 720px; margin: 16px auto 0; }
 .blog-submit input, .blog-submit textarea { width: 100%; padding: 10px; border: 1px solid #b5c6e0; border-radius: 6px; font: inherit; }
 .blog-submit button { justify-self: start; min-height: 44px; padding: 9px 16px; border: 0; border-radius: 7px; background: #0b5fa6; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }

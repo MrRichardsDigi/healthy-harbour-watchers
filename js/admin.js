@@ -9,15 +9,35 @@ if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefin
 function setupAdminTabs() {
   const tabs = Array.from(document.querySelectorAll('[data-admin-tab]'));
   const panels = Array.from(document.querySelectorAll('[data-admin-panel]'));
+  if (!tabs.length || !panels.length) return;
+
+  function selectTab(selected, updateUrl = true) {
+    const activeTab = tabs.find(tab => tab.dataset.adminTab === selected) || tabs[0];
+    const activePanel = panels.find(panel => panel.dataset.adminPanel === activeTab.dataset.adminTab);
+    tabs.forEach(tab => {
+      const isSelected = tab === activeTab;
+      tab.setAttribute('aria-selected', String(isSelected));
+      tab.tabIndex = isSelected ? 0 : -1;
+    });
+    panels.forEach(panel => {
+      panel.hidden = panel !== activePanel;
+    });
+    if (updateUrl) history.replaceState(null, '', `#${activeTab.dataset.adminTab}`);
+  }
+
   tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const selected = tab.dataset.adminTab;
-      tabs.forEach(item => item.setAttribute('aria-selected', String(item === tab)));
-      panels.forEach(panel => {
-        panel.hidden = panel.dataset.adminPanel !== selected;
-      });
+    tab.addEventListener('click', () => selectTab(tab.dataset.adminTab));
+    tab.addEventListener('keydown', event => {
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      event.preventDefault();
+      const offset = event.key === 'ArrowRight' ? 1 : -1;
+      const next = tabs[(tabs.indexOf(tab) + offset + tabs.length) % tabs.length];
+      next.focus();
+      selectTab(next.dataset.adminTab);
     });
   });
+  window.addEventListener('hashchange', () => selectTab(location.hash.slice(1), false));
+  selectTab(location.hash.slice(1) || tabs[0].dataset.adminTab, false);
 }
 
 function showDashboard() {
@@ -40,14 +60,14 @@ function showDashboard() {
         <a href="#" onclick="logout()" style="color:#b33;font-weight:bold;">Logout</a>
       </nav>
     </header>
-    <main style='max-width:900px;margin:32px auto;'>
+    <main class='admin-shell'>
       <nav class='admin-tabs' aria-label='Admin dashboard sections' role='tablist'>
         <button type='button' role='tab' aria-selected='true' aria-controls='admin-access-panel' data-admin-tab='access'>Access &amp; locations</button>
         <button type='button' role='tab' aria-selected='false' aria-controls='admin-review-panel' data-admin-tab='review'>Review</button>
         <button type='button' role='tab' aria-selected='false' aria-controls='admin-data-panel' data-admin-tab='data'>Data upload</button>
         <button type='button' role='tab' aria-selected='false' aria-controls='admin-content-panel' data-admin-tab='content'>Content</button>
       </nav>
-      <div id='admin-access-panel' class='admin-panel' data-admin-panel='access' role='tabpanel'>
+      <div id='admin-access-panel' class='admin-panel' data-admin-panel='access' role='tabpanel' aria-label='Access and locations'>
       <section class='intro field-review'>
         <h2>Field entry access</h2>
         <p>Only approved email addresses can submit field samples. School email domains do not automatically grant access.</p>
@@ -66,7 +86,7 @@ function showDashboard() {
         <div id='location-school-list'></div>
       </section>
       </div>
-      <div id='admin-review-panel' class='admin-panel' data-admin-panel='review' role='tabpanel' hidden>
+      <div id='admin-review-panel' class='admin-panel' data-admin-panel='review' role='tabpanel' aria-label='Review' hidden>
       <section class='intro field-review'>
         <h2>Review and manage site photos</h2>
         <p>Approve only site photos without identifiable people or other personal information.</p>
@@ -78,7 +98,7 @@ function showDashboard() {
         <div id='field-reviews' aria-live='polite'></div>
       </section>
       </div>
-      <div id='admin-data-panel' class='admin-panel' data-admin-panel='data' role='tabpanel' hidden>
+      <div id='admin-data-panel' class='admin-panel' data-admin-panel='data' role='tabpanel' aria-label='Data upload' hidden>
       <section class='intro'>
         <h2>Bulk Data Upload</h2>
         <p>Upload an SRF2 Excel workbook or CSV. Review the measurements before publishing them.</p>
@@ -94,7 +114,7 @@ function showDashboard() {
         <div id='bulk-preview'></div>
       </section>
       </div>
-      <div id='admin-content-panel' class='admin-panel' data-admin-panel='content' role='tabpanel' hidden>
+      <div id='admin-content-panel' class='admin-panel' data-admin-panel='content' role='tabpanel' aria-label='Content' hidden>
       <section class='intro' style='margin-top:32px;'>
         <h2>Write Blog Post</h2>
         <form id='add-blog-form' style='display:flex;flex-direction:column;gap:10px;'>
