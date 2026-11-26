@@ -550,7 +550,7 @@
     const tideCompareToggle = document.getElementById('tide-compare-toggle');
     const comparisonSummary = document.getElementById('comparison-summary');
     const modeButtons = Array.from(document.querySelectorAll('.data-mode'));
-    let dataMode = 'trends';
+    let dataMode = document.body.dataset.dataMode || 'trends';
     const samplingDates = Array.from(new Set(allRecords.map(r => r.date).filter(Boolean))).sort();
     let appliedDateRange = null;
     const applyBtn = document.getElementById('apply-filters');
@@ -898,7 +898,7 @@
         });
       }
       // Initial render and mode-specific control visibility
-      setDataMode('trends');
+      setDataMode(dataMode);
     }
 
     // Call after allRecords and selectors are ready
