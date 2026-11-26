@@ -166,6 +166,35 @@
 	color: #526579;
 	font-size: 0.9rem;
 }
+.join-contact-section {
+	max-width: 920px;
+	margin: 24px auto 8px;
+	padding: 22px 24px;
+	text-align: center;
+	background: var(--blue-card);
+	border: 1px solid #c8dced;
+	border-radius: 14px;
+	box-shadow: 0 2px 12px var(--blue-shadow);
+}
+.join-contact-section h2 {
+	margin: 0 0 6px;
+	color: var(--blue-accent);
+}
+.join-contact-section p {
+	margin: 0 0 16px;
+}
+.join-contact-actions {
+	display: flex;
+	justify-content: center;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+.join-contact-actions .contact-btn {
+	display: inline-block;
+	padding: 11px 18px;
+	border-radius: 8px;
+	color: #fff;
+}
 @media (max-width: 900px) {
 	.join-flex-row {
 		flex-direction: column;
@@ -1219,6 +1248,11 @@ footer {
 		grid-template-columns: 1fr;
 	}
 	.media-section {
+		margin-left: 12px;
+		margin-right: 12px;
+		padding: 18px;
+	}
+	.join-contact-section {
 		margin-left: 12px;
 		margin-right: 12px;
 		padding: 18px;
