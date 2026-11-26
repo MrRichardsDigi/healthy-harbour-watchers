@@ -59,7 +59,7 @@
             'assets/join2.jpg'
           ];
           const assayImages = {
-            Temperature: 'assets/join1.jpg'
+            Temperature: 'assets/join4.jpg'
           };
           function shuffle(arr) {
             for(let i=arr.length-1;i>0;i--){
