@@ -78,6 +78,7 @@
               <div class="location-info">
                 <strong>${assay.name}</strong>
                 <span>${assay.desc}</span>
+                <span class="assay-protocol-link">View protocol &rarr;</span>
               </div>
             `;
             container.appendChild(card);

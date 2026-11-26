@@ -251,6 +251,13 @@
 	font-size: 1.08em;
 	margin-bottom: 2px;
 }
+.assay-protocol-link {
+	display: block;
+	margin-top: 8px;
+	color: #0b5fa6;
+	font-size: .9rem;
+	font-weight: 700;
+}
 @media (max-width: 900px) {
 	.info-featured-row {
 		flex-direction: column;
