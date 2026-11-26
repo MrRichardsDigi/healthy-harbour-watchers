@@ -8,7 +8,10 @@
   const client = {
     rpc: async (name, args) => {
       if (failure === name) throw new Error('Mock network failure');
-      if (name === 'field_access_list') return { data: addresses.map(email => ({ email })), error: null };
+      if (name === 'field_access_account_list') return {
+        data: addresses.map(email => ({ email, approved: true, confirmed: true })),
+        error: null
+      };
       if (args.p_allow) addresses.push(args.p_email);
       else addresses = addresses.filter(email => email !== args.p_email);
       return { error: null };
@@ -42,7 +45,7 @@
     assert(!email.value, 'Successful approval did not clear input');
     list.querySelector('button').click();
     await waitFor(() => !list.textContent.includes('one@example.org'));
-    failure = 'field_access_list';
+    failure = 'field_access_account_list';
     email.value = 'three@example.org';
     form.requestSubmit();
     await waitFor(() => status.textContent.includes('Unable to manage field access'));

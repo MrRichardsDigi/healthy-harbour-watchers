@@ -4,33 +4,40 @@ function setupFieldAccessAdmin(client) {
   const status = document.getElementById('field-access-status');
   const list = document.getElementById('field-access-list');
   async function load() {
-    status.textContent = 'Loading approved addresses...';
+    status.textContent = 'Loading field accounts...';
     try {
-      const { data, error } = await client.rpc('field_access_list');
+      const { data, error } = await client.rpc('field_access_account_list');
       if (error) throw error;
       form.hidden = false;
       list.replaceChildren();
-      if (!data.length) list.textContent = 'No approved addresses.';
+      if (!data.length) list.textContent = 'No field accounts have been created yet.';
       data.forEach(item => {
         const row = document.createElement('p');
         const text = document.createElement('span');
         text.textContent = item.email;
-        const remove = document.createElement('button');
-        remove.type = 'button';
-        remove.textContent = 'Remove';
-        remove.addEventListener('click', async () => {
-          if (!window.confirm(`Remove field access for ${item.email}?`)) return;
-          remove.disabled = true;
+        const state = document.createElement('small');
+        state.textContent = item.approved
+          ? (item.confirmed ? ' Approved' : ' Approved; email not confirmed')
+          : (item.confirmed ? ' Pending approval' : ' Pending email confirmation and approval');
+        const action = document.createElement('button');
+        action.type = 'button';
+        action.textContent = item.approved ? 'Remove' : 'Approve';
+        action.addEventListener('click', async () => {
+          if (item.approved && !window.confirm(`Remove field access for ${item.email}?`)) return;
+          action.disabled = true;
           try {
-            const result = await client.rpc('field_access_change', { p_email: item.email, p_allow: false });
+            const result = await client.rpc('field_access_change', {
+              p_email: item.email,
+              p_allow: !item.approved
+            });
             if (result.error) throw result.error;
             await load();
           } catch (error) {
-            status.textContent = `Unable to remove access: ${error.message}`;
-            remove.disabled = false;
+            status.textContent = `Unable to update access: ${error.message}`;
+            action.disabled = false;
           }
         });
-        row.append(text, ' ', remove);
+        row.append(text, state, ' ', action);
         list.appendChild(row);
       });
       status.textContent = '';
