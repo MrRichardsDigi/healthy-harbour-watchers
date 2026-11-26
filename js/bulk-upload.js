@@ -46,6 +46,13 @@ function setupBulkUpload(client) {
     const text = String(value).trim();
     if (!text) return true;
     const [year, month, day] = selected.split('-').map(Number);
+    const excelSerial = Number(text);
+    if (/^\d+(?:\.\d+)?$/.test(text) && Number.isFinite(excelSerial)) {
+      const excelDate = new Date(Date.UTC(1899, 11, 30) + Math.floor(excelSerial) * 86400000);
+      return excelDate.getUTCFullYear() === year &&
+        excelDate.getUTCMonth() + 1 === month &&
+        excelDate.getUTCDate() === day;
+    }
     let match = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
     if (match) return +match[1] === year && +match[2] === month && +match[3] === day;
     match = text.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
