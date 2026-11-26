@@ -11,7 +11,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script defer src="js/site.js?v=2"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script defer src="js/site.js?v=3"></script>
 </head>
 <body>
   <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
@@ -47,6 +48,25 @@
         <a id="site-map">See on the harbour map</a>
         <a id="site-data">Explore this site's data</a>
       </p>
+      <section class="site-trends" aria-labelledby="trends-heading">
+        <h3 id="trends-heading">Recent measurements</h3>
+        <p id="site-trends-status" role="status">Loading the last 12 months...</p>
+        <div id="site-summary" class="site-summary"></div>
+        <div class="site-chart-grid">
+          <article class="site-chart-card">
+            <h4>Temperature and conductivity</h4>
+            <canvas id="site-environment-chart" role="img" aria-label="Temperature and conductivity over the last 12 months"></canvas>
+          </article>
+          <article class="site-chart-card">
+            <h4>pH and turbidity</h4>
+            <canvas id="site-clarity-chart" role="img" aria-label="pH and turbidity over the last 12 months"></canvas>
+          </article>
+          <article class="site-chart-card">
+            <h4>Enterococci bacteria</h4>
+            <canvas id="site-bacteria-chart" role="img" aria-label="Enterococci bacteria over the last 12 months"></canvas>
+          </article>
+        </div>
+      </section>
       <section aria-labelledby="photos-heading">
         <h3 id="photos-heading">Site photos</h3>
         <p>Photos are reviewed before appearing here. Approved participants can submit site photos through field entry.</p>

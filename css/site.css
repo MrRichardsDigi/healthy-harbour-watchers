@@ -13,6 +13,18 @@
 .site-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .site-actions a { display: inline-block; padding: 10px 16px; border-radius: 7px; background: var(--site-school-primary); color: white; font-weight: 700; }
 .site-actions a:hover { filter: brightness(.92); }
+.site-trends { margin: 24px 0; padding: 18px; background: var(--site-school-accent); border-radius: 10px; }
+.site-trends h3 { margin: 0 0 4px; color: var(--site-school-primary); }
+#site-trends-status { margin: 0 0 14px; color: #526579; }
+.site-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.site-summary-card { padding: 10px; background: rgba(255,255,255,.82); border: 1px solid #c8dced; border-radius: 8px; }
+.site-summary-card strong, .site-summary-card span { display: block; }
+.site-summary-card strong { color: var(--site-school-primary); font-size: .82rem; }
+.site-summary-card span { margin-top: 3px; font-weight: 700; }
+.site-chart-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.site-chart-card { min-width: 0; padding: 12px; background: rgba(255,255,255,.82); border: 1px solid #c8dced; border-radius: 8px; }
+.site-chart-card h4 { margin: 0 0 8px; color: var(--site-school-primary); font-size: .98rem; }
+.site-chart-card canvas { display: block; width: 100% !important; height: 220px !important; }
 .site-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
 .site-photos figure { margin: 0; }
 .site-photos img { display: block; width: 100%; height: auto; border-radius: 8px; border: 3px solid var(--site-school-accent); }
@@ -20,4 +32,6 @@
 @media (max-width: 700px) {
   .site-map-card { grid-template-columns: 1fr; }
   #site-mini-map { min-height: 210px; }
+  .site-chart-grid { grid-template-columns: 1fr; }
+  .site-chart-card canvas { height: 240px !important; }
 }

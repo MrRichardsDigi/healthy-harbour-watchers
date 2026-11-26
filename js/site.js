@@ -10,6 +10,132 @@ document.addEventListener('DOMContentLoaded', async () => {
   const photosStatus = document.getElementById('site-photos-status');
   const schoolBrand = document.getElementById('site-school-brand');
   const schoolLogo = document.getElementById('site-school-logo');
+  const trendStatus = document.getElementById('site-trends-status');
+  const summary = document.getElementById('site-summary');
+  const parameterNames = {
+    1: 'Temperature',
+    3: 'Conductivity',
+    5: 'pH',
+    6: 'Turbidity',
+    10: 'Enterococci'
+  };
+  const parameterUnits = {
+    1: '°C',
+    3: 'mS/cm',
+    5: '',
+    6: 'NTU',
+    10: 'CFU/100 mL'
+  };
+
+  function chartOptions(yTitle, secondaryTitle) {
+    const scales = {
+      x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 8 } },
+      y: { beginAtZero: false, title: { display: true, text: yTitle } }
+    };
+    if (secondaryTitle) {
+      scales.y1 = {
+        beginAtZero: false,
+        position: 'right',
+        grid: { drawOnChartArea: false },
+        title: { display: true, text: secondaryTitle }
+      };
+    }
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { position: 'bottom' } },
+      scales
+    };
+  }
+
+  async function renderSiteTrends(client, locationId) {
+    if (!trendStatus || !summary) return;
+    if (!window.Chart) {
+      trendStatus.textContent = 'Charts are unavailable in this browser.';
+      return;
+    }
+    try {
+      const [rowsResponse, datesResponse] = await Promise.all([
+        client.from('data').select('dateid, parameterid, value').eq('locationid', locationId).limit(5000),
+        client.from('samplingdates').select('id, date').limit(10000)
+      ]);
+      if (rowsResponse.error) throw rowsResponse.error;
+      if (datesResponse.error) throw datesResponse.error;
+      const dateById = Object.fromEntries((datesResponse.data || []).map(item => [String(item.id), item.date]));
+      const records = (rowsResponse.data || [])
+        .map(row => ({
+          date: dateById[String(row.dateid)],
+          parameterId: Number(row.parameterid),
+          value: Number(row.value)
+        }))
+        .filter(row => parameterNames[row.parameterId] && row.date && Number.isFinite(row.value));
+      if (!records.length) {
+        trendStatus.textContent = 'No chartable measurements are available for this site yet.';
+        return;
+      }
+      const latestDate = new Date(`${records.reduce((latest, row) => row.date > latest ? row.date : latest, records[0].date)}T00:00:00`);
+      const since = new Date(latestDate);
+      since.setFullYear(since.getFullYear() - 1);
+      const recent = records.filter(row => new Date(`${row.date}T00:00:00`) >= since);
+      const dates = [...new Set(recent.map(row => row.date))].sort();
+      if (!dates.length) {
+        trendStatus.textContent = 'No measurements were recorded in the last 12 months.';
+        return;
+      }
+      const valuesFor = parameterId => dates.map(date => {
+        const record = recent.find(row => row.date === date && row.parameterId === parameterId);
+        return record ? record.value : null;
+      });
+      const latestByParameter = {};
+      recent.forEach(row => {
+        if (!latestByParameter[row.parameterId] || row.date > latestByParameter[row.parameterId].date) {
+          latestByParameter[row.parameterId] = row;
+        }
+      });
+      summary.replaceChildren();
+      [1, 3, 5, 6, 10].forEach(parameterId => {
+        const record = latestByParameter[parameterId];
+        if (!record) return;
+        const card = document.createElement('div');
+        card.className = 'site-summary-card';
+        const label = document.createElement('strong');
+        label.textContent = parameterNames[parameterId];
+        const value = document.createElement('span');
+        value.textContent = `${record.value} ${parameterUnits[parameterId]}`.trim();
+        card.append(label, value);
+        summary.appendChild(card);
+      });
+      trendStatus.textContent = `Showing ${dates[0]} to ${dates[dates.length - 1]}.`;
+      const common = { fill: false, tension: 0.25, spanGaps: true, pointRadius: 3 };
+      new Chart(document.getElementById('site-environment-chart'), {
+        type: 'line',
+        data: { labels: dates, datasets: [
+          { ...common, label: 'Temperature (°C)', data: valuesFor(1), borderColor: '#d97706', yAxisID: 'y' },
+          { ...common, label: 'Conductivity', data: valuesFor(3), borderColor: '#0b5fa6', yAxisID: 'y1' }
+        ] },
+        options: chartOptions('°C', 'Conductivity')
+      });
+      new Chart(document.getElementById('site-clarity-chart'), {
+        type: 'line',
+        data: { labels: dates, datasets: [
+          { ...common, label: 'pH', data: valuesFor(5), borderColor: '#7c3aed', yAxisID: 'y' },
+          { ...common, label: 'Turbidity (NTU)', data: valuesFor(6), borderColor: '#0891b2', yAxisID: 'y1' }
+        ] },
+        options: chartOptions('pH', 'NTU')
+      });
+      new Chart(document.getElementById('site-bacteria-chart'), {
+        type: 'line',
+        data: { labels: dates, datasets: [
+          { ...common, label: 'Enterococci (CFU/100 mL)', data: valuesFor(10), borderColor: '#be123c', yAxisID: 'y' }
+        ] },
+        options: chartOptions('CFU/100 mL')
+      });
+    } catch (error) {
+      console.warn('Site trends unavailable:', error);
+      trendStatus.textContent = 'Measurements could not be loaded for this site.';
+    }
+  }
   try {
     const id = new URLSearchParams(location.search).get('id');
     const response = await fetch('data/locations.json');
@@ -51,6 +177,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('site-map').href = `locations.html?loc=${encodeURIComponent(site.id)}`;
     document.getElementById('site-data').href = `data.html?loc=${encodeURIComponent(site.id)}`;
     document.getElementById('site-details').hidden = false;
+    if (window.supabase && typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined') {
+      await renderSiteTrends(window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY), Number(site.id));
+    } else {
+      trendStatus.textContent = 'Live measurements are unavailable.';
+    }
     const latitude = Number(site.lat);
     const longitude = Number(site.lng);
     const miniMap = document.getElementById('site-mini-map');
