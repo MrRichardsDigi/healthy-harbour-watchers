@@ -58,6 +58,9 @@
             'assets/join3.jpg',
             'assets/join2.jpg'
           ];
+          const assayImages = {
+            Temperature: 'assets/join1.jpg'
+          };
           function shuffle(arr) {
             for(let i=arr.length-1;i>0;i--){
               const j=Math.floor(Math.random()*(i+1));
@@ -72,7 +75,7 @@
             const card = document.createElement('a');
             card.className = 'location-card';
             card.href = assay.href;
-            const img = imgList[i % imgList.length];
+            const img = assayImages[assay.name] || imgList[i % imgList.length];
             card.innerHTML = `
               <img src="${img}" alt="${assay.name}">
               <div class="location-info">
