@@ -547,6 +547,7 @@
     const dateClear = document.getElementById('date-clear');
     const tidePhaseSelect = document.getElementById('tide-phase-select');
     const tideHeightSelect = document.getElementById('tide-height-select');
+    const tideCompareToggle = document.getElementById('tide-compare-toggle');
     const samplingDates = Array.from(new Set(allRecords.map(r => r.date).filter(Boolean))).sort();
     let appliedDateRange = null;
     const applyBtn = document.getElementById('apply-filters');
@@ -708,7 +709,9 @@
         // location filtering: if any selected, require r.loc to be in the flattened list
         if(selectedLoc.length){ if(!selectedLoc.includes(String(r.loc))) return false; }
         if (appliedDateRange && (!r.date || r.date < appliedDateRange.start || r.date > appliedDateRange.end)) return false;
-        if (tidePhaseSelect.value && r.tidePhase !== tidePhaseSelect.value) return false;
+        const selectedTidePhases = Array.from(tidePhaseSelect.selectedOptions).map(option => option.value);
+        if (selectedTidePhases.length && !selectedTidePhases.includes(r.tidePhase)) return false;
+        if (tideCompareToggle.checked && !r.tidePhase) return false;
         if (tideHeightSelect.value) {
           if (r.tideHeight == null) return false;
           if (tideHeightSelect.value === 'low' && r.tideHeight >= 0.5) return false;
@@ -782,6 +785,11 @@
           });
           updateTrendlineBtn();
         }
+      if (tideCompareToggle) {
+        tideCompareToggle.addEventListener('change', () => {
+          renderChart(filterRecords());
+        });
+      }
     function getChartType() {
       return chartTypeState;
     }
@@ -822,6 +830,8 @@
           locationSelect.value = '';
           tidePhaseSelect.value = '';
           tideHeightSelect.value = '';
+          Array.from(tidePhaseSelect.options).forEach(option => { option.selected = false; });
+          tideCompareToggle.checked = false;
           applyFilters();
         });
       }
@@ -842,6 +852,10 @@
         return; 
       }
       ctx.canvas.style.display='block';
+      if (tideCompareToggle.checked) {
+        renderTideComparison(filtered);
+        return;
+      }
       // get sorted unique dates
       const dates = Array.from(new Set(filtered.map(r=>r.date))).sort((a,b)=>new Date(a)-new Date(b));
       // get selected params and locations
@@ -950,8 +964,44 @@
               ticks: { font: { size: 14 } }
             }
           }
+
         }
       });
+    }
+
+    function renderTideComparison(filtered) {
+      const chartTitleDiv = document.getElementById('chart-title');
+      const params = Array.from(new Set(filtered.map(r => r.parameter)));
+      const phases = ['rising', 'falling'];
+      const datasets = phases.map((phase, index) => ({
+        label: phase === 'rising' ? 'Rising tide' : 'Falling tide',
+        data: params.map(parameter => {
+          const values = filtered
+            .filter(r => r.parameter === parameter && r.tidePhase === phase)
+            .map(r => Number(r.value))
+            .filter(value => Number.isFinite(value));
+          return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+        }),
+        backgroundColor: index === 0 ? '#0b5fa6' : '#d97706'
+      }));
+      if (chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: { labels: params, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: true, text: 'Average measurement by tide phase' }
+          },
+          scales: {
+            x: { title: { display: true, text: 'Parameter' } },
+            y: { title: { display: true, text: 'Average value' }, beginAtZero: false }
+          }
+        }
+      });
+      if (chartTitleDiv) chartTitleDiv.textContent = 'Rising tide compared with falling tide';
     }
 
     function formatSamplingDate(value) {
