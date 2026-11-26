@@ -415,6 +415,17 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;color:#0
   white-space: nowrap;
 }
 .site-header nav a{margin-left:12px;color:var(--blue-text);text-decoration:none}
+.site-location-menu { display: inline-block; position: relative; margin-left: 12px; }
+.site-location-menu summary { list-style: none; cursor: pointer; color: var(--blue-text); padding: 6px 0; }
+.site-location-menu summary::-webkit-details-marker { display: none; }
+.site-location-menu summary::after { content: ' ▾'; font-size: .8em; }
+.site-location-menu summary.nav-current { background: #e6f0ff; border-radius: 6px; font-weight: bold; padding: 6px 10px; }
+.site-location-panel { position: absolute; z-index: 1200; top: calc(100% + 6px); right: 0; min-width: 220px; padding: 8px; background: #fff; border: 1px solid #b5c6e0; border-radius: 8px; box-shadow: 0 4px 14px #0b25452a; }
+.site-location-panel a { display: block; margin: 0; padding: 9px 10px; white-space: nowrap; }
+.site-location-panel a:hover, .site-location-panel a:focus-visible { background: #e6f0ff; border-radius: 5px; }
+.location-school-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 320px); gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid #dce7f2; }
+.location-school-row label { font-weight: 600; }
+.location-school-row select { min-height: 40px; padding: 6px 8px; }
 .hero{padding:20px;text-align:center}
 .carousel {
 	position: relative;
@@ -769,6 +780,10 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
 	margin: 0;
 	padding: 8px 10px;
 }
+.site-header nav .site-location-menu { margin: 0; }
+.site-header nav .site-location-menu summary { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 10px; }
+.site-header nav .site-location-menu summary.nav-current { padding: 8px 10px; }
+.site-location-panel { right: auto; left: 0; }
 .hero-bg, .wavy-divider, .wavy-divider svg, .site-banner { width: 100%; }
 .hero-overlay { max-width: calc(100% - 32px); }
 .cta-btn { margin: 4px; }
@@ -930,6 +945,10 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
 	.site-nav-enhanced .site-menu-close { display: block; align-self: flex-end; min-height: 48px; padding: 10px 12px; border: 1px solid #8eafc9; border-radius: 8px; background: #fff; color: #0b5fa6; font: inherit; font-weight: 700; cursor: pointer; }
 	.site-header.site-nav-enhanced nav a,
 	.site-header.site-nav-enhanced nav a.nav-current { justify-content: flex-start; min-height: 56px; padding: 12px 16px; font-size: 1.15rem; }
+	.site-header.site-nav-enhanced nav .site-location-menu { display: block; margin: 0; }
+	.site-header.site-nav-enhanced nav .site-location-menu summary { display: flex; justify-content: flex-start; min-height: 56px; padding: 12px 16px; font-size: 1.15rem; }
+	.site-header.site-nav-enhanced nav .site-location-panel { position: static; min-width: 0; border: 0; box-shadow: none; padding: 0 0 0 12px; }
+	.site-header.site-nav-enhanced nav .site-location-panel a { min-height: 44px; padding: 10px 16px; font-size: 1rem; }
 	.site-banner { font-size: .9rem; padding: 8px 0; }
 	.site-header { padding: 10px 12px; align-items: center; }
 	.site-header h1 { margin: 0; text-align: left; }

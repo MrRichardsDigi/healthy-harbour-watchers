@@ -15,6 +15,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('site-name').textContent = site.name;
     document.getElementById('site-type').textContent = site.currentSite
       ? `Current monitoring site ${site.currentSite}` : 'Historical monitoring site';
+    const school = document.getElementById('site-school');
+    school.textContent = 'School: Unassigned';
+    if (window.supabase && typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined') {
+      const assignmentClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const assignment = await assignmentClient.rpc('location_school_list');
+      if (!assignment.error) {
+        const match = (assignment.data || []).find(item => String(item.location_id) === id);
+        if (match && match.school_name) school.textContent = `School: ${match.school_name}`;
+      }
+    }
     document.getElementById('site-coordinates').textContent =
       `Coordinates: ${Number(site.lat).toFixed(5)}, ${Number(site.lng).toFixed(5)}`;
     document.getElementById('site-map').href = `locations.html?loc=${encodeURIComponent(site.id)}`;

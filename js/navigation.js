@@ -5,6 +5,7 @@ function setupSiteNavigation() {
 
   nav.id = 'site-navigation';
   nav.setAttribute('aria-label', 'Main navigation');
+  setupLocationMenu(nav);
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'site-menu-toggle';
@@ -43,6 +44,44 @@ function setupSiteNavigation() {
     }
   });
   window.matchMedia('(min-width: 701px)').addEventListener('change', () => setOpen(false));
+}
+
+function setupLocationMenu(nav) {
+  const locationsLink = Array.from(nav.querySelectorAll('a')).find(link =>
+    new URL(link.href, document.baseURI).pathname.endsWith('/locations.html'));
+  if (!locationsLink || nav.querySelector('.site-location-menu')) return;
+
+  const menu = document.createElement('details');
+  menu.className = 'site-location-menu';
+  const summary = document.createElement('summary');
+  summary.textContent = 'Locations';
+  if (locationsLink.classList.contains('nav-current')) summary.classList.add('nav-current');
+  const panel = document.createElement('div');
+  panel.className = 'site-location-panel';
+  const allLink = locationsLink.cloneNode(true);
+  allLink.classList.remove('nav-current');
+  allLink.textContent = 'All locations';
+  panel.appendChild(allLink);
+  menu.append(summary, panel);
+  locationsLink.replaceWith(menu);
+
+  fetch('data/locations.json')
+    .then(response => {
+      if (!response.ok) throw new Error('Unable to load locations');
+      return response.json();
+    })
+    .then(locations => {
+      locations
+        .slice()
+        .sort((a, b) => (a.currentSite || 999) - (b.currentSite || 999))
+        .forEach(location => {
+          const link = document.createElement('a');
+          link.href = `site.html?id=${encodeURIComponent(location.id)}`;
+          link.textContent = location.name;
+          panel.appendChild(link);
+        });
+    })
+    .catch(error => console.warn('Unable to build location menu:', error));
 }
 
 if (document.readyState === 'loading') {

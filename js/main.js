@@ -129,16 +129,25 @@
           fetchJSON('data/locations.json')
         ]);
         if(error) throw error;
+        let assignments = {};
+        const assignmentResponse = await supabaseClient.rpc('location_school_list');
+        if (!assignmentResponse.error) {
+          (assignmentResponse.data || []).forEach(item => {
+            assignments[String(item.location_id)] = item.school_name || '';
+          });
+        } else {
+          console.warn('Location school assignments unavailable:', assignmentResponse.error);
+        }
         // normalize to {id, name, lat, lng}
-        const normalized = (locRows || []).map(r=>({ id: String(r.id), name: r.location ?? r.name ?? String(r.id), lat: r.lat ?? r.latitude, lng: r.lng ?? r.longitude, currentSite: localLocations.find(l => String(l.id) === String(r.id))?.currentSite }));
+        const normalized = (locRows || []).map(r=>({ id: String(r.id), name: r.location ?? r.name ?? String(r.id), lat: r.lat ?? r.latitude, lng: r.lng ?? r.longitude, currentSite: localLocations.find(l => String(l.id) === String(r.id))?.currentSite, schoolName: assignments[String(r.id)] || '' }));
         return normalized;
       }catch(e){
         console.warn('Supabase locations fetch failed, falling back to local JSON', e);
         try{ window.__hhw_debug = window.__hhw_debug || {}; window.__hhw_debug.fetchErrors = window.__hhw_debug.fetchErrors || []; window.__hhw_debug.fetchErrors.push({op:'locations', error:String(e)}); }catch(_){}
-        return fetchJSON('data/locations.json');
+        return fetchJSON('data/locations.json').then(rows => rows.map(row => ({ ...row, schoolName: '' })));
       }
     }
-    return fetchJSON('data/locations.json');
+    return fetchJSON('data/locations.json').then(rows => rows.map(row => ({ ...row, schoolName: '' })));
   }
 
   async function getRecords(locId){
@@ -289,7 +298,7 @@
           sidebar.innerHTML = `
             <button id="close-sidebar" aria-label="Close site details" style="position:absolute;top:12px;right:12px;background:#fff2;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:18px;color:#0b5fa6;z-index:20">&times;</button>
             <h3 style='margin-top:0'>${loc.name}</h3>
-            <div style="margin-bottom:10px;font-size:13px;color:#444">${loc.currentSite ? `Current site ${loc.currentSite}` : 'Historical site'}</div>
+            <div style="margin-bottom:10px;font-size:13px;color:#444">${loc.currentSite ? `Current site ${loc.currentSite}` : 'Historical site'}${loc.schoolName ? ` · ${loc.schoolName}` : ''}</div>
             <div><a href="site.html?id=${encodeURIComponent(loc.id)}">View site profile</a></div>
             <div><a id="view-data-link" href="data.html?loc=${encodeURIComponent(loc.id)}" style="color:#0b5fa6;text-decoration:underline">View data for this site</a></div>
           `;
@@ -311,7 +320,7 @@
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'site-list-button';
-      button.textContent = `${loc.currentSite ? `Site ${loc.currentSite}: ` : ''}${loc.name}`;
+      button.textContent = `${loc.currentSite ? `Site ${loc.currentSite}: ` : ''}${loc.name}${loc.schoolName ? ` — ${loc.schoolName}` : ''}`;
       button.onclick = ()=>{
         map.setView([loc.lat,loc.lng],14);
         marker.fire('click');
