@@ -16,6 +16,7 @@
 .site-trends { margin: 24px 0; padding: 18px; background: var(--site-school-accent); border-radius: 10px; }
 .site-trends h3 { margin: 0 0 4px; color: var(--site-school-primary); }
 #site-trends-status { margin: 0 0 14px; color: #526579; }
+.site-tide-status { margin: -6px 0 14px; color: #526579; font-size: .92rem; }
 .site-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .site-summary-card { padding: 10px; background: rgba(255,255,255,.82); border: 1px solid #c8dced; border-radius: 8px; }
 .site-summary-card strong, .site-summary-card span { display: block; }

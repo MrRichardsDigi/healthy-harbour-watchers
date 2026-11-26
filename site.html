@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Monitoring site — Healthy Harbour Watchers</title>
   <link rel="stylesheet" href="css/style.css?v=12">
-  <link rel="stylesheet" href="css/site.css?v=4">
+  <link rel="stylesheet" href="css/site.css?v=5">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script defer src="js/navigation.js?v=4"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-  <script defer src="js/site.js?v=4"></script>
+  <script defer src="js/site.js?v=5"></script>
 </head>
 <body>
   <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
@@ -51,6 +51,7 @@
       <section class="site-trends" aria-labelledby="trends-heading">
         <h3 id="trends-heading">Recent measurements</h3>
         <p id="site-trends-status" role="status">Loading the last 12 months...</p>
+        <p id="site-tide-status" class="site-tide-status" role="status">Loading Port Chalmers tide reference...</p>
         <div id="site-summary" class="site-summary"></div>
         <div class="site-chart-grid">
           <article class="site-chart-card">

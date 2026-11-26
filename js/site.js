@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const schoolBrand = document.getElementById('site-school-brand');
   const schoolLogo = document.getElementById('site-school-logo');
   const trendStatus = document.getElementById('site-trends-status');
+  const tideStatus = document.getElementById('site-tide-status');
   const summary = document.getElementById('site-summary');
   const parameterNames = {
     1: 'Temperature',
@@ -47,6 +48,54 @@ document.addEventListener('DOMContentLoaded', async () => {
       plugins: { legend: { position: 'bottom' } },
       scales
     };
+  }
+
+  function tideAtEstimatedSampleTime(tideEvents, date) {
+    const events = tideEvents
+      .filter(event => event.date === date)
+      .map(event => ({
+        ...event,
+        minutes: Number(event.time.slice(0, 2)) * 60 + Number(event.time.slice(3))
+      }))
+      .sort((a, b) => a.minutes - b.minutes);
+    if (!events.length) return null;
+    const sampleMinutes = 9 * 60 + 30;
+    let before = null;
+    let after = null;
+    events.forEach(event => {
+      if (event.minutes <= sampleMinutes) before = event;
+      if (!after && event.minutes >= sampleMinutes) after = event;
+    });
+    if (!before) before = { ...events[events.length - 1], minutes: events[events.length - 1].minutes - 1440 };
+    if (!after) after = { ...events[0], minutes: events[0].minutes + 1440 };
+    const fraction = (sampleMinutes - before.minutes) / (after.minutes - before.minutes);
+    const height = before.height + (after.height - before.height) * fraction;
+    return {
+      height,
+      phase: after.height > before.height ? 'rising' : 'falling',
+      nextEvent: Math.abs(after.minutes - sampleMinutes) <= Math.abs(sampleMinutes - before.minutes) ? after : before
+    };
+  }
+
+  async function renderTideContext(dates) {
+    if (!tideStatus) return;
+    try {
+      const response = await fetch('data/port-chalmers-tides.json');
+      if (!response.ok) throw new Error('Tide reference data unavailable');
+      const tideEvents = await response.json();
+      const matches = dates.map(date => ({ date, tide: tideAtEstimatedSampleTime(tideEvents, date) }))
+        .filter(item => item.tide);
+      if (!matches.length) {
+        tideStatus.textContent = 'Tide reference data is not available for these sample dates.';
+        return;
+      }
+      const latest = matches[matches.length - 1];
+      tideStatus.textContent =
+        `Port Chalmers tide prediction at estimated 09:30 NZ time: ${latest.tide.height.toFixed(2)} m, ${latest.tide.phase} tide on ${latest.date}. Historical sample times are estimated as 09:00–10:00.`;
+    } catch (error) {
+      console.warn('Tide context unavailable:', error);
+      tideStatus.textContent = 'Port Chalmers tide reference is temporarily unavailable.';
+    }
   }
 
   async function renderSiteTrends(client, locationId) {
@@ -107,6 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         summary.appendChild(card);
       });
       trendStatus.textContent = `Showing ${dates[0]} to ${dates[dates.length - 1]}.`;
+      renderTideContext(dates);
       const common = { fill: false, tension: 0.25, spanGaps: true, pointRadius: 3 };
       new Chart(document.getElementById('site-environment-chart'), {
         type: 'line',
