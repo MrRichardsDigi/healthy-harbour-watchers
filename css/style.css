@@ -1258,3 +1258,11 @@ footer {
 		padding: 18px;
 	}
 }
+ .data-modes { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; border-bottom: 1px solid #c8dced; padding-bottom: 8px; }
+ .data-mode { padding: 8px 12px; border: 1px solid #c8dced; border-radius: 6px; background: #f8fbff; color: #0b5fa6; cursor: pointer; }
+ .data-mode.active { background: #0b5fa6; color: #fff; }
+ .comparison-summary { margin: 14px 0; overflow-x: auto; }
+ .comparison-summary table { width: 100%; border-collapse: collapse; }
+ .comparison-summary caption { margin-bottom: 6px; text-align: left; color: #0b5fa6; font-weight: 700; }
+ .comparison-summary th, .comparison-summary td { padding: 7px 8px; border: 1px solid #c8dced; text-align: left; }
+ .comparison-summary th { background: #f1f7fc; }

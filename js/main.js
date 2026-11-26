@@ -548,6 +548,9 @@
     const tidePhaseSelect = document.getElementById('tide-phase-select');
     const tideHeightSelect = document.getElementById('tide-height-select');
     const tideCompareToggle = document.getElementById('tide-compare-toggle');
+    const comparisonSummary = document.getElementById('comparison-summary');
+    const modeButtons = Array.from(document.querySelectorAll('.data-mode'));
+    let dataMode = 'trends';
     const samplingDates = Array.from(new Set(allRecords.map(r => r.date).filter(Boolean))).sort();
     let appliedDateRange = null;
     const applyBtn = document.getElementById('apply-filters');
@@ -722,6 +725,58 @@
       });
     }
 
+    function median(values) {
+      const sorted = values.slice().sort((a, b) => a - b);
+      if (!sorted.length) return null;
+      const middle = Math.floor(sorted.length / 2);
+      return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+    }
+
+    function renderTideSummary(filtered) {
+      if (!comparisonSummary) return;
+      const params = Array.from(new Set(filtered.map(record => record.parameter)));
+      const rows = params.map(parameter => {
+        const rising = filtered.filter(record => record.parameter === parameter && record.tidePhase === 'rising')
+          .map(record => Number(record.value)).filter(Number.isFinite);
+        const falling = filtered.filter(record => record.parameter === parameter && record.tidePhase === 'falling')
+          .map(record => Number(record.value)).filter(Number.isFinite);
+        const risingMedian = median(rising);
+        const fallingMedian = median(falling);
+        const difference = risingMedian == null || fallingMedian == null ? null : risingMedian - fallingMedian;
+        return { parameter, rising, falling, risingMedian, fallingMedian, difference };
+      });
+      const format = value => value == null ? '—' : value.toFixed(2);
+      const table = document.createElement('table');
+      table.innerHTML = '<caption>Rising and falling tide summary (median values)</caption><thead><tr><th>Parameter</th><th>Rising median</th><th>Falling median</th><th>Difference</th><th>Samples</th></tr></thead>';
+      const body = document.createElement('tbody');
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${row.parameter}</td><td>${format(row.risingMedian)}</td><td>${format(row.fallingMedian)}</td><td>${format(row.difference)}</td><td>${row.rising.length} / ${row.falling.length}</td>`;
+        body.appendChild(tr);
+      });
+      table.appendChild(body);
+      comparisonSummary.replaceChildren(table);
+      comparisonSummary.hidden = false;
+    }
+
+    function setDataMode(mode) {
+      dataMode = mode;
+      modeButtons.forEach(button => button.classList.toggle('active', button.dataset.mode === mode));
+      const isTide = mode === 'tide';
+      const isRecords = mode === 'records';
+      const showChart = !isRecords;
+      document.getElementById('tide-phase-control').hidden = !isTide;
+      document.getElementById('tide-height-control').hidden = !isTide;
+      document.getElementById('tide-compare-control').hidden = !isTide;
+      document.getElementById('date-slider-container').hidden = isTide;
+      document.getElementById('chart-controls').hidden = isRecords || isTide;
+      document.getElementById('chart-container').hidden = !showChart;
+      document.getElementById('chart-title').hidden = !showChart;
+      tideCompareToggle.checked = isTide;
+      if (comparisonSummary) comparisonSummary.hidden = !isTide;
+      applyFilters();
+    }
+
     // build table from filtered records
     function renderTable(filtered){
       table.innerHTML = '';
@@ -790,6 +845,9 @@
           renderChart(filterRecords());
         });
       }
+      modeButtons.forEach(button => {
+        button.addEventListener('click', () => setDataMode(button.dataset.mode));
+      });
     function getChartType() {
       return chartTypeState;
     }
@@ -849,13 +907,16 @@
         ctx.canvas.style.display='none'; 
         if(chartInstance){ chartInstance.destroy(); chartInstance=null;}
         if(chartTitleDiv) chartTitleDiv.textContent = '';
+        if(comparisonSummary) comparisonSummary.hidden = true;
         return; 
       }
       ctx.canvas.style.display='block';
       if (tideCompareToggle.checked) {
+        renderTideSummary(filtered);
         renderTideComparison(filtered);
         return;
       }
+      if (comparisonSummary) comparisonSummary.hidden = true;
       // get sorted unique dates
       const dates = Array.from(new Set(filtered.map(r=>r.date))).sort((a,b)=>new Date(a)-new Date(b));
       // get selected params and locations
