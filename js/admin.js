@@ -101,9 +101,14 @@ function showDashboard() {
       <div id='admin-data-panel' class='admin-panel' data-admin-panel='data' role='tabpanel' aria-label='Data upload' hidden>
       <section class='intro'>
         <h2>Bulk Data Upload</h2>
-        <p>Upload an SRF2 Excel workbook or CSV. Review the measurements before publishing them.</p>
-        <p>Use files with the current site numbering. Check the site numbers and names in the preview before publishing; older files may use different numbers.</p>
-        <a href='data/data-upload-template.csv' download style='display:inline-block;margin-bottom:10px;padding:6px 14px;background:#e6f0ff;color:#0b5fa6;border-radius:6px;text-decoration:none;font-size:1em;'>Download CSV Template</a><br>
+        <p>Use the three-step process below to upload measurements safely. Do not start with a blank spreadsheet.</p>
+        <ol>
+          <li><strong>Download the CSV template</strong> and fill it in, keeping the column headings unchanged.</li>
+          <li><strong>Choose the sampling date</strong> for this upload. This date applies to every measurement row.</li>
+          <li><strong>Choose your completed CSV</strong> (or an SRF2 Excel workbook), preview it, fix any warnings, and publish only after checking the preview.</li>
+        </ol>
+        <p>Use the current site numbers (#1–#8) in the <strong>Site</strong> column. Older spreadsheets may use different site numbers, so check the site names shown in the preview carefully.</p>
+        <a href='data/data-upload-template.csv' download style='display:inline-block;margin-bottom:10px;padding:6px 14px;background:#e6f0ff;color:#0b5fa6;border-radius:6px;text-decoration:none;font-size:1em;'>Download the CSV template</a><br>
         <label style='display:block;margin-bottom:10px;'>
           Sampling Date:
           <input type='date' id='csv-sampling-date' style='margin-left:8px;padding:4px 8px;'>
