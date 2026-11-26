@@ -116,19 +116,20 @@ function showDashboard() {
       </div>
       <div id='admin-content-panel' class='admin-panel' data-admin-panel='content' role='tabpanel' aria-label='Content' hidden>
       <section class='intro' style='margin-top:32px;'>
-        <h2>Write Blog Post</h2>
+        <h2 id='blog-form-heading'>Write Blog Post</h2>
         <form id='add-blog-form' style='display:flex;flex-direction:column;gap:10px;'>
           <input type='text' id='blog-title' placeholder='Title' required>
           <textarea id='blog-content' placeholder='Content' rows='6' required></textarea>
           <label style='font-size:0.98em;'>Image (optional): <input type='file' id='blog-image' accept='image/*'></label>
           <div style='display:flex;gap:10px;'>
-            <button type='submit'>Publish Post</button>
+            <button type='submit' id='blog-submit-btn'>Publish Post</button>
             <button type='button' id='save-draft-btn' style='background:#e6f0ff;color:#0b5fa6;border-radius:6px;border:none;padding:8px 18px;'>Save Draft</button>
+            <button type='button' id='cancel-blog-edit-btn' hidden>Cancel edit</button>
           </div>
         </form>
       </section>
       <section class='intro' style='margin-top:32px;'>
-        <h2>Draft Blog Posts</h2>
+        <h2>Manage Blog Posts</h2>
         <div id='draft-posts'></div>
       </section>
       </div>
@@ -142,55 +143,90 @@ function showDashboard() {
   if (supabaseClient) loadSitePhotoReviews(supabaseClient);
   if (supabaseClient) loadFieldReviews(supabaseClient);
 
-  // Drafts management logic
-  async function loadDrafts() {
+  let editingBlogPostId = null;
+  function resetBlogEditor() {
+    editingBlogPostId = null;
+    const blogForm = document.getElementById('add-blog-form');
+    blogForm.reset();
+    document.getElementById('blog-form-heading').textContent = 'Write Blog Post';
+    document.getElementById('blog-submit-btn').textContent = 'Publish Post';
+    document.getElementById('save-draft-btn').hidden = false;
+    document.getElementById('cancel-blog-edit-btn').hidden = true;
+  }
+
+  // Blog post management logic
+  async function loadBlogPosts() {
     const draftDiv = document.getElementById('draft-posts');
     if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
       draftDiv.innerHTML = '<div style="color:#b33">Supabase config missing or not loaded.</div>';
       return;
     }
     const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    draftDiv.innerHTML = '<div>Loading drafts...</div>';
-    const { data, error } = await client.from('blog_posts').select('*').eq('published', false).order('created_at', { ascending: false });
+    draftDiv.innerHTML = '<div>Loading posts...</div>';
+    const { data, error } = await client.from('blog_posts').select('*').order('created_at', { ascending: false });
     if(error) {
-      draftDiv.innerHTML = '<div style="color:#b33">Error loading drafts: '+error.message+'</div>';
+      draftDiv.innerHTML = '<div style="color:#b33">Error loading posts: '+error.message+'</div>';
       return;
     }
     if(!data.length) {
-      draftDiv.innerHTML = '<div>No drafts yet.</div>';
+      draftDiv.innerHTML = '<div>No blog posts yet.</div>';
       return;
     }
     draftDiv.innerHTML = data.map(post => `
       <div style="background:#f4f8ff;padding:14px 16px;border-radius:10px;margin-bottom:18px;box-shadow:0 1px 6px #0b5fa61a;">
         <strong>${post.title}</strong>
+        <div style="color:#52708e;font-size:0.9em;">${post.published ? 'Published' : 'Draft'}</div>
         <div style="color:#0b5fa6;font-size:0.98em;margin-bottom:8px;">${(function(d){d=new Date(d);return d.getDate().toString().padStart(2,'0')+'/'+(d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear();})(post.created_at)}</div>
         <div style="font-size:1em;white-space:pre-line;margin-bottom:8px;">${post.content}</div>
-        <button class="publish-draft-btn" data-id="${post.id}" style="background:#0b5fa6;color:#fff;border:none;border-radius:6px;padding:6px 14px;margin-right:8px;">Publish</button>
-        <button class="edit-draft-btn" data-id="${post.id}" style="background:#e6f0ff;color:#0b5fa6;border:none;border-radius:6px;padding:6px 14px;">Edit</button>
+        <button class="toggle-blog-publish-btn" data-id="${post.id}" style="background:#0b5fa6;color:#fff;border:none;border-radius:6px;padding:6px 14px;margin-right:8px;">${post.published ? 'Unpublish' : 'Publish'}</button>
+        <button class="edit-blog-btn" data-id="${post.id}" style="background:#e6f0ff;color:#0b5fa6;border:none;border-radius:6px;padding:6px 14px;margin-right:8px;">Edit</button>
+        <button class="delete-blog-btn" data-id="${post.id}" style="background:#fff0f0;color:#a33;border:1px solid #d99;border-radius:6px;padding:6px 14px;">Delete</button>
       </div>
     `).join('');
-    // Add event listeners for publish and edit
-    draftDiv.querySelectorAll('.publish-draft-btn').forEach(btn => {
+    draftDiv.querySelectorAll('.toggle-blog-publish-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.getAttribute('data-id');
-        await client.from('blog_posts').update({ published: true }).eq('id', id);
-        loadDrafts();
-        alert('Draft published!');
+        const post = data.find(item => String(item.id) === String(id));
+        const result = await client.from('blog_posts').update({ published: !post.published }).eq('id', id);
+        if (result.error) {
+          alert(`Unable to update post: ${result.error.message}`);
+          return;
+        }
+        await loadBlogPosts();
       });
     });
-    draftDiv.querySelectorAll('.edit-draft-btn').forEach(btn => {
+    draftDiv.querySelectorAll('.edit-blog-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const id = btn.getAttribute('data-id');
         const post = data.find(p => String(p.id) === String(id));
         if(post){
+          editingBlogPostId = post.id;
           document.getElementById('blog-title').value = post.title;
           document.getElementById('blog-content').value = post.content;
-          // Image editing not supported for drafts
+          document.getElementById('blog-form-heading').textContent = 'Edit Blog Post';
+          document.getElementById('blog-submit-btn').textContent = 'Save changes';
+          document.getElementById('save-draft-btn').hidden = true;
+          document.getElementById('cancel-blog-edit-btn').hidden = false;
+          document.getElementById('blog-title').focus();
         }
       });
     });
+    draftDiv.querySelectorAll('.delete-blog-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        const post = data.find(item => String(item.id) === String(id));
+        if (!post || !window.confirm(`Delete "${post.title}"? This cannot be undone.`)) return;
+        const result = await client.from('blog_posts').delete().eq('id', id);
+        if (result.error) {
+          alert(`Unable to delete post: ${result.error.message}`);
+          return;
+        }
+        if (String(editingBlogPostId) === String(id)) resetBlogEditor();
+        await loadBlogPosts();
+      });
+    });
   }
-  loadDrafts();
+  loadBlogPosts();
 
   setupBulkUpload(supabaseClient);
 
@@ -235,14 +271,21 @@ function showDashboard() {
           const { data: publicUrlData } = client.storage.from('Blogimages').getPublicUrl(fileName);
           image_url = publicUrlData && publicUrlData.publicUrl ? publicUrlData.publicUrl : '';
         }
-        const { data, error } = await client.from('blog_posts').insert([{ title, content, image_url, published: publish }]);
+        const updateValues = { title, content };
+        if (image_url) updateValues.image_url = image_url;
+        const query = editingBlogPostId
+          ? client.from('blog_posts').update(updateValues).eq('id', editingBlogPostId)
+          : client.from('blog_posts').insert([{ title, content, image_url, published: publish }]);
+        const { error } = await query;
         if(error){
           alert('Error saving post: ' + error.message);
         } else {
-          alert(publish ? 'Blog post published!' : 'Draft saved!');
-          blogForm.reset();
+          alert(editingBlogPostId ? 'Blog post updated!' : (publish ? 'Blog post published!' : 'Draft saved!'));
+          resetBlogEditor();
+          await loadBlogPosts();
         }
       }
+      document.getElementById('cancel-blog-edit-btn').addEventListener('click', resetBlogEditor);
     }
 }
 
