@@ -6,7 +6,7 @@
   let failure = '';
   let addresses = ['one@example.org'];
   const client = {
-    rpc: async (name, args) => {
+    rpc: async (name, args = {}) => {
       if (failure === name) throw new Error('Mock network failure');
       if (name === 'field_access_account_list') return {
         data: addresses.map(email => ({ email, approved: true, confirmed: true })),
@@ -37,7 +37,7 @@
     await waitFor(() => status.textContent.includes('Unable to approve address'));
     assert(!form.querySelector('button').disabled && email.value === 'two@example.org', 'Failed approval handling');
     list.querySelector('button').click();
-    await waitFor(() => status.textContent.includes('Unable to remove access'));
+    await waitFor(() => status.textContent.includes('Unable to update access'));
     assert(!list.querySelector('button').disabled && addresses.length === 1, 'Failed removal handling');
     failure = '';
     form.requestSubmit();
