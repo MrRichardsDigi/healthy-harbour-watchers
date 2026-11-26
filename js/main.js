@@ -61,14 +61,7 @@
           const assayImages = {
             Temperature: ['assets/join4.jpg', 'assets/join1.jpg']
           };
-          function shuffle(arr) {
-            for(let i=arr.length-1;i>0;i--){
-              const j=Math.floor(Math.random()*(i+1));
-              [arr[i],arr[j]]=[arr[j],arr[i]];
-            }
-            return arr;
-          }
-          const selected = shuffle([...assays]).slice(0,4);
+          const selected = assays;
           const container = document.getElementById('assays-cards');
           container.innerHTML = '';
           selected.forEach((assay, i) => {
