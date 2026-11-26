@@ -90,7 +90,26 @@
         const filtered = locations.filter(l => l.currentSite).sort((a,b) => a.currentSite - b.currentSite);
         const imgList = ['assets/harbour1.jpg','assets/harbour2.jpg','assets/harbour3.jpg'];
         const photosByLocation = {};
+        const schoolByLocation = {};
+        const schoolBranding = {
+          "St Hilda's Collegiate": { primary: '#2f6fa3', accent: '#e8f2fb' },
+          'Trinity College': { primary: '#17365d', accent: '#f1e2e4' },
+          'Logan Park High School': { primary: '#6f1d2b', accent: '#f4e8ea' },
+          'Bayfield High School': { primary: '#245b45', accent: '#e9f1ed' },
+          'Columba College': { primary: '#1f4d3a', accent: '#e8f0ec' }
+        };
         if (supabaseClient) {
+          try {
+            const assignmentResponse = await supabaseClient.rpc('location_school_list');
+            if (assignmentResponse.error) throw assignmentResponse.error;
+            (assignmentResponse.data || []).forEach(item => {
+              if (item.school_name) {
+                schoolByLocation[String(item.location_id)] = item.school_name;
+              }
+            });
+          } catch (error) {
+            console.warn('Location school assignments unavailable:', error);
+          }
           await Promise.all(filtered.map(async location => {
             try {
               const { data, error } = await supabaseClient.rpc('site_photo_list', {
@@ -120,6 +139,13 @@
           const card = document.createElement('a');
           card.className = 'location-card';
           card.href = `site.html?id=${encodeURIComponent(loc.id)}`;
+          const schoolName = schoolByLocation[String(loc.id)] || '';
+          const theme = schoolBranding[schoolName];
+          if (theme) {
+            card.classList.add('school-owned-card');
+            card.style.setProperty('--school-primary', theme.primary);
+            card.style.setProperty('--school-accent', theme.accent);
+          }
           card.innerHTML = `
             <img src="${loc.img}" alt="Photo of ${loc.name}">
             <div class="location-info">
@@ -127,6 +153,12 @@
               <span>${loc.desc}</span>
             </div>
           `;
+          if (schoolName) {
+            const school = document.createElement('span');
+            school.className = 'location-school';
+            school.textContent = schoolName;
+            card.querySelector('.location-info').appendChild(school);
+          }
           container.appendChild(card);
         });
       });
