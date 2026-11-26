@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Monitoring site — Healthy Harbour Watchers</title>
   <link rel="stylesheet" href="css/style.css?v=10">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.css?v=2">
   <script defer src="js/navigation.js?v=3"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
@@ -29,7 +29,10 @@
     <article id="site-details" hidden>
       <p id="site-type" class="site-type"></p>
       <h2 id="site-name"></h2>
-      <p id="site-school"></p>
+      <div id="site-school-brand" class="site-school-brand" hidden>
+        <img id="site-school-logo" alt="">
+        <p id="site-school"></p>
+      </div>
       <p id="site-coordinates"></p>
       <p class="site-actions">
         <a id="site-map">See on the harbour map</a>

@@ -1,9 +1,14 @@
-.site-profile { max-width: 1000px; margin: 24px auto; padding: 0 16px 32px; }
-.site-type { color: #0b5fa6; font-weight: 700; }
-.site-profile h2 { margin-top: 0; }
+.site-profile { max-width: 1000px; margin: 32px auto; padding: 0 16px 40px; }
+.site-profile article { --site-school-primary: #0b5fa6; --site-school-accent: #e6f0ff; background: rgba(255,255,255,.78); border: 1px solid #c8dced; border-top: 7px solid var(--site-school-primary); border-radius: 14px; padding: clamp(20px, 4vw, 36px); box-shadow: 0 3px 16px #0b5fa61a; }
+.site-type { color: var(--site-school-primary); font-weight: 700; }
+.site-profile h2 { margin-top: 0; color: var(--site-school-primary); }
+.site-school-brand { display: flex; align-items: center; gap: 12px; min-height: 64px; margin: 12px 0 18px; padding: 10px 14px; background: var(--site-school-accent); border-radius: 10px; }
+.site-school-brand img { width: 58px; height: 58px; object-fit: contain; }
+.site-school-brand p { margin: 0; color: var(--site-school-primary); font-weight: 700; }
 .site-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.site-actions a { display: inline-block; padding: 10px 16px; border-radius: 6px; background: #0b5fa6; color: white; }
+.site-actions a { display: inline-block; padding: 10px 16px; border-radius: 7px; background: var(--site-school-primary); color: white; font-weight: 700; }
+.site-actions a:hover { filter: brightness(.92); }
 .site-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 16px; }
 .site-photos figure { margin: 0; }
-.site-photos img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.site-photos img { display: block; width: 100%; height: auto; border-radius: 8px; border: 3px solid var(--site-school-accent); }
 .site-photos figcaption { margin-top: 6px; color: #555; }

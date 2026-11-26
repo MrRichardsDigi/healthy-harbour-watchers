@@ -1,6 +1,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  const schoolBranding = {
+    "St Hilda's Collegiate": { primary: '#2f6fa3', accent: '#e8f2fb' },
+    'Trinity College': { primary: '#17365d', accent: '#f1e2e4' },
+    'Logan Park High School': { primary: '#6f1d2b', accent: '#f4e8ea' },
+    'Bayfield High School': { primary: '#245b45', accent: '#e9f1ed' },
+    'Columba College': { primary: '#1f4d3a', accent: '#e8f0ec' }
+  };
   const status = document.getElementById('site-status');
   const photosStatus = document.getElementById('site-photos-status');
+  const schoolBrand = document.getElementById('site-school-brand');
+  const schoolLogo = document.getElementById('site-school-logo');
   try {
     const id = new URLSearchParams(location.search).get('id');
     const response = await fetch('data/locations.json');
@@ -22,7 +31,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       const assignment = await assignmentClient.rpc('location_school_list');
       if (!assignment.error) {
         const match = (assignment.data || []).find(item => String(item.location_id) === id);
-        if (match && match.school_name) school.textContent = `School: ${match.school_name}`;
+        if (match && match.school_name) {
+          school.textContent = `School: ${match.school_name}`;
+          schoolBrand.hidden = false;
+          schoolLogo.src = match.logo_path || '';
+          schoolLogo.alt = `${match.school_name} logo`;
+          if (!match.logo_path) schoolLogo.hidden = true;
+          const theme = schoolBranding[match.school_name];
+          if (theme) {
+            document.getElementById('site-details').style.setProperty('--site-school-primary', theme.primary);
+            document.getElementById('site-details').style.setProperty('--site-school-accent', theme.accent);
+            document.getElementById('site-details').classList.add('school-themed');
+          }
+        }
       }
     }
     document.getElementById('site-coordinates').textContent =
