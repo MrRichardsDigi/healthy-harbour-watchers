@@ -17,6 +17,11 @@
 .site-trends h3 { margin: 0 0 4px; color: var(--site-school-primary); }
 #site-trends-status { margin: 0 0 14px; color: #526579; }
 .site-tide-status { margin: -6px 0 14px; color: #526579; font-size: .92rem; }
+.site-tide-table { margin: 0 0 16px; overflow-x: auto; }
+.site-tide-table table { width: 100%; border-collapse: collapse; font-size: .88rem; background: rgba(255,255,255,.62); }
+.site-tide-table caption { padding: 8px; text-align: left; color: var(--site-school-primary); font-weight: 700; }
+.site-tide-table th, .site-tide-table td { padding: 6px 8px; border: 1px solid #c8dced; text-align: left; }
+.site-tide-table th { background: rgba(255,255,255,.82); }
 .site-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .site-summary-card { padding: 10px; background: rgba(255,255,255,.82); border: 1px solid #c8dced; border-radius: 8px; }
 .site-summary-card strong, .site-summary-card span { display: block; }
