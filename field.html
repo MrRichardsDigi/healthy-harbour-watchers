@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/field.css?v=2">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
-  <script defer src="js/field-auth.js?v=1"></script>
+  <script defer src="js/field-auth.js?v=2"></script>
   <script defer src="js/field.js?v=4"></script>
   <script defer src="js/site-photo-upload.js"></script>
 </head>
@@ -35,14 +35,17 @@
       <h2>Field entry sign-in</h2>
       <p>Only individually approved participants can submit samples. Sign in once while connected before going into the field. After that, you can open field entry and save samples offline, then reconnect to submit them.</p>
       <button type="button" id="field-google">Sign in with Google</button>
-      <div id="field-email-option" hidden>
+      <div id="field-email-option">
         <form id="field-email-form">
           <label for="field-email">Email address</label>
           <input id="field-email" type="email" autocomplete="email" required>
-          <button type="submit">Email me a sign-in link</button>
+          <label for="field-password">Password</label>
+          <input id="field-password" type="password" autocomplete="current-password" minlength="6" required>
+          <button type="submit">Sign in with email</button>
+          <button type="button" id="field-email-signup">Create an account</button>
         </form>
       </div>
-      <p>Email sign-in for other participants will be available once email delivery is set up.</p>
+      <p>Email accounts still need individual approval before they can use Field entry.</p>
       <button type="button" id="field-switch" hidden>Sign out to switch accounts</button>
       <p id="field-auth-status" role="status" aria-live="polite">Checking access...</p>
     </section>

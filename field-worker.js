@@ -1,7 +1,7 @@
-const CACHE = 'hhw-field-v6';
+const CACHE = 'hhw-field-v7';
 const CORE = [
   'field.html', 'css/style.css?v=10', 'css/field.css?v=2', 'js/navigation.js?v=4',
-  'js/field-auth.js?v=1', 'js/field.js?v=4', 'js/site-photo-upload.js', 'js/config.js', 'data/locations.json', 'assets/logo.png'
+  'js/field-auth.js?v=2', 'js/field.js?v=4', 'js/site-photo-upload.js', 'js/config.js', 'data/locations.json', 'assets/logo.png'
 ];
 const SDK = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
 const scope = new URL(self.registration.scope);

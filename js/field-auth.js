@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const google = document.getElementById('field-google');
   const emailForm = document.getElementById('field-email-form');
   const email = document.getElementById('field-email');
+  const password = document.getElementById('field-password');
+  const emailSignup = document.getElementById('field-email-signup');
   const signout = document.getElementById('field-signout');
   const switchAccount = document.getElementById('field-switch');
   const markerKey = 'hhw-field-approved-offline-v1';
@@ -87,19 +89,40 @@ document.addEventListener('DOMContentLoaded', async () => {
       google.disabled = false;
     }
   });
+  async function emailAuth(mode) {
+    const address = email.value.trim();
+    if (!address || !password.value) {
+      status.textContent = 'Enter an email address and password.';
+      return;
+    }
+    try {
+      const result = mode === 'signup'
+        ? await auth.client.auth.signUp({
+          email: address,
+          password: password.value,
+          options: { emailRedirectTo: redirectTo }
+        })
+        : await auth.client.auth.signInWithPassword({ email: address, password: password.value });
+      const { error, data } = result;
+      if (error) throw error;
+      if (mode === 'signup' && !data.session) {
+        status.textContent = 'Account created. Check your email to confirm the address, then sign in. Admin approval is still required.';
+        return;
+      }
+      await checkSession();
+    } catch (error) {
+      status.textContent = `${mode === 'signup' ? 'Unable to create account' : 'Unable to sign in'}: ${error.message}`;
+    }
+  }
   emailForm.addEventListener('submit', async event => {
     event.preventDefault();
-    try {
-      const { error } = await auth.client.auth.signInWithOtp({
-        email: email.value.trim(), options: { emailRedirectTo: redirectTo }
-      });
-      if (error) throw error;
-      status.textContent = 'If the address can receive sign-in mail, check your inbox and open the link on this device. Approval is still required.';
-    } catch (error) {
-      status.textContent = `Unable to send sign-in link: ${error.message}`;
-    }
+    await emailAuth('signin');
   });
-  try {
+  emailSignup.addEventListener('click', async () => {
+    await emailAuth('signup');
+  });
+
+  async function checkSession() {
     const { data, error } = await auth.client.auth.getSession();
     if (error) throw error;
     if (!data.session) {
@@ -120,6 +143,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     show(true, saved
       ? 'Signed in with an approved account. Offline drafts remain on this device.'
       : 'Signed in, but offline access could not be saved on this device.');
+  }
+  try {
+    await checkSession();
   } catch (error) {
     show(false, `Unable to check access: ${error.message}. Connect and try again.`);
   }
