@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const emailForm = document.getElementById('field-email-form');
   const email = document.getElementById('field-email');
   const password = document.getElementById('field-password');
-  const emailSignup = document.getElementById('field-email-signup');
   const signout = document.getElementById('field-signout');
   const switchAccount = document.getElementById('field-switch');
   const markerKey = 'hhw-field-approved-offline-v1';
@@ -89,37 +88,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       google.disabled = false;
     }
   });
-  async function emailAuth(mode) {
+  async function emailAuth() {
     const address = email.value.trim();
     if (!address || !password.value) {
       status.textContent = 'Enter an email address and password.';
       return;
     }
     try {
-      const result = mode === 'signup'
-        ? await auth.client.auth.signUp({
-          email: address,
-          password: password.value,
-          options: { emailRedirectTo: redirectTo }
-        })
-        : await auth.client.auth.signInWithPassword({ email: address, password: password.value });
-      const { error, data } = result;
+      const { error } = await auth.client.auth.signInWithPassword({ email: address, password: password.value });
       if (error) throw error;
-      if (mode === 'signup' && !data.session) {
-        status.textContent = 'Account created. Check your email to confirm the address, then sign in. Admin approval is still required.';
-        return;
-      }
       await checkSession();
     } catch (error) {
-      status.textContent = `${mode === 'signup' ? 'Unable to create account' : 'Unable to sign in'}: ${error.message}`;
+      status.textContent = `Unable to sign in: ${error.message}`;
     }
   }
   emailForm.addEventListener('submit', async event => {
     event.preventDefault();
-    await emailAuth('signin');
-  });
-  emailSignup.addEventListener('click', async () => {
-    await emailAuth('signup');
+    await emailAuth();
   });
 
   async function checkSession() {

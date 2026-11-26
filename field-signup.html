@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b5fa6">
+  <title>Create a field-entry account — Healthy Harbour Watchers</title>
+  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/field.css?v=3">
+  <script defer src="js/navigation.js?v=4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script defer src="js/config.js"></script>
+  <script defer src="js/field-signup.js?v=1"></script>
+</head>
+<body>
+  <div class="site-banner">Healthy Harbour Watchers &mdash; Community Science for Otago Harbour</div>
+  <header class="site-header">
+    <a href="index.html" class="site-logo"><img src="assets/logo.png" alt="Healthy Harbour Watchers logo"></a>
+    <h1>Field entry</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="locations.html">Locations</a>
+      <a href="data.html">Data</a>
+      <a href="field.html">Field entry</a>
+      <a href="handbook.html">Handbook</a>
+      <a href="join.html">Join</a>
+      <a href="blog.html">Blog</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+  <main class="field-main">
+    <section class="field-card field-signup-card">
+      <p><a href="field.html">&larr; Back to Field entry sign-in</a></p>
+      <h2>Create a field-entry account</h2>
+      <p>Create an email account for signing in to Field entry. An administrator must approve your email address before you can access the form or submit samples.</p>
+      <form id="field-signup-form">
+        <label for="field-signup-email">Email address</label>
+        <input id="field-signup-email" type="email" autocomplete="email" required>
+        <label for="field-signup-password">Password</label>
+        <input id="field-signup-password" type="password" autocomplete="new-password" minlength="6" required>
+        <label for="field-signup-confirm">Confirm password</label>
+        <input id="field-signup-confirm" type="password" autocomplete="new-password" minlength="6" required>
+        <button type="submit">Create account</button>
+        <p id="field-signup-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <footer><small>Healthy Harbour Watchers — Otago Harbour</small></footer>
+</body>
+</html>

@@ -9,6 +9,7 @@
   border-radius: 12px;
 }
 .field-card h2 { margin-top: 0; }
+.field-signup-card { max-width: 560px; margin-left: auto; margin-right: auto; }
 .field-card form, .measurement-grid {
   display: grid;
   gap: 12px;
