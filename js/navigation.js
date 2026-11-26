@@ -62,6 +62,20 @@ function setupLocationMenu(nav) {
   allLink.classList.remove('nav-current');
   allLink.textContent = 'All locations';
   panel.appendChild(allLink);
+  const currentHeading = document.createElement('h3');
+  currentHeading.textContent = 'Current locations';
+  panel.appendChild(currentHeading);
+  const currentPanel = document.createElement('div');
+  currentPanel.className = 'site-location-group';
+  panel.appendChild(currentPanel);
+  const historyMenu = document.createElement('details');
+  historyMenu.className = 'site-location-history';
+  const historySummary = document.createElement('summary');
+  historySummary.textContent = 'Historical locations';
+  const historyPanel = document.createElement('div');
+  historyPanel.className = 'site-location-group';
+  historyMenu.append(historySummary, historyPanel);
+  panel.appendChild(historyMenu);
   menu.append(summary, panel);
   locationsLink.replaceWith(menu);
 
@@ -73,12 +87,13 @@ function setupLocationMenu(nav) {
     .then(locations => {
       locations
         .slice()
-        .sort((a, b) => (a.currentSite || 999) - (b.currentSite || 999))
+        .sort((a, b) => (a.currentSite || 999) - (b.currentSite || 999) ||
+          a.name.localeCompare(b.name))
         .forEach(location => {
           const link = document.createElement('a');
           link.href = `site.html?id=${encodeURIComponent(location.id)}`;
           link.textContent = location.name;
-          panel.appendChild(link);
+          (location.currentSite ? currentPanel : historyPanel).appendChild(link);
         });
     })
     .catch(error => console.warn('Unable to build location menu:', error));
