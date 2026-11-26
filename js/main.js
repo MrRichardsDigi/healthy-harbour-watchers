@@ -408,7 +408,7 @@
               return;
             }
             // Build CSV
-            const headers = ['date','parameter','value','unit','loc'];
+            const headers = ['date','parameter','value','unit','loc','tide_height_m','tide_phase'];
             const rows = [headers.join(',')];
             filtered.forEach(r=>{
               const row = [
@@ -416,7 +416,9 @@
                 (paramDisplay && paramDisplay[String(r.parameter)]) ? paramDisplay[String(r.parameter)] : String(r.parameter),
                 r.value,
                 r.unit,
-                r.loc
+                r.loc,
+                r.tideHeight == null ? '' : r.tideHeight.toFixed(2),
+                r.tidePhase
               ].map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',');
               rows.push(row);
             });
@@ -440,6 +442,45 @@
     // Use the local locations JSON on the data page to avoid depending on the locations endpoint
     const [locations, records] = await Promise.all([fetchJSON('data/locations.json'), getRecords(null)]);
     const allRecords = records || [];
+    let tideEvents = [];
+    try {
+      const tideResponse = await fetch('data/port-chalmers-tides.json');
+      if (tideResponse.ok) tideEvents = await tideResponse.json();
+    } catch (error) {
+      console.warn('Tide filters unavailable:', error);
+    }
+    const tideByDate = {};
+    tideEvents.forEach(event => {
+      if (!tideByDate[event.date]) tideByDate[event.date] = [];
+      tideByDate[event.date].push({
+        ...event,
+        minutes: Number(event.time.slice(0, 2)) * 60 + Number(event.time.slice(3))
+      });
+    });
+    Object.values(tideByDate).forEach(events => events.sort((a, b) => a.minutes - b.minutes));
+    function tideForDate(date) {
+      const events = tideByDate[date];
+      if (!events || !events.length) return null;
+      const sampleMinutes = 9 * 60 + 30;
+      let before = null;
+      let after = null;
+      events.forEach(event => {
+        if (event.minutes <= sampleMinutes) before = event;
+        if (!after && event.minutes >= sampleMinutes) after = event;
+      });
+      if (!before) before = { ...events[events.length - 1], minutes: events[events.length - 1].minutes - 1440 };
+      if (!after) after = { ...events[0], minutes: events[0].minutes + 1440 };
+      const fraction = (sampleMinutes - before.minutes) / (after.minutes - before.minutes);
+      return {
+        height: before.height + (after.height - before.height) * fraction,
+        phase: after.height > before.height ? 'rising' : 'falling'
+      };
+    }
+    allRecords.forEach(record => {
+      const tide = tideForDate(record.date);
+      record.tideHeight = tide ? tide.height : null;
+      record.tidePhase = tide ? tide.phase : '';
+    });
 
     // populate location selector (deduplicate names and show counts)
     const locationSelect = document.getElementById('location-select');
@@ -504,6 +545,8 @@
     const dateStartLabel = document.getElementById('date-start-label');
     const dateEndLabel = document.getElementById('date-end-label');
     const dateClear = document.getElementById('date-clear');
+    const tidePhaseSelect = document.getElementById('tide-phase-select');
+    const tideHeightSelect = document.getElementById('tide-height-select');
     const samplingDates = Array.from(new Set(allRecords.map(r => r.date).filter(Boolean))).sort();
     let appliedDateRange = null;
     const applyBtn = document.getElementById('apply-filters');
@@ -665,6 +708,13 @@
         // location filtering: if any selected, require r.loc to be in the flattened list
         if(selectedLoc.length){ if(!selectedLoc.includes(String(r.loc))) return false; }
         if (appliedDateRange && (!r.date || r.date < appliedDateRange.start || r.date > appliedDateRange.end)) return false;
+        if (tidePhaseSelect.value && r.tidePhase !== tidePhaseSelect.value) return false;
+        if (tideHeightSelect.value) {
+          if (r.tideHeight == null) return false;
+          if (tideHeightSelect.value === 'low' && r.tideHeight >= 0.5) return false;
+          if (tideHeightSelect.value === 'mid' && (r.tideHeight < 0.5 || r.tideHeight > 1.5)) return false;
+          if (tideHeightSelect.value === 'high' && r.tideHeight <= 1.5) return false;
+        }
         return true;
       });
     }
@@ -673,7 +723,7 @@
     function renderTable(filtered){
       table.innerHTML = '';
       if(!filtered.length){ table.innerHTML = '<tr><td>No records found</td></tr>'; return; }
-      const headers = ['date','parameter','value','unit','location'];
+      const headers = ['date','parameter','value','unit','location','tide height','tide phase'];
       const thead = document.createElement('thead');
       thead.innerHTML = `<tr>${headers.map(h=>`<th style="text-align:left;padding:6px;border-bottom:1px solid #ddd">${h}</th>`).join('')}</tr>`;
       table.appendChild(thead);
@@ -703,7 +753,9 @@
                         <td style="padding:6px;border-bottom:1px solid #f1f1f1">${displayParam}</td>
                         <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.value}</td>
                         <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.unit}</td>
-                        <td style="padding:6px;border-bottom:1px solid #f1f1f1">${displayLoc}</td>`;
+                        <td style="padding:6px;border-bottom:1px solid #f1f1f1">${displayLoc}</td>
+                        <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.tideHeight == null ? '' : `${r.tideHeight.toFixed(2)} m`}</td>
+                        <td style="padding:6px;border-bottom:1px solid #f1f1f1">${r.tidePhase || ''}</td>`;
         tbody.appendChild(tr);
       });
       table.appendChild(tbody);
@@ -768,6 +820,8 @@
           resetDateSliders();
           for(let i=0;i<paramSelect.options.length;i++) paramSelect.options[i].selected = true;
           locationSelect.value = '';
+          tidePhaseSelect.value = '';
+          tideHeightSelect.value = '';
           applyFilters();
         });
       }

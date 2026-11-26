@@ -56,6 +56,21 @@
         <label style="display:flex;flex-direction:column;font-size:13px"><span>Parameters</span>
           <select id="param-select" multiple size="4" style="min-width:200px;padding:6px"></select>
         </label>
+        <label style="display:flex;flex-direction:column;font-size:13px"><span>Tide phase</span>
+          <select id="tide-phase-select" style="min-width:140px;padding:6px">
+            <option value="">All phases</option>
+            <option value="rising">Rising</option>
+            <option value="falling">Falling</option>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;font-size:13px"><span>Tide height</span>
+          <select id="tide-height-select" style="min-width:160px;padding:6px">
+            <option value="">All heights</option>
+            <option value="low">Below 0.5 m</option>
+            <option value="mid">0.5–1.5 m</option>
+            <option value="high">Above 1.5 m</option>
+          </select>
+        </label>
         <div class="chart-controls" style="display:flex;align-items:center;gap:16px;margin-bottom:8px">
           <button id="chart-type-toggle-btn" style="padding:6px 12px;font-size:13px;cursor:pointer;">Convert to line graph</button>
           <button id="trendline-toggle-btn" style="padding:6px 12px;font-size:13px;cursor:pointer;">Show Trendline</button>
@@ -106,6 +121,6 @@
 
   <script src="js/chartjs-plugin-trendline.js"></script>
   <script src="js/data-mobile.js?v=3"></script>
-  <script src="js/main.js?v=8"></script>
+  <script src="js/main.js?v=9"></script>
 </body>
 </html>
