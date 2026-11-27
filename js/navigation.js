@@ -43,7 +43,7 @@ function setupSiteNavigation() {
       setOpen(false, true);
     }
   });
-  window.matchMedia('(min-width: 1051px)').addEventListener('change', () => setOpen(false));
+  window.matchMedia('(min-width: 1201px)').addEventListener('change', () => setOpen(false));
 }
 
 function setupLocationMenu(nav) {
