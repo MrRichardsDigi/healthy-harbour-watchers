@@ -7,14 +7,12 @@ function setupLocationSchoolAdmin(client) {
     status.textContent = 'Loading location assignments...';
     list.replaceChildren();
     try {
-      const [locationsResponse, schoolsResponse, historyResponse] = await Promise.all([
+      const [locationsResponse, schoolsResponse] = await Promise.all([
         client.rpc('location_school_list'),
-        client.rpc('school_partner_list'),
-        client.rpc('location_school_history_list')
+        client.rpc('school_partner_list')
       ]);
       if (locationsResponse.error) throw locationsResponse.error;
       if (schoolsResponse.error) throw schoolsResponse.error;
-      if (historyResponse.error) throw historyResponse.error;
       const data = locationsResponse.data;
       const schools = schoolsResponse.data || [];
       if (!data || !data.length) {
@@ -59,18 +57,6 @@ function setupLocationSchoolAdmin(client) {
         row.append(label, select);
         list.appendChild(row);
       });
-      if (historyResponse.data && historyResponse.data.length) {
-        const heading = document.createElement('h3');
-        heading.textContent = 'Ownership history';
-        list.appendChild(heading);
-        historyResponse.data.forEach(item => {
-          const row = document.createElement('p');
-          const previous = item.previous_school_name || 'Unassigned';
-          const next = item.new_school_name || 'Unassigned';
-          row.textContent = `${item.location_name}: ${previous} -> ${next} (${new Date(item.changed_at).toLocaleDateString('en-NZ')})`;
-          list.appendChild(row);
-        });
-      }
       status.textContent = '';
     } catch (error) {
       status.textContent = `Unable to load location assignments: ${error.message}`;
