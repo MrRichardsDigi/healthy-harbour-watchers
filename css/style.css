@@ -1116,6 +1116,24 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
 	.site-header.site-nav-enhanced nav .site-location-panel a { min-height: 44px; padding: 10px 14px; }
 }
 
+@media (min-width: 1201px) and (max-width: 1750px) {
+	.site-header {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 12px 20px;
+	}
+	.site-header h1 {
+		position: static;
+		min-width: 0;
+		transform: none;
+		font-size: clamp(1.25rem, 2.1vw, 1.8rem);
+		white-space: normal;
+	}
+	.site-header nav { min-width: 0; justify-content: flex-end; }
+	.site-header nav a,
+	.site-header nav a.nav-current { padding: 8px; }
+}
+
 @media (max-width: 700px) {
 	.site-header.site-nav-enhanced { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
 	.site-header.site-nav-enhanced h1 { min-width: 0; font-size: clamp(1rem, 4vw, 1.4rem); overflow-wrap: anywhere; }
