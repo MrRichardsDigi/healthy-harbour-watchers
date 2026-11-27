@@ -265,7 +265,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     status.hidden = true;
     const container = document.getElementById('site-photos');
-    const photoManifestResponse = await fetch('data/site-photos.json');
+    const manifestUrl = new URL('data/site-photos.json', window.location.href);
+    const cacheVersion = new URLSearchParams(window.location.search).get('v');
+    if (cacheVersion) manifestUrl.searchParams.set('v', cacheVersion);
+    const photoManifestResponse = await fetch(manifestUrl, { cache: 'no-store' });
     if (!photoManifestResponse.ok) throw new Error('Could not load curated site photos');
     const photoManifest = await photoManifestResponse.json();
     const curatedPhotos = photoManifest[id] || [];
