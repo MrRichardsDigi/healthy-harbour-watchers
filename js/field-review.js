@@ -29,6 +29,23 @@ async function loadFieldReviews(client) {
         item.textContent = `${names[id] || `Parameter ${id}`}: ${value}`;
         list.appendChild(item);
       }
+      const observations = sample.observations || {};
+      if (Object.keys(observations).length) {
+        const observationHeading = document.createElement('strong');
+        observationHeading.textContent = 'Site observations';
+        const observationList = document.createElement('ul');
+        const observationNames = {
+          weather: 'Weather', tide: 'Tide conditions',
+          surface: 'Water-surface conditions', other: 'Other unusual observations'
+        };
+        for (const [key, value] of Object.entries(observations)) {
+          if (!observationNames[key]) continue;
+          const item = document.createElement('li');
+          item.textContent = `${observationNames[key]}: ${value}`;
+          observationList.appendChild(item);
+        }
+        card.append(observationHeading, observationList);
+      }
       const approve = document.createElement('button');
       approve.textContent = 'Approve';
       const reject = document.createElement('button');

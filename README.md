@@ -44,12 +44,12 @@ Supabase integration
 
 ## Field entry
 
-Students can open `field.html` on a phone, choose a sampling site and date, and enter one or more measurements. An internet connection is required. Submissions are not added to the public dataset until a reviewer approves them in the admin dashboard. Rejecting a submission leaves it in the database with a rejected status, but does not publish it.
+Students can open `field.html` on a phone, choose a sampling site and date, enter one or more measurements, and record site observations. Sign in while connected before fieldwork; samples and observations can then be saved offline and submitted for review when connected. Submissions are not added to the public dataset until a reviewer approves them in the admin dashboard. Rejecting a submission leaves it in the database with a rejected status, but does not publish it.
 
 Setup (a Supabase project owner must perform these steps):
 
 1. Configure the project URL and **public anon/publishable key** in `js/config.js`, if not already configured. Never put a service-role or secret key in this file.
-2. Confirm that the existing `locations`, `parameters`, `samplingdates`, and `data` tables match the columns used by the existing CSV upload. Confirm the parameter IDs match the field form: 1 temperature, 2 adjusted salinity, 3 adjusted specific conductivity, 4 dissolved oxygen %, 5 pH, 6 turbidity, 7 chlorophyll a, 8 NNN, 9 DRP, 10 enterococci, 11 dissolved oxygen mg/L. Verify the instruments' units and adjustment method against your protocols before collecting data.
+2. Confirm that the existing `locations`, `parameters`, `samplingdates`, and `data` tables match the columns used by the existing CSV upload. Confirm the parameter IDs match the field form: 1 temperature, 2 adjusted salinity, 3 adjusted specific conductivity, 4 dissolved oxygen %, 5 pH, 6 turbidity, 7 chlorophyll a, 8 NNN, 9 DRP, 10 enterococci, 11 dissolved oxygen mg/L. Dissolved oxygen concentration can be entered from either the YSI Pro2030 or YSI ProSolo. Verify the instruments' units and adjustment method against your protocols before collecting data.
 3. For a new installation, run `data/field-entry-setup.sql` in the Supabase SQL editor, followed by the field sign-in setup below before using field entry. The initial script creates the submission queue and reviewer allowlist; it initially allows public submission and does not change the existing data table's policies.
 4. Create reviewer accounts in Supabase Auth. For each reviewer, add their Auth user UUID in the SQL editor:
 
@@ -60,7 +60,9 @@ Setup (a Supabase project owner must perform these steps):
    Remove a reviewer by deleting their row from `public.field_reviewers`. Signing into the admin dashboard alone does not grant field-review access.
 5. Publish the site over HTTPS (or use localhost for testing). Verify the existing `locations` table is readable using the public key. Submit a test sample, sign in as an authorized reviewer, approve it, and verify it appears in the data viewer. Also test rejection and an unauthorized account.
 
-Review every sample before approval. The form does not collect names.
+Review every sample before approval. The form does not ask for names.
+
+The site-observation fields are optional and are stored with the pending submission for reviewers; they are not published as public measurements. Each field is limited to 500 characters. Avoid personal information.
 
 Open the field page with internet first and wait for the offline-ready message on each device. The page and site list are then available offline in supported browsers. Entries in progress are saved on the device as they are entered; save each completed sample to keep multiple samples. Saved samples do not send automatically: reconnect and submit each one for review. They remain on that browser/device, not in an account or a backup, and clearing site data or using private browsing can remove them. If a submission is not confirmed, retry the same saved sample unchanged; its persistent submission ID prevents duplicate retries. Do not edit or delete an uncertain submission until its status is checked.
 
@@ -75,6 +77,8 @@ The admin dashboard accepts an Excel workbook containing an `SRF2` sheet or a CS
 The imported columns are water temperature, adjusted salinity, adjusted conductivity, dissolved oxygen %, dissolved oxygen mg/L, pH (if supplied), turbidity, chlorophyll a, NNN, DRP and enterococci. Unadjusted salinity and specific conductivity are not imported. Confirm the selected date, source (field or lab), and units before publishing.
 
 The redesigned uploader requires `data/bulk-upload-setup.sql` to be installed in Supabase after `data/field-entry-setup.sql`. It adds an authorized-reviewer-only, transactional publish function and an upload receipt for safe retries. After the existing setup is installed, run `data/dissolved-oxygen-mg-l-setup.sql` once to add parameter 11 and enable DO mg/L in Field entry and bulk publishing. The bulk-upload setup is installed in the current project; the DO migration must still be run there and in other projects separately. Existing direct-write paths do not participate in the bulk upload's locking, so avoid simultaneous CSV uploads or direct writes for the same date. Use the existing field reviewer allowlist to authorize bulk publishers.
+
+For an existing project that already has field access configured, apply `data/field-observations-setup.sql` once to add optional site observations to pending submissions. It does not publish observation text into the public measurements table. The migration keeps the old four-argument submit call working without observations, so the existing site remains usable during rollout; the updated site uses the five-argument call.
 
 To test the uploader without changing a database, serve the repository locally and open `tests/bulk-upload.html`. The test uses a mock database and requires internet access for the CSV and Excel libraries.
 

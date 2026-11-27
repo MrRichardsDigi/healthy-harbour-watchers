@@ -51,7 +51,7 @@
       } }) };
       const script = w.document.createElement('script');
       w.fieldAuth = { approved: true, client: w.supabase.createClient() };
-      script.src = new URL('../js/field.js?v=5', location.href).href;
+      script.src = new URL('../js/field.js?v=6', location.href).href;
       w.document.head.appendChild(script);
       await new Promise((resolve, reject) => {
         script.onload = resolve;
@@ -82,8 +82,11 @@
     });
     change(w, '#field-location', '4');
     change(w, '[data-parameter="1"]', '90');
+    change(w, '[data-observation="weather"]', 'Light rain');
     w.document.getElementById('field-form').requestSubmit();
     assert(JSON.parse(stored).drafts.length === 1, 'Save unusual sample');
+    assert(JSON.parse(stored).drafts[0].observations.weather === 'Light rain',
+      'Site observations saved with sample');
     change(w, '#field-location', '11');
     change(w, '[data-parameter="5"]', '8.2');
     w.document.getElementById('field-form').requestSubmit();
@@ -91,6 +94,8 @@
     change(w, '[data-parameter="1"]', '12');
     w = await load();
     assert(w.document.querySelectorAll('.field-draft').length === 2, 'Multiple saved samples survive reload');
+    assert(w.document.querySelector('.field-draft').textContent.includes('Light rain'),
+      'Saved site observations survive reload');
     assert(w.document.getElementById('field-location').value === '5' &&
       w.document.querySelector('[data-parameter="1"]').value === '12', 'Work in progress survives reload');
 
@@ -107,19 +112,23 @@
     card.querySelector('button').click();
     await waitFor(() => w.document.getElementById('field-status').textContent.startsWith('Submitted for review'));
     assert(calls[1].args.p_id === first.p_id &&
-      JSON.stringify(calls[1].args.p_measurements) === JSON.stringify(first.p_measurements), 'Idempotent retry');
+      JSON.stringify(calls[1].args.p_measurements) === JSON.stringify(first.p_measurements) &&
+      JSON.stringify(calls[1].args.p_observations) === JSON.stringify(first.p_observations),
+      'Idempotent retry includes site observations');
     assert(JSON.parse(stored).drafts.length === 1, 'Only submitted sample removed');
 
     const edit = [...w.document.querySelectorAll('.field-draft button')].find(button => button.textContent === 'Edit');
     edit.click();
     change(w, '[data-parameter="5"]', '7');
     w.document.getElementById('field-cancel-edit').click();
-    assert(JSON.parse(stored).drafts[0].values['5'] === '8.2', 'Cancel keeps original saved sample');
+    assert(JSON.parse(stored).drafts[0].values['5'] === '8.2' &&
+      JSON.parse(stored).drafts[0].observations.weather === undefined,
+      'Cancel keeps original saved sample and observations');
     rejectWrites = true;
     change(w, '[data-parameter="1"]', '22');
     assert(w.document.getElementById('field-status').textContent.includes('Unable to save') &&
       w.document.getElementById('field-save').disabled, 'Storage failure reported');
-    results.textContent = 'PASS\nWarning boundaries and advisory save\nMultiple drafts and work-in-progress survive reload\nUncertain submission and idempotent retry\nEdit cancellation and storage failure';
+    results.textContent = 'PASS\nWarning boundaries and advisory save\nMultiple drafts, observations and work-in-progress survive reload\nUncertain submission and idempotent retry\nEdit cancellation and storage failure';
     results.dataset.result = 'pass';
     frame.remove();
   } catch (error) {

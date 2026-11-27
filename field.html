@@ -7,11 +7,11 @@
   <meta name="theme-color" content="#0b5fa6">
   <title>Field entry — Healthy Harbour Watchers</title>
   <link rel="stylesheet" href="css/style.css?v=navredesign2">
-  <link rel="stylesheet" href="css/field.css?v=3">
+  <link rel="stylesheet" href="css/field.css?v=4">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
   <script defer src="js/field-auth.js?v=2"></script>
-  <script defer src="js/field.js?v=5"></script>
+  <script defer src="js/field.js?v=6"></script>
   <script defer src="js/site-photo-upload.js"></script>
 </head>
 <body>
@@ -55,7 +55,7 @@
     <div id="field-content" hidden>
     <section class="field-card">
       <h2>Record a sample</h2>
-      <p>Choose the site and date, then enter the measurements you took. Leave other measurements blank. You can save multiple samples on this device and submit them when connected.</p>
+      <p>Choose the site and date, enter the measurements and note the conditions at the site. Leave measurements you did not take blank. You can save multiple samples on this device and submit them when connected.</p>
       <p id="offline-status" role="status">Preparing offline access...</p>
       <p>When offline, the site list comes from the last successful connection. Check the site name before saving.</p>
       <p>Submissions are reviewed before appearing in the public data. Please don't enter names or other personal information.</p>
@@ -81,6 +81,18 @@
             <label>Dissolved oxygen (mg/L)<span>Oxygen concentration reading from a YSI Pro2030 or YSI ProSolo; enter the mg/L value.</span><input type="number" step="any" inputmode="decimal" data-parameter="11" aria-describedby="warning-11"><small id="warning-11"></small></label>
           </div>
           <p>Where no unit is shown, check the approved method and instrument. Unusual-value prompts are reminders to check, not limits or safety advice.</p>
+        </fieldset>
+        <fieldset>
+          <legend>Site observations (optional)</legend>
+          <p>Note conditions that may help explain the measurements. Keep each entry brief and do not include names or other personal information.</p>
+          <label for="observation-weather">Weather</label>
+          <textarea id="observation-weather" data-observation="weather" maxlength="500" rows="2"></textarea>
+          <label for="observation-tide">Tide conditions</label>
+          <textarea id="observation-tide" data-observation="tide" maxlength="500" rows="2"></textarea>
+          <label for="observation-surface">Water-surface conditions</label>
+          <textarea id="observation-surface" data-observation="surface" maxlength="500" rows="2"></textarea>
+          <label for="observation-other">Other unusual observations</label>
+          <textarea id="observation-other" data-observation="other" maxlength="500" rows="2"></textarea>
         </fieldset>
         <button id="field-save" type="submit" disabled>Save sample on this device</button>
         <button id="field-cancel-edit" type="button" hidden>Cancel editing</button>

@@ -18,6 +18,7 @@ create table if not exists public.field_submissions (
   locationid bigint not null references public.locations(id),
   sampling_date date not null,
   measurements jsonb not null,
+  observations jsonb not null default '{}'::jsonb,
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
   created_at timestamptz not null default now(),
   reviewed_at timestamptz,
@@ -29,7 +30,7 @@ alter table public.field_submissions enable row level security;
 revoke all on public.field_reviewers, public.field_submissions from anon, authenticated;
 
 create or replace function public.submit_field_sample(
-  p_id uuid, p_locationid bigint, p_date date, p_measurements jsonb
+  p_id uuid, p_locationid bigint, p_date date, p_measurements jsonb, p_observations jsonb
 ) returns void
 language plpgsql security definer set search_path = pg_catalog, public
 as $$
@@ -40,6 +41,17 @@ begin
   if p_id is null or p_locationid is null or p_date is null or p_measurements is null
      or jsonb_typeof(p_measurements) <> 'object' or p_measurements = '{}'::jsonb then
     raise exception 'A site, date and at least one measurement are required';
+  end if;
+  if p_observations is null or jsonb_typeof(p_observations) <> 'object' then
+    raise exception 'Invalid site observations';
+  end if;
+  if exists (
+    select 1 from jsonb_each(p_observations)
+    where key not in ('weather', 'tide', 'surface', 'other')
+       or jsonb_typeof(value) <> 'string'
+       or length(value #>> '{}') > 500
+  ) then
+    raise exception 'Invalid site observations';
   end if;
   if not exists (select 1 from public.locations where id = p_locationid) then
     raise exception 'Unknown sampling site';
@@ -53,13 +65,13 @@ begin
       raise exception 'Measurement parameter % is not configured', item.key;
     end if;
   end loop;
-  insert into public.field_submissions (id, locationid, sampling_date, measurements)
-    values (p_id, p_locationid, p_date, p_measurements)
+  insert into public.field_submissions (id, locationid, sampling_date, measurements, observations)
+    values (p_id, p_locationid, p_date, p_measurements, p_observations)
     on conflict (id) do nothing;
   if not found then
     select * into existing from public.field_submissions where id = p_id;
     if existing.locationid <> p_locationid or existing.sampling_date <> p_date
-       or existing.measurements <> p_measurements then
+       or existing.measurements <> p_measurements or existing.observations <> p_observations then
       raise exception 'Submission ID already used for a different sample';
     end if;
   end if;
@@ -117,10 +129,10 @@ begin
 end;
 $$;
 
-revoke all on function public.submit_field_sample(uuid, bigint, date, jsonb) from public, anon, authenticated;
+revoke all on function public.submit_field_sample(uuid, bigint, date, jsonb, jsonb) from public, anon, authenticated;
 revoke all on function public.pending_field_samples() from public, anon, authenticated;
 revoke all on function public.review_field_sample(uuid, boolean) from public, anon, authenticated;
-grant execute on function public.submit_field_sample(uuid, bigint, date, jsonb) to anon, authenticated;
+grant execute on function public.submit_field_sample(uuid, bigint, date, jsonb, jsonb) to anon, authenticated;
 grant execute on function public.pending_field_samples() to authenticated;
 grant execute on function public.review_field_sample(uuid, boolean) to authenticated;
 notify pgrst, 'reload schema';

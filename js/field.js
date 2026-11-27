@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const offlineStatus = document.getElementById('offline-status');
   const draftsElement = document.getElementById('field-drafts');
   const inputs = [...form.querySelectorAll('[data-parameter]')];
+  const observationInputs = [...form.querySelectorAll('[data-observation]')];
+  const observationNames = {
+    weather: 'Weather', tide: 'Tide conditions',
+    surface: 'Water-surface conditions', other: 'Other unusual observations'
+  };
   const names = ['Water temperature (°C)', 'Adjusted salinity', 'Adjusted specific conductivity',
     'Dissolved oxygen (%)', 'pH', 'Turbidity', 'Chlorophyll a', 'NNN (µmol/L)', 'DRP (µmol/L)', 'Enterococci', 'Dissolved oxygen (mg/L)'];
   const ranges = {
@@ -26,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   }
   function blankWork() {
-    return { location: '', date: localToday(), values: {}, editingId: null };
+    return { location: '', date: localToday(), values: {}, observations: {}, editingId: null };
   }
   function failStorage(message) {
     storageAvailable = false;
@@ -64,13 +69,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   function readWork() {
     const values = {};
+    const observations = {};
     inputs.forEach(input => { if (input.value !== '') values[input.dataset.parameter] = input.value; });
-    return { location: location.disabled ? state.work.location : location.value, date: date.value, values, editingId: state.work.editingId };
+    observationInputs.forEach(input => {
+      const value = input.value.trim();
+      if (value) observations[input.dataset.observation] = value;
+    });
+    return {
+      location: location.disabled ? state.work.location : location.value,
+      date: date.value,
+      values,
+      observations,
+      editingId: state.work.editingId
+    };
   }
   function showWork(work) {
     location.value = work.location;
     date.value = work.date;
     inputs.forEach(input => { input.value = work.values[input.dataset.parameter] || ''; });
+    observationInputs.forEach(input => {
+      input.value = (work.observations || {})[input.dataset.observation] || '';
+    });
     save.textContent = work.editingId ? 'Update saved sample' : 'Save sample on this device';
     cancelEdit.hidden = !work.editingId;
     warnings();
@@ -94,6 +113,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       addText(card, 'strong', `${site ? site.name : `Site ${draft.location}`} — ${draft.date}`);
       const list = card.appendChild(document.createElement('ul'));
       Object.entries(draft.values).forEach(([id, value]) => addText(list, 'li', `${names[Number(id) - 1]}: ${value}`));
+      const observations = draft.observations || {};
+      if (Object.keys(observations).length) {
+        addText(card, 'strong', 'Site observations');
+        const observationList = card.appendChild(document.createElement('ul'));
+        Object.entries(observations).forEach(([key, value]) => {
+          if (observationNames[key]) addText(observationList, 'li', `${observationNames[key]}: ${value}`);
+        });
+      }
       if (draft.attempted) addText(card, 'p', 'A submission was attempted but not confirmed. Retry unchanged to avoid a duplicate.');
       const send = addText(card, 'button', draft.attempted ? 'Retry submission' : 'Submit for review');
       send.type = 'button';
@@ -106,7 +133,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         edit.addEventListener('click', () => {
           if ((state.work.location || Object.keys(state.work.values).length) &&
               !window.confirm('Replace the sample currently being entered? Save it first if you need to keep it.')) return;
-          state.work = { location: draft.location, date: draft.date, values: { ...draft.values }, editingId: draft.id };
+          state.work = {
+            location: draft.location,
+            date: draft.date,
+            values: { ...draft.values },
+            observations: { ...(draft.observations || {}) },
+            editingId: draft.id
+          };
           if (persist()) {
             showWork(state.work);
             renderDrafts();
@@ -151,7 +184,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const client = window.fieldAuth.client;
       const measurements = Object.fromEntries(Object.entries(draft.values).map(([key, value]) => [key, Number(value)]));
       const { error } = await client.rpc('submit_field_sample', {
-        p_id: draft.id, p_locationid: Number(draft.location), p_date: draft.date, p_measurements: measurements
+        p_id: draft.id, p_locationid: Number(draft.location), p_date: draft.date,
+        p_measurements: measurements, p_observations: draft.observations || {}
       });
       if (error) throw error;
       state.drafts = state.drafts.filter(item => item.id !== id);
@@ -221,8 +255,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       status.textContent = 'This sample cannot be edited. Reload and retry its submission unchanged.';
       return;
     }
-    const draft = { id: existing ? existing.id : crypto.randomUUID(), location: work.location,
-      date: work.date, values: work.values, attempted: false };
+    const draft = {
+      id: existing ? existing.id : crypto.randomUUID(),
+      location: work.location,
+      date: work.date,
+      values: work.values,
+      observations: work.observations,
+      attempted: false
+    };
     if (existing) state.drafts[state.drafts.indexOf(existing)] = draft;
     else state.drafts.push(draft);
     state.work = blankWork();

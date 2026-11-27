@@ -24,7 +24,7 @@
 .field-draft { margin: 12px 0; padding: 14px; background: white; border-radius: 8px; }
 .field-draft button { margin: 4px 8px 4px 0; }
 .field-draft ul { padding-left: 22px; }
-.field-card input, .field-card select {
+.field-card input, .field-card select, .field-card textarea {
   box-sizing: border-box;
   width: 100%;
   min-height: 44px;
@@ -34,6 +34,7 @@
   background: white;
   font: inherit;
 }
+.field-card textarea { resize: vertical; }
 .field-card fieldset { border: 1px solid #b5c6e0; border-radius: 6px; }
 .field-card legend { font-weight: 700; }
 .field-card button, .field-review button {
