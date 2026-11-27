@@ -58,7 +58,7 @@
     }
     const header = 'Site,Date,water temp oC\n';
     const ids = [4, 11, 5, 6, 10, 9, 7, 8];
-    const names = ['Mussel Bay', 'Stream at Sawyer Bay', 'Ravensbourne Boat Club',
+    const names = ['Mussel Bay', 'Stream at Sawyers Bay', 'Ravensbourne Boat Club',
       'Leith River Mouth', "Anderson's Bay Outlet", 'Sommerville Creek',
       'MacAndrew Bay Marina', 'MacAndrew Bay Stormwater Outfall'];
     await run(header + ids.map((_, i) => `#${i + 1},17 Oct 2026,${i + 10}`).join('\n'));
@@ -89,7 +89,7 @@
     mapping = structuredClone(originalMapping);
     duplicates = [{ locationid: 11, parameterid: 1 }];
     await run(header + '2,17 Oct 2026,10');
-    assert(preview.textContent.includes('Already exists for 2 - Stream at Sawyer Bay') &&
+    assert(preview.textContent.includes('Already exists for 2 - Stream at Sawyers Bay') &&
       !preview.querySelector('button'), 'Existing duplicate');
     duplicates = [];
     passed.push('Ambiguous mappings, database mismatches and existing duplicates are rejected');
