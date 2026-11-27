@@ -79,7 +79,7 @@ function setupLocationMenu(nav) {
   menu.append(summary, panel);
   locationsLink.replaceWith(menu);
 
-  fetch('data/locations.json')
+  fetch('data/locations.json', { cache: 'no-store' })
     .then(response => {
       if (!response.ok) throw new Error('Unable to load locations');
       return response.json();

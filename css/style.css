@@ -524,6 +524,8 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;color:#0
 .site-location-panel { position: absolute; z-index: 1200; top: calc(100% + 6px); right: 0; min-width: 220px; padding: 8px; background: #fff; border: 1px solid #b5c6e0; border-radius: 8px; box-shadow: 0 4px 14px #0b25452a; }
 .site-location-panel h3 { margin: 4px 10px 2px; color: #52708e; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
 .site-location-panel a { display: block; margin: 0; padding: 9px 10px; white-space: nowrap; }
+.site-header nav .site-location-group { display: flex; flex-direction: column; align-items: stretch; }
+.site-header nav .site-location-group > a { justify-content: flex-start; text-align: left; }
 .site-location-panel a:hover, .site-location-panel a:focus-visible { background: #e6f0ff; border-radius: 5px; }
 .site-location-history { margin-top: 4px; border-top: 1px solid #dce7f2; }
 .site-location-history summary { display: block; padding: 9px 10px; color: var(--blue-text); cursor: pointer; list-style: none; }
@@ -1416,6 +1418,7 @@ footer {
 	font-size: .94rem;
 	white-space: nowrap;
  }
+ .site-header nav .site-location-panel a { display: block; }
  .site-header nav a:hover,
  .site-header nav .site-location-menu summary:hover { background: rgba(255,255,255,.55); }
  .site-menu-toggle,

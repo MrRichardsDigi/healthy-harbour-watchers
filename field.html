@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <script defer src="js/navigation.js?v=6"></script>
+  <script defer src="js/navigation.js?v=7"></script>
   <meta name="theme-color" content="#0b5fa6">
   <title>Field entry — Healthy Harbour Watchers</title>
-  <link rel="stylesheet" href="css/style.css?v=navredesign1">
+  <link rel="stylesheet" href="css/style.css?v=navredesign2">
   <link rel="stylesheet" href="css/field.css?v=3">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script defer src="js/config.js"></script>
@@ -66,7 +66,7 @@
         <input id="field-date" type="date" required>
         <fieldset>
           <legend>Measurements</legend>
-          <p>Enter at least one measurement. Use a decimal point for decimals. Pro2030 readings are collected in the field; pH and turbidity may be added later from the lab.</p>
+          <p>Enter at least one measurement. Use a decimal point for decimals. YSI Pro2030 or YSI ProSolo readings are collected in the field; pH and turbidity may be added later from the lab.</p>
           <div class="measurement-grid">
             <label>Water temperature (°C)<span>How warm the water is.</span><input type="number" step="any" inputmode="decimal" data-parameter="1" aria-describedby="warning-1"><small id="warning-1"></small></label>
             <label>Adjusted salinity<span>Dissolved salts; enter the adjusted reading.</span><input type="number" step="any" inputmode="decimal" data-parameter="2" aria-describedby="warning-2"><small id="warning-2"></small></label>
@@ -78,7 +78,7 @@
             <label>NNN (µmol/L)<span>Nitrogen nutrients, including nitrate and nitrite.</span><input type="number" step="any" inputmode="decimal" data-parameter="8" aria-describedby="warning-8"><small id="warning-8"></small></label>
             <label>DRP (µmol/L)<span>Dissolved reactive phosphorus, a nutrient.</span><input type="number" step="any" inputmode="decimal" data-parameter="9" aria-describedby="warning-9"><small id="warning-9"></small></label>
             <label>Enterococci<span>Bacteria used as an indicator of possible faecal contamination.</span><input type="number" step="any" inputmode="decimal" data-parameter="10" aria-describedby="warning-10"><small id="warning-10"></small></label>
-            <label>Dissolved oxygen (mg/L)<span>Pro2030 oxygen concentration reading; enter the mg/L value.</span><input type="number" step="any" inputmode="decimal" data-parameter="11" aria-describedby="warning-11"><small id="warning-11"></small></label>
+            <label>Dissolved oxygen (mg/L)<span>Oxygen concentration reading from a YSI Pro2030 or YSI ProSolo; enter the mg/L value.</span><input type="number" step="any" inputmode="decimal" data-parameter="11" aria-describedby="warning-11"><small id="warning-11"></small></label>
           </div>
           <p>Where no unit is shown, check the approved method and instrument. Unusual-value prompts are reminders to check, not limits or safety advice.</p>
         </fieldset>
