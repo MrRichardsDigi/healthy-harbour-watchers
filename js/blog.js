@@ -5,7 +5,8 @@
     document.getElementById('blog-posts').innerHTML = '<div style="color:#b33">Supabase config missing or not loaded.</div>';
     return;
   }
-  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const client = window.hhwBlogSupabaseClient ||
+    (window.hhwBlogSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY));
   const { data, error } = await client.from('blog_posts').select('*').eq('published', true).order('created_at', { ascending: false });
   if(error) {
     document.getElementById('blog-posts').innerHTML = '<div style="color:#b33">Error loading posts: '+error.message+'</div>';

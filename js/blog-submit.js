@@ -11,7 +11,8 @@
     return;
   }
 
-  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const client = window.hhwBlogSupabaseClient ||
+    (window.hhwBlogSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY));
   const redirectTo = new URL('blog.html', document.baseURI).href;
 
   async function showSubmissionForm() {

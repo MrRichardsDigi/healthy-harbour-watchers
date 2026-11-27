@@ -162,11 +162,11 @@ function showDashboard() {
   // Blog post management logic
   async function loadBlogPosts() {
     const draftDiv = document.getElementById('draft-posts');
-    if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
+    if(!supabaseClient) {
       draftDiv.innerHTML = '<div style="color:#b33">Supabase config missing or not loaded.</div>';
       return;
     }
-    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const client = supabaseClient;
     draftDiv.innerHTML = '<div>Loading posts...</div>';
     const { data, error } = await client.from('blog_posts').select('*').order('created_at', { ascending: false });
     if(error) {
@@ -257,11 +257,11 @@ function showDashboard() {
           alert('Please enter a title and content.');
           return;
         }
-        if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
+        if(!supabaseClient) {
           alert('Supabase config missing or not loaded.');
           return;
         }
-        const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const client = supabaseClient;
         // Handle image upload if file selected
         if(imageInput && imageInput.files && imageInput.files[0]){
           const file = imageInput.files[0];
@@ -326,13 +326,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         errorDiv.style.display = 'block';
         return;
       }
-      if(typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined' || !window.supabase) {
+      if(!supabaseClient) {
         errorDiv.textContent = 'Supabase config missing or not loaded.';
         errorDiv.style.display = 'block';
         return;
       }
-      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if(error) {
         errorDiv.textContent = error.message || 'Login failed.';
         errorDiv.style.display = 'block';
