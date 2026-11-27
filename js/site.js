@@ -264,17 +264,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       miniMap.textContent = 'Map unavailable. Use the harbour map link below.';
     }
     status.hidden = true;
+    const container = document.getElementById('site-photos');
+    const photoManifestResponse = await fetch('data/site-photos.json');
+    if (!photoManifestResponse.ok) throw new Error('Could not load curated site photos');
+    const photoManifest = await photoManifestResponse.json();
+    const curatedPhotos = photoManifest[id] || [];
+    for (const fileName of curatedPhotos) {
+      const figure = document.createElement('figure');
+      const image = document.createElement('img');
+      image.src = `assets/${encodeURIComponent(fileName)}`;
+      image.alt = `Field photo from ${site.name}`;
+      image.loading = 'lazy';
+      figure.appendChild(image);
+      container.appendChild(figure);
+    }
     if (!window.supabase || typeof SUPABASE_URL === 'undefined' || typeof SUPABASE_ANON_KEY === 'undefined') {
-      throw new Error('Photo service unavailable');
+      photosStatus.textContent = curatedPhotos.length
+        ? 'Community-submitted photos are unavailable.'
+        : 'Photo service unavailable.';
+      return;
     }
     const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const { data, error } = await client.rpc('site_photo_list', { p_locationid: Number(site.id) });
     if (error) throw error;
-    if (!data.length) {
-      photosStatus.textContent = 'No approved photos yet.';
-      return;
-    }
-    const container = document.getElementById('site-photos');
     for (const photo of data) {
       const signed = await client.storage.from('site-photos').createSignedUrl(photo.object_path, 3600);
       if (signed.error) throw signed.error;
@@ -287,6 +299,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       caption.textContent = `Submitted ${new Date(photo.created_at).toLocaleDateString('en-NZ')}`;
       figure.append(image, caption);
       container.appendChild(figure);
+    }
+    if (!curatedPhotos.length && !data.length) {
+      photosStatus.textContent = 'No approved photos yet.';
+      return;
     }
     photosStatus.hidden = true;
   } catch (error) {
