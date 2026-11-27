@@ -7,7 +7,7 @@
   <title>Monitoring handbook — Healthy Harbour Watchers</title>
   <script defer src="js/navigation.js?v=7"></script>
   <link rel="stylesheet" href="css/style.css?v=navredesign2">
-  <link rel="stylesheet" href="css/handbook.css?v=2">
+  <link rel="stylesheet" href="css/handbook.css?v=3">
 </head>
 <body>
   <header class="site-header">
@@ -49,7 +49,9 @@
         </div>
         <nav class="handbook-topics" aria-label="Handbook topics">
           <a href="#fieldwork">Fieldwork &amp; observations</a>
+          <a href="#ysi-meters">YSI field meter</a>
           <a href="#water">Water quality</a>
+          <a href="#protocol-dissolved-oxygen">Dissolved oxygen</a>
           <a href="#nutrients">Nutrients &amp; biology</a>
         </nav>
       </section>
@@ -63,9 +65,13 @@
           <details class="handbook-card">
             <summary><span class="handbook-page">Page 3</span><h3>Sampling and equipment</h3><span class="handbook-expand">Read guidance</span></summary>
             <div class="handbook-detail">
-              <p>Good data depends on collecting samples and using equipment consistently. The handbook recommends sampling at the same part of the tidal cycle and recording the state of the tide.</p>
-              <p>Make site observations first, collect water samples for chemistry before disturbing the water, and leave activities that disturb bottom sediment until last. This helps keep one activity from affecting the next.</p>
-              <p>Prepare the equipment and forms for the measurements being taken. Follow the complete handbook and your supervisor's instructions for sample handling and instrument use.</p>
+              <p>Use the sampling plan consistently. Record the site, date, time and tide conditions so results can be compared between visits.</p>
+              <ol class="handbook-steps">
+                <li>Note weather, tide, water-surface conditions and anything unusual at the site.</li>
+                <li>Collect chemistry water samples before putting probes in the water or disturbing the site.</li>
+                <li>Take instrument readings and clarity measurements next; leave activities that disturb bottom sediment until last.</li>
+              </ol>
+              <p>Before starting, check that the required equipment and recording fields are ready. Follow the approved method and your supervisor's directions for sample handling.</p>
             </div>
           </details>
           <details class="handbook-card">
@@ -73,6 +79,34 @@
             <div class="handbook-detail">
               <p>Record the conditions at each site as well as measurements: weather, tide, water surface conditions and anything unusual can help explain changes in results.</p>
               <p>Use the site record form to keep observations together with the site and sampling date. The full handbook includes the forms and further guidance.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section class="handbook-section" id="ysi-meters">
+        <div class="handbook-section-heading">
+          <div><p class="handbook-kicker">Field instrument guide</p><h2>YSI field meters</h2></div>
+          <p>Use the correct steps for the meter and probe you have.</p>
+        </div>
+        <div class="handbook-grid">
+          <details class="handbook-card" id="protocol-ysi" open>
+            <summary><span class="handbook-page">Field supplement</span><h3>Using the YSI Pro2030 and ProSolo</h3><span class="handbook-expand">Read guidance</span></summary>
+            <div class="handbook-detail">
+              <p>The YSI Pro2030 measures dissolved oxygen, conductivity and temperature. ProSolo readings depend on the probe fitted; an ODO/CT probe measures optical dissolved oxygen, conductivity and temperature. Check the probe label and its manual before assuming a channel is available.</p>
+              <ol class="handbook-steps">
+                <li><strong>Check the meter and sensor.</strong> Confirm the correct probe is connected, inspect the cable and sensor for damage or fouling, and check the battery and displayed units. Ask your supervisor about any fault.</li>
+                <li><strong>Check calibration.</strong> Calibrate when required by the approved field procedure. The Pro2030 and ProSolo have different sensor and calibration steps; use the manual for the exact meter and probe. Do not collect data if calibration fails or the reading will not stabilize.</li>
+                <li><strong>Collect samples first.</strong> Take chemistry bottles before immersing the probe, then place the sensor in representative water without touching the bottom or trapping bubbles around it.</li>
+                <li><strong>Wait for stable readings.</strong> The Pro2030 dissolved-oxygen sensor needs water movement while measuring; follow its manual for the required movement. The ProSolo optical dissolved-oxygen sensor does not require stirring. Do not apply one model's procedure to the other.</li>
+                <li><strong>Record what the meter displays.</strong> Enter dissolved oxygen concentration in mg/L in the mg/L field and percent saturation in the separate % field; do not convert or swap them. Confirm the meter displays temperature in °C to match the field form. Enter conductivity or salinity only when the fitted probe and approved method provide those readings, using the method's prescribed units. Ask your supervisor if a unit is unclear.</li>
+                <li><strong>Finish safely.</strong> Rinse and store the meter and probe as instructed in that model's manual. Tell your supervisor about unstable readings, calibration errors or damaged sensors.</li>
+              </ol>
+              <p class="handbook-caution"><strong>Calibration, sensor preparation and storage differ by model and probe.</strong> Follow the approved group procedure and the matching manufacturer's manual; this quick guide does not replace either one.</p>
+              <div class="handbook-references" aria-label="YSI user manuals">
+                <a href="https://www.ysi.com/file%20library/documents/manuals/605056-ysi-pro2030-user-manual-revc.pdf" target="_blank" rel="noopener noreferrer">YSI Pro2030 user manual <span aria-hidden="true">↗</span></a>
+                <a href="https://www.ysi.com/file%20library/documents/manuals/ysi_prosolo_user_manual_english.pdf" target="_blank" rel="noopener noreferrer">YSI ProSolo user manual <span aria-hidden="true">↗</span></a>
+              </div>
             </div>
           </details>
         </div>
@@ -88,7 +122,7 @@
           <details class="handbook-card" id="protocol-ph"><summary><span class="handbook-page">Page 14</span><h3>pH</h3><span class="handbook-expand">Read guidance</span></summary><div class="handbook-detail"><p>pH describes how acidic or alkaline the water is. Monitoring it alongside other conditions helps build a picture of water quality.</p><p>Use the handbook and the instrument instructions for the chosen measurement method and recording the result.</p></div></details>
           <details class="handbook-card" id="protocol-turbidity"><summary><span class="handbook-page">Page 15</span><h3>Water clarity</h3><span class="handbook-expand">Read guidance</span></summary><div class="handbook-detail"><p>Suspended particles make water cloudier and reduce the depth that light can reach. Clarity can change after flooding and can be affected by erosion or algal growth.</p><p>The handbook describes tools including a Secchi disk, turbidity meter and turbidity tube. Take clarity measurements before activities that disturb sediment.</p></div></details>
           <details class="handbook-card" id="protocol-conductivity"><summary><span class="handbook-page">Page 16</span><h3>Salinity and conductivity</h3><span class="handbook-expand">Read guidance</span></summary><div class="handbook-detail"><p>Salinity describes dissolved salts in water. It varies across the harbour and affects aquatic organisms and how water layers form.</p><p>The handbook discusses salinity and electrical conductivity; use the approved instrument method and record the correct units and adjustments.</p></div></details>
-          <details class="handbook-card"><summary><span class="handbook-page">Page 17</span><h3>Dissolved oxygen</h3><span class="handbook-expand">Read guidance</span></summary><div class="handbook-detail"><p>Dissolved oxygen is available to aquatic plants and animals. Levels can change with temperature, salinity and time of day.</p><p>Record the result with its unit: concentration and percentage saturation are different measurements. Consult the handbook for the sampling and measurement method.</p></div></details>
+          <details class="handbook-card" id="protocol-dissolved-oxygen"><summary><span class="handbook-page">Page 17</span><h3>Dissolved oxygen</h3><span class="handbook-expand">Read guidance</span></summary><div class="handbook-detail"><p>Dissolved oxygen is available to aquatic plants and animals. Levels can change with temperature, salinity and time of day.</p><p>Record the YSI reading with its displayed unit: mg/L is oxygen concentration, while % is percentage saturation. They are different measurements; do not convert one into the other field. See the <a href="#ysi-meters">YSI field meter guide</a> for model-specific notes.</p></div></details>
         </div>
       </section>
 

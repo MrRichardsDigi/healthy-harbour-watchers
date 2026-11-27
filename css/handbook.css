@@ -20,7 +20,7 @@
 }
 .handbook-primary { gap: 8px; background: #fff; color: #07508a; }
 .handbook-secondary { border: 1px solid #aac7df; color: #07508a; background: #fff; }
-.handbook-primary:focus-visible, .handbook-secondary:focus-visible, .handbook-topics a:focus-visible {
+.handbook-primary:focus-visible, .handbook-secondary:focus-visible, .handbook-topics a:focus-visible, .handbook-references a:focus-visible {
   outline: 3px solid #e39b19;
   outline-offset: 3px;
 }
@@ -64,6 +64,11 @@
 .handbook-card[open] .handbook-expand::after { content: ' −'; }
 .handbook-detail { border-top: 1px solid #d5e4f2; margin-top: 14px; padding-top: 14px; }
 .handbook-card .handbook-detail p + p { margin-top: 12px; }
+.handbook-steps { margin: 0; padding-left: 1.35rem; color: #425c72; line-height: 1.6; }
+.handbook-steps li + li { margin-top: 8px; }
+.handbook-card .handbook-detail .handbook-caution { margin: 16px 0 0; padding: 12px 14px; border-left: 3px solid #e39b19; border-radius: 4px; background: #fff8e6; }
+.handbook-references { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.handbook-references a { display: inline-flex; align-items: center; gap: 4px; color: #07508a; font-weight: 700; line-height: 1.5; }
 .handbook-page { color: #0b5fa6; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
 .handbook-next { margin-top: 48px; padding: 24px; border-radius: 12px; background: #d3e7f8; }
 .handbook-next h2 { margin: 0 0 6px; }
