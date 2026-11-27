@@ -1037,6 +1037,85 @@ footer{padding:12px 20px;text-align:center;background:var(--blue-bg)}
 	.schools-list { flex-wrap: wrap; }
 }
 
+@media (min-width: 701px) and (max-width: 1050px) {
+	.site-header.site-nav-enhanced {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 8px 14px;
+		align-items: center;
+	}
+	.site-header.site-nav-enhanced h1 {
+		min-width: 0;
+		margin: 0;
+		text-align: left;
+		font-size: clamp(1.15rem, 2.7vw, 1.8rem);
+		overflow-wrap: anywhere;
+	}
+	.site-header.site-nav-enhanced .site-logo { margin-right: 0; }
+	.site-header.site-nav-enhanced .site-logo img { height: 68px; }
+	.site-nav-enhanced .site-menu-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		min-height: 44px;
+		padding: 8px 10px;
+		border: 1px solid #8eafc9;
+		border-radius: 8px;
+		background: #fff;
+		color: #0b5fa6;
+		font: inherit;
+		font-weight: 700;
+		cursor: pointer;
+	}
+	.site-nav-enhanced .site-menu-toggle span { font-size: 1.25rem; line-height: 1; }
+	.site-header.site-nav-enhanced nav {
+		position: fixed;
+		z-index: 1101;
+		top: 0;
+		right: 0;
+		width: min(76vw, 380px);
+		height: 100vh;
+		height: 100dvh;
+		margin: 0;
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		align-items: stretch;
+		gap: 6px;
+		overflow-y: auto;
+		background: #fff;
+		box-shadow: -4px 0 20px #0003;
+		transform: translateX(100%);
+		visibility: hidden;
+		transition: transform .2s ease, visibility .2s;
+	}
+	.site-header.site-nav-enhanced.site-nav-open nav { transform: translateX(0); visibility: visible; }
+	.site-nav-enhanced.site-nav-open .site-menu-backdrop { display: block; position: fixed; inset: 0; z-index: 1100; background: #0007; }
+	.site-nav-enhanced .site-menu-close {
+		display: block;
+		align-self: flex-end;
+		min-height: 48px;
+		padding: 10px 12px;
+		border: 1px solid #8eafc9;
+		border-radius: 8px;
+		background: #fff;
+		color: #0b5fa6;
+		font: inherit;
+		font-weight: 700;
+		cursor: pointer;
+	}
+	.site-header.site-nav-enhanced nav a,
+	.site-header.site-nav-enhanced nav a.nav-current { justify-content: flex-start; min-height: 48px; padding: 10px 14px; }
+	.site-header.site-nav-enhanced nav .site-location-menu { display: block; margin: 0; }
+	.site-header.site-nav-enhanced nav .site-location-menu summary { display: flex; justify-content: flex-start; min-height: 48px; padding: 10px 14px; }
+	.site-header.site-nav-enhanced nav .site-location-panel { position: static; min-width: 0; border: 0; box-shadow: none; padding: 0 0 0 12px; }
+	.site-header.site-nav-enhanced nav .site-location-panel h3 { margin: 8px 14px 2px; }
+	.site-header.site-nav-enhanced nav .site-location-history { margin-top: 6px; }
+	.site-header.site-nav-enhanced nav .site-location-history summary { min-height: 44px; padding: 10px 14px; }
+	.site-header.site-nav-enhanced nav .site-location-panel a { min-height: 44px; padding: 10px 14px; }
+}
+
 @media (max-width: 700px) {
 	.site-header.site-nav-enhanced { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; }
 	.site-header.site-nav-enhanced h1 { min-width: 0; font-size: clamp(1rem, 4vw, 1.4rem); overflow-wrap: anywhere; }
