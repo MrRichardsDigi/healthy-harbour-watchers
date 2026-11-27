@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     status.textContent = `${error.message}. Reconnect and reload.`;
   }
   async function prepare(file) {
-    if (file.size > 5 * 1024 * 1024) throw new Error('Choose a photo no larger than 5 MB');
+    if (file.size > 10 * 1024 * 1024) throw new Error('Choose a photo no larger than 10 MB');
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
       throw new Error('Choose a JPEG, PNG or WebP photo');
     }

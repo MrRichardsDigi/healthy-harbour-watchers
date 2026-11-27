@@ -3,7 +3,7 @@
 begin;
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('site-photos', 'site-photos', false, 5242880, array['image/jpeg']);
+values ('site-photos', 'site-photos', false, 10485760, array['image/jpeg']);
 
 create table if not exists public.site_photos (
   id uuid primary key,

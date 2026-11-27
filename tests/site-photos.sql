@@ -9,6 +9,14 @@ alter table storage.objects enable row level security;
 grant usage on schema storage to anon, authenticated;
 grant select, insert, delete on storage.objects to anon, authenticated;
 \ir '..\\data\\site-photos-setup.sql'
+-- Exercise the upgrade path for an already-installed 5 MiB bucket.
+update storage.buckets set file_size_limit = 5242880 where id = 'site-photos';
+\ir '..\\data\\site-photos-10mb-migration.sql'
+do $$ begin
+ if not exists (select 1 from storage.buckets where id = 'site-photos' and file_size_limit = 10485760) then
+   raise exception 'Photo bucket limit was not raised to 10 MiB';
+ end if;
+end $$;
 insert into public.field_reviewers values ('00000000-0000-0000-0000-000000000001');
 insert into public.field_allowed_emails(email, added_by) values
  ('student@school.org', '00000000-0000-0000-0000-000000000001');
