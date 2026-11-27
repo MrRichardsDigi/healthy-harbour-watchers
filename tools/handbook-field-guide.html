@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Healthy Harbour Watchers Field Handbook</title>
+  <style>
+    @page { size: A4 portrait; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; color: #17364b; }
+    body { background: #dce8ed; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page {
+      position: relative;
+      width: 210mm;
+      height: 297mm;
+      margin: 12px auto;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+      background: #fff;
+      box-shadow: 0 3px 18px rgba(7, 54, 80, .16);
+    }
+    .interior { padding: 15mm 15mm 14mm; }
+    .page-kicker { margin: 0 0 2mm; color: #087c91; font-size: 9pt; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    h2 { margin: 0; color: #073650; font-size: 25pt; line-height: 1.08; }
+    .page-intro { max-width: 175mm; margin: 3mm 0 6mm; color: #4c6575; font-size: 10.5pt; line-height: 1.42; }
+    h3 { margin: 0 0 2mm; color: #073650; font-size: 12pt; line-height: 1.2; }
+    p { margin: 0; }
+    .page-footer {
+      position: absolute;
+      right: 15mm;
+      bottom: 7mm;
+      left: 15mm;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 2mm;
+      border-top: 1px solid #d5e3e8;
+      color: #607989;
+      font-size: 8pt;
+    }
+    .card { padding: 4mm; border: 1px solid #d4e4e9; border-radius: 2.5mm; background: #f8fbfc; }
+    .card p, .card li { color: #365466; font-size: 9.5pt; line-height: 1.38; }
+    .card p + p { margin-top: 2mm; }
+    .card ul, .card ol { margin: 0; padding-left: 5mm; }
+    .card li + li { margin-top: 1.5mm; }
+    .card li::marker { color: #087c91; font-weight: 700; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+    .callout { margin-top: 4mm; padding: 3.5mm 4mm; border-left: 1.2mm solid #dc9a27; border-radius: 1.5mm; background: #fff6e6; }
+    .callout p { color: #60491e; font-size: 9.5pt; line-height: 1.4; }
+    .callout p + p { margin-top: 1.5mm; }
+    .teal-callout { border-left-color: #087c91; background: #edf5f8; }
+    .teal-callout p { color: #294b5e; }
+    .steps { display: grid; gap: 2.5mm; margin: 0; padding: 0; list-style: none; counter-reset: step; }
+    .steps li { position: relative; min-height: 11mm; padding: 2.4mm 3mm 2.4mm 12mm; border-radius: 2mm; background: #f1f7f9; color: #294b5e; font-size: 9.5pt; line-height: 1.35; counter-increment: step; }
+    .steps li::before { position: absolute; top: 2mm; left: 2.5mm; display: flex; width: 7mm; height: 7mm; align-items: center; justify-content: center; border-radius: 50%; background: #087c91; color: #fff; content: counter(step); font-size: 9pt; font-weight: 700; }
+    .tag { display: inline-block; margin: 0 1mm 1.5mm 0; padding: 1mm 2mm; border-radius: 99px; background: #dceef2; color: #075c70; font-size: 8pt; font-weight: 700; }
+    .small { color: #607989 !important; font-size: 8.5pt !important; }
+    a { color: #07508a; font-weight: 700; }
+
+    .cover { display: flex; flex-direction: column; justify-content: space-between; padding: 17mm; color: #fff; background: #073650; }
+    .cover-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .48; }
+    .cover::after { position: absolute; inset: 0; content: ""; background: linear-gradient(180deg, rgba(4,33,54,.78) 0%, rgba(4,33,54,.4) 48%, rgba(4,33,54,.9) 100%); }
+    .cover-content, .cover-footer { position: relative; z-index: 1; }
+    .cover-brand { display: flex; align-items: center; gap: 5mm; }
+    .cover-brand img { width: 37mm; padding: 2mm; border-radius: 3mm; background: #fff; }
+    .cover-brand span { color: #c9eff5; font-size: 10pt; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .cover-title { max-width: 160mm; margin-top: 53mm; }
+    .cover-title .eyebrow { color: #9de0df; font-size: 12pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .cover-title h1 { margin: 4mm 0 3mm; font-size: 37pt; line-height: 1.02; }
+    .cover-title p { color: #edf8fb; font-size: 17pt; }
+    .cover-footer { padding-top: 4mm; border-top: 1px solid rgba(255,255,255,.55); }
+    .cover-footer p { max-width: 174mm; font-size: 10pt; line-height: 1.5; }
+    .cover-footer p + p { margin-top: 2mm; color: #d3eaf0; font-size: 8.5pt; }
+    .cover-footer .cover-version { margin-top: 2mm; color: #d3eaf0; font-size: 8.5pt; }
+
+    .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .check-card { min-height: 47mm; }
+    .checklist { margin: 0; padding: 0; list-style: none; }
+    .checklist li { position: relative; padding-left: 6mm; color: #365466; font-size: 9.5pt; line-height: 1.4; }
+    .checklist li + li { margin-top: 2mm; }
+    .checklist li::before { position: absolute; top: .5mm; left: 0; width: 3.5mm; height: 3.5mm; border: 1px solid #087c91; border-radius: 1mm; content: ""; }
+
+    #site-map { display: block; width: 100%; height: auto; border: 1px solid #bfd4dc; border-radius: 2.5mm; background: #e7f2f4; }
+    .map-layout { display: grid; grid-template-columns: 1.45fr 1fr; gap: 4mm; }
+    .site-list { padding: 3mm; border-radius: 2.5mm; background: #edf5f8; }
+    .site-list ol { margin: 0; padding-left: 5mm; }
+    .site-list li { padding: 0 0 2.5mm 1mm; color: #294b5e; font-size: 8.8pt; line-height: 1.22; }
+    .site-list li::marker { color: #087c91; font-weight: 700; }
+
+    .observe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .observe-card { min-height: 46mm; }
+    .observe-card .prompt { margin-top: 2mm; color: #607989; font-size: 8.5pt; line-height: 1.35; }
+    .sample-steps { grid-template-columns: 1fr 1fr; }
+    .sample-steps li { min-height: 22mm; }
+    .meter-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .meter-card { min-height: 54mm; }
+    .unit-box { padding: 3mm; border-radius: 2mm; background: #edf5f8; }
+    .unit-box strong { display: block; margin-bottom: 1mm; color: #073650; font-size: 12pt; }
+    .unit-box span { color: #365466; font-size: 8.8pt; line-height: 1.32; }
+    .secchi-steps { grid-template-columns: 1fr 1fr; }
+    .secchi-steps li { min-height: 22mm; }
+    .test-card { min-height: 44mm; }
+    .test-card .purpose { margin: 0 0 2mm; color: #087c91; font-size: 9pt; font-weight: 700; }
+    .phase-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2mm; margin-top: 3mm; }
+    .phase-list div { padding: 2.5mm; border-radius: 2mm; background: #f1f7f9; color: #294b5e; font-size: 8.5pt; line-height: 1.3; }
+    .phase-list strong { display: block; margin-bottom: 1mm; color: #073650; }
+    .link-row { display: flex; flex-wrap: wrap; gap: 4mm; margin-top: 2mm; font-size: 8.5pt; }
+    .flow-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+    .flow-card { min-height: 40mm; }
+    .flow-number { display: inline-flex; width: 7mm; height: 7mm; align-items: center; justify-content: center; margin-bottom: 2mm; border-radius: 50%; background: #087c91; color: #fff; font-size: 9pt; font-weight: 700; }
+    .back-cover { display: flex; flex-direction: column; justify-content: space-between; color: #fff; background: #073650; }
+    .back-cover .interior-content { padding: 16mm; }
+    .back-cover h2, .back-cover h3 { color: #fff; }
+    .back-cover p, .back-cover li { color: #e5f1f4; }
+    .back-cover .card li { color: #365466; }
+    .back-cover a { color: #9de0df; }
+    .back-cover .callout { border-left-color: #9de0df; background: rgba(255,255,255,.1); }
+    .back-cover .callout p { color: #f0f8fa; }
+    .back-cover .page-footer { border-top-color: rgba(255,255,255,.4); color: #d3eaf0; }
+
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; box-shadow: none; }
+      .page:last-child { page-break-after: auto; break-after: auto; }
+    }
+  </style>
+</head>
+<body>
+  <section class="page cover">
+    <img class="cover-photo" src="../assets/harbour2.jpg" alt="">
+    <div class="cover-content">
+      <div class="cover-brand">
+        <img src="../assets/logo.png" alt="Healthy Harbour Watchers">
+        <span>Otago Harbour monitoring programme</span>
+      </div>
+      <div class="cover-title">
+        <p class="eyebrow">Field handbook</p>
+        <h1>Healthy Harbour Watchers</h1>
+        <p>Observe. Measure. Understand.</p>
+      </div>
+    </div>
+    <div class="cover-footer">
+      <p>A compact, field-first guide for consistent observations and measurements at Otago Harbour.</p>
+      <p class="cover-version">Print edition · November 2026</p>
+      <p>Each page is designed as a single-sided A4 field sheet. This guide is not a safety plan, instrument manual or laboratory method; use the current approved instructions supplied by your group and lab lead.</p>
+    </div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">01 · Start here</p>
+    <h2>Before you leave</h2>
+    <p class="page-intro">A few checks before the trip save time at the water's edge and help keep results comparable.</p>
+    <div class="check-grid">
+      <section class="card check-card">
+        <h3>Plan the visit</h3>
+        <ul class="checklist">
+          <li>Confirm the site, sampling plan and who is supervising.</li>
+          <li>Check tide, weather and safe access; follow the group's risk plan.</li>
+          <li>Where practical, sample at a consistent time and part of the tide.</li>
+          <li>Sign in to Field entry while online; wait for “Offline access is ready”.</li>
+        </ul>
+      </section>
+      <section class="card check-card">
+        <h3>Check the kit</h3>
+        <ul class="checklist">
+          <li>Correct bottles, labels, clean sampling gear and cool storage required by the lab.</li>
+          <li>Correct meter and probe; inspect for damage, fouling and low battery.</li>
+          <li>Calibration, reagents and consumables checked according to the current method.</li>
+          <li>Spare batteries, rinse water, PPE and a safe way to carry equipment.</li>
+        </ul>
+      </section>
+    </div>
+    <h3 style="margin-top:5mm">Work in this order</h3>
+    <ol class="steps">
+      <li><strong>Observe:</strong> note weather, tide, water surface and anything unusual.</li>
+      <li><strong>Collect clean-water samples:</strong> take chemistry and lab bottles before probes or sediment-disturbing work.</li>
+      <li><strong>Measure:</strong> take stable instrument readings, then clarity readings.</li>
+      <li><strong>Disturb the bed last:</strong> take depth or other bottom-disturbing measurements only if the plan requires them.</li>
+    </ol>
+    <div class="callout">
+      <p><strong>Safety comes first.</strong> Stay within the approved access plan. Never enter the water, work alone or board a boat unless your supervisor's risk plan specifically authorizes it. Stop if conditions become unsafe.</p>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>02</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">02 · Know your site</p>
+    <h2>Current monitoring sites</h2>
+    <p class="page-intro">Use the current site number in Field entry and on every sample label. This map replaces the historical source map.</p>
+    <div class="map-layout">
+      <img id="site-map" src="../assets/field-handbook-map.png" alt="Map showing the eight current Otago Harbour monitoring sites, numbered 1 to 8.">
+      <aside class="site-list">
+        <h3>Site key</h3>
+        <ol>
+          <li>Mussel Bay</li>
+          <li>Stream at Sawyers Bay</li>
+          <li>Ravensbourne Boat Club</li>
+          <li>Leith River Mouth</li>
+          <li>Anderson's Bay Outlet</li>
+          <li>Sommerville Creek</li>
+          <li>MacAndrew Bay Marina</li>
+          <li>MacAndrew Bay Stormwater Outfall</li>
+        </ol>
+      </aside>
+    </div>
+    <div class="callout teal-callout">
+      <p><strong>Remember the sequence:</strong> observe → collect bottles → meters → clarity → bed-disturbing work last.</p>
+      <p>Open the <a href="https://mrrichardsdigi.github.io/healthy-harbour-watchers/locations.html">Locations page</a> online for site profiles and live navigation. Map data: OpenStreetMap contributors.</p>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>03</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">03 · Observe</p>
+    <h2>Record the conditions</h2>
+    <p class="page-intro">Conditions help explain a result. Write what you see, not what you think caused it.</p>
+    <div class="observe-grid">
+      <section class="card observe-card">
+        <h3>Weather</h3>
+        <p>Cloud, rain now or recently, wind and air temperature if your method asks for it.</p>
+        <p class="prompt">Keep descriptions simple: “light rain”, “strong wind”, “overcast”.</p>
+      </section>
+      <section class="card observe-card">
+        <h3>Time and tide</h3>
+        <p>Record the date, visit time and tide stage if known: rising, falling, high or low.</p>
+        <p class="prompt">Note the tide-table or station used when your plan requires it.</p>
+      </section>
+      <section class="card observe-card">
+        <h3>Water surface</h3>
+        <p>Describe calm, rippled or wave conditions, plus visible colour or unusual cloudiness.</p>
+        <p class="prompt">Glare and chop can affect clarity readings; note them.</p>
+      </section>
+      <section class="card observe-card">
+        <h3>Anything unusual?</h3>
+        <p>From a safe distance, note foam, scum, sheen, unusual odour, discharge, litter or dead animals.</p>
+        <p class="prompt">Do not touch, approach or collect an unknown discharge or dead animal. Tell your supervisor.</p>
+      </section>
+    </div>
+    <div class="callout teal-callout">
+      <p><strong>In Field entry:</strong> use the Weather, Tide conditions, Water-surface conditions and Other unusual observations boxes. Brief, factual notes are most useful.</p>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>04</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">04 · Collect samples</p>
+    <h2>Protect the sample</h2>
+    <p class="page-intro">Use the bottle, location, depth and preservation instructions specified for that analysis. Different tests need different handling.</p>
+    <ol class="steps sample-steps">
+      <li><strong>Prepare:</strong> match each clean or sterile container to the lab's current instructions. Check its label and expiry where applicable.</li>
+      <li><strong>Label:</strong> include sample ID, site, date, time and analysis as required. Keep labels readable and waterproof.</li>
+      <li><strong>Sample before disturbance:</strong> collect bottles before probes, clarity gear or anything that stirs the bottom.</li>
+      <li><strong>Collect carefully:</strong> use the position and depth in your plan. Avoid touching the bottle rim or cap interior; do not collect sediment or algal mats unless instructed.</li>
+      <li><strong>Prevent cross-contamination:</strong> use separate containers and clean or sterile technique as the method requires. Rinse a bottle only if its instructions say to.</li>
+      <li><strong>Preserve and transfer:</strong> follow the lab's exact cooling, filtration, holding-time and delivery instructions. Do not assume one rule fits every test.</li>
+    </ol>
+    <div class="callout">
+      <p><strong>Do not improvise sample handling.</strong> If a bottle, label, preservative or storage step is missing or unclear, ask the lab lead before collecting.</p>
+    </div>
+    <div class="grid-2" style="margin-top:4mm">
+      <section class="card">
+        <h3>At the water's edge</h3>
+        <p>Choose representative water as directed by the sampling plan. Avoid scraping the seabed, pylons or algal mats, and avoid water disturbed by your own activity.</p>
+      </section>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>05</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">05 · Equipment and quality</p>
+    <h2>Make results repeatable</h2>
+    <p class="page-intro">Consistency matters more than adding extra measurements. Follow the sampling plan and record enough context to repeat the work.</p>
+    <div class="grid-2">
+      <section class="card">
+        <h3>Before measuring</h3>
+        <ul>
+          <li>Inspect the instrument, cable and sensor; check batteries and units.</li>
+          <li>Calibrate when required by the approved method and instrument manual.</li>
+          <li>Check kit reagents and consumables against their instructions and expiry dates.</li>
+          <li>Keep glassware protected; carry instruments in their case.</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h3>While measuring</h3>
+        <ul>
+          <li>Use the same method, site and measurement position each visit when practical.</li>
+          <li>Keep the sensor off the bottom and clear of bubbles; wait for a stable reading.</li>
+          <li>Record the value and units shown. Never convert or guess a missing result.</li>
+          <li>Repeat a reading only when the plan calls for it; record any issue or change.</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h3>After measuring</h3>
+        <ul>
+          <li>Rinse and store probes exactly as the matching manual says.</li>
+          <li>Check sample IDs and transfer conditions before leaving the site.</li>
+          <li>Report damaged gear, failed calibration or unstable readings.</li>
+        </ul>
+      </section>
+      <section class="card">
+        <h3>Good records</h3>
+        <ul>
+          <li>Use the selected site and actual sampling date.</li>
+          <li>Leave measurements you did not take blank; blank is not zero.</li>
+          <li>Use a decimal point and the units required by the method.</li>
+          <li>Describe unusual conditions without assigning a cause.</li>
+        </ul>
+      </section>
+    </div>
+    <div class="callout teal-callout">
+      <p><strong>Unusual-value prompts are checks, not limits.</strong> Recheck the value and units, but do not change a genuine result just to fit a usual range.</p>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>06</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">06 · YSI field meters</p>
+    <h2>Pro2030 and ProSolo</h2>
+    <p class="page-intro">The available readings depend on the meter and probe fitted. Check the probe label and use the matching manufacturer's manual.</p>
+    <div class="meter-pair">
+      <section class="card meter-card">
+        <h3>Take the reading</h3>
+        <ol>
+          <li>Collect chemistry bottles first.</li>
+          <li>Check meter, sensor, battery, units and calibration status.</li>
+          <li>Place the probe in representative water without touching the bottom or trapping bubbles.</li>
+          <li>Wait until the displayed values are stable.</li>
+          <li>Rinse and store the probe according to its manual.</li>
+        </ol>
+      </section>
+      <section class="card meter-card">
+        <h3>Movement depends on the probe</h3>
+        <p>The Pro2030 dissolved-oxygen sensor needs water movement while measuring. Follow its manual for the correct movement.</p>
+        <p>When fitted with an ODO probe, the ProSolo does not require stirring.</p>
+        <p class="small">Do not transfer one model's procedure to another. If calibration fails or the value will not stabilize, do not record it as a valid result.</p>
+      </section>
+    </div>
+    <h3 style="margin-top:5mm">Keep these readings separate</h3>
+    <div class="grid-3">
+      <div class="unit-box"><strong>mg/L</strong><span>Dissolved-oxygen concentration.</span></div>
+      <div class="unit-box"><strong>% saturation</strong><span>Oxygen compared with expected solubility under current conditions.</span></div>
+      <div class="unit-box"><strong>°C</strong><span>Water temperature. Record the displayed value.</span></div>
+    </div>
+    <div class="callout">
+      <p><strong>Do not convert or swap mg/L and %.</strong> Enter each displayed value into its matching field. Enter adjusted salinity or conductivity only when the fitted probe and approved method provide it, using the method's units.</p>
+    </div>
+    <div class="link-row">
+      <a href="https://www.ysi.com/file%20library/documents/manuals/605056-ysi-pro2030-user-manual-revc.pdf">YSI Pro2030 manual</a>
+      <a href="https://www.ysi.com/file%20library/documents/manuals/ysi_prosolo_user_manual_english.pdf">YSI ProSolo manual</a>
+    </div>
+    <p class="small" style="margin-top:2mm">Oxygen varies with temperature, salinity, tide, time of day and photosynthesis. Interpret results using current local guidance and site context, not a generic threshold alone.</p>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>07</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">07 · Water clarity</p>
+    <h2>Secchi disk and turbidity</h2>
+    <p class="page-intro">Clarity describes how far light can travel through water. Take clarity readings before any activity that disturbs the seabed.</p>
+    <ol class="steps secchi-steps">
+      <li><strong>Choose a consistent view:</strong> use the same side of the boat or structure where possible. Note glare, cloud and wave conditions.</li>
+      <li><strong>Lower slowly:</strong> lower the black-and-white Secchi disk vertically until the pattern just disappears. Record depth A.</li>
+      <li><strong>Raise slowly:</strong> bring it up until the pattern just reappears. Record depth B.</li>
+      <li><strong>Calculate:</strong> Secchi depth = (A + B) ÷ 2. Record the result in the method's units.</li>
+      <li><strong>If the bottom is visible:</strong> record that the disk was still visible at the bottom and note the water depth. Do not report it as an exact Secchi depth.</li>
+      <li><strong>Note conditions:</strong> record site, viewing position and anything that could affect visibility.</li>
+    </ol>
+    <div class="grid-2" style="margin-top:4mm">
+      <section class="card">
+        <h3>Turbidity meter</h3>
+        <p>Use a calibrated meter and the current method. Follow the instrument instructions for sample cells, cleaning and units.</p>
+        <p>Secchi depth and turbidity are different measurements. Do not convert one into the other.</p>
+      </section>
+      <section class="card">
+        <h3>Keep the disk reliable</h3>
+        <p>Check the marked line against a tape before fieldwork and after repeated use. Rinse the disk and line after sampling; store without kinks.</p>
+        <p class="small">Strong glare, choppy water and low light can reduce repeatability. Record the conditions rather than hiding them.</p>
+      </section>
+    </div>
+    <div class="callout teal-callout">
+      <p><strong>Order matters:</strong> complete Secchi readings before measuring depth or doing other work that may stir bottom sediment.</p>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>08</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">08 · Other measurements</p>
+    <h2>Use the right method and units</h2>
+    <p class="page-intro">The form accepts field readings and later lab results. Follow the sampling plan for each parameter; do not assume every meter provides every channel.</p>
+    <div class="grid-2">
+      <section class="card">
+        <h3>Water temperature</h3>
+        <p>Measure representative water with a suitable sensor. Avoid the bottom and wait for a stable value. Record in °C, plus depth or position if the plan asks.</p>
+      </section>
+      <section class="card">
+        <h3>Salinity and conductivity</h3>
+        <p>Use the fitted, approved instrument method. If the form asks for adjusted salinity or adjusted specific conductivity, enter that adjusted reading—not an unadjusted value.</p>
+      </section>
+      <section class="card">
+        <h3>pH</h3>
+        <p>Use a calibrated pH instrument and the approved sample method. Wait for a stable reading and record it as displayed. pH may also be added later from the lab.</p>
+      </section>
+      <section class="card">
+        <h3>Water depth</h3>
+        <p>Measure only when the sampling plan requires it. Depth work can disturb sediment, so do it after water samples and clarity readings.</p>
+      </section>
+    </div>
+    <div class="phase-list">
+      <div><strong>Do not infer</strong>Never estimate an instrument result or convert a value into a different field.</div>
+      <div><strong>Do not assume</strong>Units and adjustments vary by parameter and method; check the protocol.</div>
+      <div><strong>Do not hide</strong>Record unstable readings, unusual conditions or method changes for review.</div>
+    </div>
+    <div class="callout">
+      <p><strong>pH and turbidity can be added later.</strong> If the lab reports them after the visit, enter the lab result only with the correct site, date and units.</p>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>09</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">09 · Laboratory results</p>
+    <h2>What the lab measures</h2>
+    <p class="page-intro">These measurements help describe nutrients, microscopic algae and indicator bacteria in the harbour.</p>
+    <div class="grid-2">
+      <section class="card test-card">
+        <p class="purpose">Algae and plant growth</p>
+        <h3>Chlorophyll-a</h3>
+        <p>A pigment measurement used to estimate phytoplankton biomass. The lab method determines filtration, preservation and analysis.</p>
+      </section>
+      <section class="card test-card">
+        <p class="purpose">Phosphorus nutrient</p>
+        <h3>DRP</h3>
+        <p>Dissolved reactive phosphorus is a form of phosphorus available to aquatic life. Report the analyte and units required by the lab.</p>
+      </section>
+      <section class="card test-card">
+        <p class="purpose">Nitrogen nutrients</p>
+        <h3>NNN</h3>
+        <p>Nitrate plus nitrite results help track dissolved nitrogen nutrients. Use the approved lab result and units.</p>
+      </section>
+      <section class="card test-card">
+        <p class="purpose">Indicator bacteria</p>
+        <h3>Enterococci</h3>
+        <p>An indicator of possible faecal contamination. It is not a direct count of every harmful organism.</p>
+      </section>
+    </div>
+    <div class="callout">
+      <p><strong>The 2014 laboratory recipes are intentionally omitted.</strong> Before collecting a lab sample, get current instructions for bottle type, filtration or preservative, storage temperature, holding time, transport, units and safety.</p>
+      <p>Do not handle chemical reagents or culture bacteria unless trained and working under an approved laboratory procedure. Keep cultures sealed and follow the lab lead's disposal instructions.</p>
+    </div>
+    <p class="small" style="margin-top:4mm">Field entry supports lab results being added later. Leave a result blank until a valid value is available; do not use zero to mean “not measured”.</p>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>10</span></div>
+  </section>
+
+  <section class="page interior">
+    <p class="page-kicker">10 · Field entry</p>
+    <h2>Save offline. Submit online.</h2>
+    <p class="page-intro">Field entry stores completed samples on the browser and device you used. Nothing is submitted automatically.</p>
+    <div class="flow-grid">
+      <section class="card flow-card">
+        <span class="flow-number">1</span>
+        <h3>Prepare online</h3>
+        <p>Sign in while connected. Open Field entry and wait for the offline-ready message on this device.</p>
+      </section>
+      <section class="card flow-card">
+        <span class="flow-number">2</span>
+        <h3>Record at the site</h3>
+        <p>Choose the site and date. Enter only measurements you took and add brief site observations.</p>
+      </section>
+      <section class="card flow-card">
+        <span class="flow-number">3</span>
+        <h3>Save on the device</h3>
+        <p>Save each sample. Check that it appears under Saved samples before moving on.</p>
+      </section>
+      <section class="card flow-card">
+        <span class="flow-number">4</span>
+        <h3>Reconnect</h3>
+        <p>When online, submit each saved sample for review. It does not send itself.</p>
+      </section>
+      <section class="card flow-card">
+        <span class="flow-number">5</span>
+        <h3>Wait for review</h3>
+        <p>Submitted data is checked before it appears in the public dataset.</p>
+      </section>
+      <section class="card flow-card">
+        <span class="flow-number">6</span>
+        <h3>Retry carefully</h3>
+        <p>If submission was not confirmed, retry the same saved sample unchanged. Ask the coordinator before editing an uncertain submission.</p>
+      </section>
+    </div>
+    <div class="callout">
+      <p><strong>Offline samples stay on that device.</strong> They are not an account backup. Keep the device safe; do not clear site data or use private browsing before submitting.</p>
+      <p>For privacy, do not put names or personal information in sample observations.</p>
+    </div>
+    <div class="link-row"><a href="https://mrrichardsdigi.github.io/healthy-harbour-watchers/field.html">Open Healthy Harbour Watchers Field entry</a></div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Field handbook</span><span>11</span></div>
+  </section>
+
+  <section class="page interior back-cover">
+    <div class="interior-content">
+      <p class="page-kicker" style="color:#9de0df">11 · Close the visit</p>
+      <h2>Before you pack up</h2>
+      <p class="page-intro" style="color:#e5f1f4">A final check protects the samples and the record.</p>
+      <div class="card" style="background:rgba(255,255,255,.96)">
+        <ul class="checklist">
+          <li>Every bottle matches its label and the lab's current handling instructions.</li>
+          <li>Site, date, time and units are correct; missing readings are blank, not zero.</li>
+          <li>Weather, tide, water surface and unusual observations are recorded.</li>
+          <li>Each completed sample is saved on the device and visible in Saved samples.</li>
+          <li>Gear is rinsed, stored and reported as required by its manual.</li>
+          <li>Samples are transferred to the lab lead within the stated holding time.</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <p><strong>Read results in context.</strong> Tide, rainfall, wind, temperature and time of day can change measurements. A single result is not, by itself, a diagnosis of pollution.</p>
+      </div>
+      <div class="callout">
+        <p><strong>This is a field guide, not a lab manual.</strong> Follow the current approved sampling plan, risk assessment, instrument manual and laboratory procedure. Ask your supervisor when anything is unclear.</p>
+      </div>
+      <div class="link-row">
+        <a href="https://mrrichardsdigi.github.io/healthy-harbour-watchers/handbook.html">Online handbook and YSI manuals</a>
+        <a href="https://mrrichardsdigi.github.io/healthy-harbour-watchers/locations.html">Site profiles</a>
+      </div>
+    </div>
+    <div class="page-footer"><span>Healthy Harbour Watchers · Otago Harbour</span><span>12</span></div>
+  </section>
+
+</body>
+</html>
