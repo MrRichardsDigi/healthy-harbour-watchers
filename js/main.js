@@ -108,6 +108,14 @@
       fetch('data/locations.json').then(r=>r.json()).then(async locations => {
         const filtered = locations.filter(l => l.currentSite).sort((a,b) => a.currentSite - b.currentSite);
         const imgList = ['assets/harbour1.jpg','assets/harbour2.jpg','assets/harbour3.jpg'];
+        let curatedPhotosByLocation = {};
+        try {
+          const response = await fetch('data/site-photos.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error('Could not load curated site photos');
+          curatedPhotosByLocation = await response.json();
+        } catch (error) {
+          console.warn('Curated location photos unavailable:', error);
+        }
         const photosByLocation = {};
         const schoolByLocation = {};
         const schoolBranding = {
@@ -130,6 +138,8 @@
             console.warn('Location school assignments unavailable:', error);
           }
           await Promise.all(filtered.map(async location => {
+            const curatedPhotos = curatedPhotosByLocation[String(location.id)];
+            if (Array.isArray(curatedPhotos) && curatedPhotos.length) return;
             try {
               const { data, error } = await supabaseClient.rpc('site_photo_list', {
                 p_locationid: Number(location.id)
@@ -148,7 +158,11 @@
           }));
         }
         filtered.forEach((l,i)=>{
-          l.img = photosByLocation[String(l.id)] || imgList[i%imgList.length];
+          const curatedPhotos = curatedPhotosByLocation[String(l.id)];
+          const curatedPhoto = Array.isArray(curatedPhotos) && curatedPhotos.length
+            ? `assets/${encodeURIComponent(curatedPhotos[Math.floor(Math.random() * curatedPhotos.length)])}`
+            : null;
+          l.img = curatedPhoto || photosByLocation[String(l.id)] || imgList[i%imgList.length];
           l.desc = `Current monitoring site ${l.currentSite}`;
         });
         const featured = filtered;
